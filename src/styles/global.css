@@ -64,16 +64,8 @@ html[data-theme="dark"] {
   samp {
     font-family:
       /* "Xiawuwenkai", */
-      "JetBrains Mono",
-      "IBM Plex Mono",
-      ui-monospace,
-      SFMono-Regular,
-      Menlo,
-      Monaco,
-      Consolas,
-      "Liberation Mono",
-      "Courier New",
-      monospace;
+      "JetBrains Mono", "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo,
+      Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   }
 }
 
@@ -83,6 +75,14 @@ html[data-theme="dark"] {
 
 @utility app-layout {
   @apply mx-auto w-full max-w-app px-4;
+}
+
+@utility scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .active-nav {

@@ -1,0 +1,60 @@
+---
+import type { MarkdownHeading } from "astro";
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+
+const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+const DEFAULT_COLLAPSED = 8;
+const isCollapsed = toc.length > DEFAULT_COLLAPSED;
+---
+
+{
+  toc.length > 0 && (
+    <nav class="toc sticky top-20 max-h-[calc(100vh-6rem)] scrollbar-hide">
+      <div class="flex items-center justify-between">
+        <h2 class="mb-3 text-sm font-semibold uppercase tracking-wide text-foreground/80">
+          On this page
+        </h2>
+        {isCollapsed && (
+          <button
+            id="toc-toggle"
+            class="toc-toggle text-xs text-foreground/60 hover:text-accent"
+            aria-expanded="false"
+          >
+            展开
+          </button>
+        )}
+      </div>
+      <ul class:list={["space-y-2 text-sm", isCollapsed && "hidden"]} id="toc-list">
+        {toc.map((heading) => (
+          <li class:list={[{ "ps-4": heading.depth === 3 }]}>
+            <a
+              href={`#${heading.slug}`}
+              class="block truncate text-foreground/70 hover:text-accent hover:underline"
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
+
+<script>
+  const toggle = document.getElementById("toc-toggle");
+  const list = document.getElementById("toc-list");
+
+  if (toggle && list) {
+    toggle.addEventListener("click", () => {
+      const isExpanded = toggle.getAttribute("aria-expanded") === "true";
+      toggle.setAttribute("aria-expanded", String(!isExpanded));
+      list.classList.toggle("hidden");
+      toggle.textContent = isExpanded ? "展开" : "收起";
+    });
+  }
+</script>
