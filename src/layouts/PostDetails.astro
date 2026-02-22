@@ -110,15 +110,15 @@ const nextPost =
       <EditPost {hideEditPost} {post} class="max-sm:hidden" />
     </div>
 
-    <div class="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_200px]">
+    <div class="mt-8 flex gap-8">
       <article
         id="article"
-        class="app-prose w-full max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
+        class="app-prose flex-1 prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
       >
         <Content />
       </article>
 
-      <aside class="hidden lg:block lg:ps-8">
+      <aside class="hidden w-[200px] shrink-0 ps-6 lg:block lg:ps-14">
         <TableOfContents {headings} />
       </aside>
     </div>
