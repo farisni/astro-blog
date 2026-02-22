@@ -63,7 +63,7 @@ html[data-theme="dark"] {
   kbd,
   samp {
     font-family:
-      "Xiawuwenkai",
+      /* "Xiawuwenkai", */
       "JetBrains Mono",
       "IBM Plex Mono",
       ui-monospace,
