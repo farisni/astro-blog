@@ -1,27 +1,26 @@
 ---
-author: Sat Naing
+author: Faris
 pubDatetime: 2022-09-26T12:13:24Z
 modDatetime: 2024-01-04T09:09:06Z
-title: Predefined color schemes
+title: 预定义配色方案
 slug: predefined-color-schemes
 featured: false
 draft: false
 tags:
   - color-schemes
 description:
-  Some of the well-crafted, predefined color schemes for AstroPaper blog
-  theme.
+  为 AstroPaper 博客主题精心准备的预定义配色方案。
 ---
 
-I've crafted some predefined color schemes for this AstroPaper blog theme. You can replace these color schemes with the original ones.
+我为 AstroPaper 博客主题准备了一些预定义的配色方案，你可以用它们替换默认配色。
 
-If you don't know how you can configure color schemes, check [this blog post](https://astro-paper.pages.dev/posts/customizing-astropaper-theme-color-schemes/).
+如果你不知道如何配置配色方案，请查看[这篇博文](https://astro-paper.pages.dev/posts/customizing-astropaper-theme-color-schemes/)。
 
 ## Table of contents
 
-## Light color schemes
+## 亮色配色方案
 
-Light color scheme has to be defined using the css selector `:root` and `html[data-theme="light"]`.
+亮色配色方案需要使用 CSS 选择器 `:root` 和 `html[data-theme="light"]` 来定义。
 
 ### Lobster
 
@@ -68,11 +67,11 @@ html[data-theme="light"] {
 }
 ```
 
-## Dark color schemes
+## 暗色配色方案
 
-Dark color scheme has to be defined as `html[data-theme="dark"]`.
+暗色配色方案需要定义为 `html[data-theme="dark"]`。
 
-### AstroPaper 1 original Dark Theme
+### AstroPaper 1 原始暗色主题
 
 ![AstroPaper 1 default dark theme](https://user-images.githubusercontent.com/53733092/215769153-13b0ad8d-5ba2-44b1-af06-e5ae61293f62.png)
 
@@ -114,7 +113,7 @@ html[data-theme="dark"] {
 }
 ```
 
-### Astro dark (High Contrast)
+### Astro dark（高对比度）
 
 ![astro-dark-color-scheme](https://user-images.githubusercontent.com/53733092/215680520-59427bb0-f4cb-48c0-bccc-f182a428d72d.svg)
 
@@ -128,13 +127,13 @@ html[data-theme="dark"] {
 }
 ```
 
-### Astro dark (New default dark theme in AstroPaper 2)
+### Astro dark（AstroPaper 2 默认暗色主题）
 
 ![new dark color scheme - low contrast](https://user-images.githubusercontent.com/53733092/215772856-d5b7ae35-ddaa-4ed6-b0bf-3fa5dbcf834c.png)
 
 ```css
 html[data-theme="dark"] {
-  --background: #212737; /* lower contrast background */
+  --background: #212737;
   --foreground: #eaedf3;
   --accent: #ff6b01;
   --muted: #8a3302;
@@ -142,7 +141,7 @@ html[data-theme="dark"] {
 }
 ```
 
-### Astro Deep Purple (New dark theme in AstroPaper 3)
+### Astro Deep Purple（AstroPaper 3 新暗色主题）
 
 ![AstroPaper v3 new theme](https://github.com/satnaing/astro-paper/assets/53733092/c8b5d7e1-a3bc-4852-a5ad-4abf7b3cec79)
 
@@ -156,7 +155,7 @@ html[data-theme="dark"] {
 }
 ```
 
-### AstroPaper v4 Special (New dark theme in AstroPaper 4)
+### AstroPaper v4 特别版（AstroPaper 4 新暗色主题）
 
 ![AstroPaper v4 new theme](https://github.com/satnaing/astro-paper/assets/53733092/66eb74dc-7a0e-4f2e-982d-25f5c443b25a)
 

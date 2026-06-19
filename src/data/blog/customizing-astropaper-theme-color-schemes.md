@@ -1,29 +1,28 @@
 ---
-author: Sat Naing
+author: Faris
 pubDatetime: 2022-09-25T15:20:35Z
 modDatetime: 2026-01-09T15:00:15.170Z
-title: Customizing AstroPaper theme color schemes
+title: 自定义 AstroPaper 主题配色方案
 featured: false
 draft: false
 tags:
   - color-schemes
   - docs
 description:
-  How you can enable/disable light & dark mode; and customize color schemes
-  of AstroPaper theme.
+  如何启用/禁用明暗模式，以及自定义 AstroPaper 主题的配色方案。
 ---
 
-This post will explain how you can enable/disable light & dark mode for the website. Moreover, you'll learn how you can customize color schemes of the entire website.
+本文介绍如何启用/禁用网站的明暗模式，以及如何自定义整个网站的配色方案。
 
 ## Table of contents
 
-## Enable/disable light & dark mode
+## 启用/禁用明暗模式
 
-AstroPaper theme will include light and dark mode by default. In other words, there will be two color schemes\_ one for light mode and another for dark mode. This default behavior can be disabled in `SITE` configuration object.
+AstroPaper 主题默认包含明暗模式。也就是说有两种配色——亮色和暗色。可以通过 `SITE` 配置对象禁用这一默认行为。
 
 ```js file="src/config.ts"
 export const SITE = {
-  website: "https://astro-paper.pages.dev/", // replace this with your deployed domain
+  website: "https://astro-paper.pages.dev/",
   author: "Sat Naing",
   profile: "https://satnaing.dev/",
   desc: "A minimal, responsive and SEO-friendly Astro blog theme.",
@@ -34,62 +33,57 @@ export const SITE = {
   postPerPage: 4,
   scheduledPostMargin: 15 * 60 * 1000, // 15 minutes
   showArchives: true,
-  showBackButton: true, // show back button in post detail
+  showBackButton: true,
   editPost: {
     enabled: true,
     text: "Suggest Changes",
     url: "https://github.com/satnaing/astro-paper/edit/main/",
   },
   dynamicOgImage: true,
-  lang: "en", // html lang code. Set this empty and default will be "en"
-  timezone: "Asia/Bangkok", // Default global timezone (IANA format) https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  lang: "en",
+  timezone: "Asia/Bangkok",
 } as const;
 ```
 
-To disable `light & dark mode` set `SITE.lightAndDarkMode` to `false`.
+要禁用明暗模式，将 `SITE.lightAndDarkMode` 设为 `false` 即可。
 
-## Choose initial color scheme
+## 选择初始配色方案
 
-By default, if we disable `SITE.lightAndDarkMode`, we will only get system's prefers-color-scheme.
+默认情况下，禁用 `SITE.lightAndDarkMode` 后，只会使用系统的 prefers-color-scheme。
 
-Thus, to choose an initial color scheme instead of prefers-color-scheme, we have to set color scheme in the `initialColorScheme` variable inside `theme.ts`.
+要指定初始配色方案而非跟随系统，需要在 `theme.ts` 中设置 `initialColorScheme` 变量。
 
 ```ts file="src/scripts/theme.ts"
-// Initial color scheme
-// Can be "light", "dark", or empty string for system's prefers-color-scheme
+// 初始配色方案
+// 可选 "light"、"dark"，或空字符串表示跟随系统
 const initialColorScheme = ""; // "light" | "dark" // [!code hl]
 
 function getPreferTheme(): string {
-  // get theme data from local storage (user's explicit choice)
   const currentTheme = localStorage.getItem("theme");
   if (currentTheme) return currentTheme;
 
-  // return initial color scheme if it is set (site default)
   if (initialColorScheme) return initialColorScheme;
 
-  // return user device's prefer color scheme (system fallback)
   return window.matchMedia("(prefers-color-scheme: dark)").matches
     ? "dark"
     : "light";
 }
-
-// ...
 ```
 
-The **initialColorScheme** variable can hold two values\_ `"light"`, `"dark"`. You can leave the empty string (default) if you don't want to specify an initial color scheme.
+**initialColorScheme** 可取两个值：`"light"`、`"dark"`。不想指定则可以留空（默认）。
 
-- `""` - system's prefers-color-scheme. (default)
-- `"light"` - use light mode as initial color scheme.
-- `"dark"` - use dark mode as initial color scheme.
+- `""` - 跟随系统 prefers-color-scheme（默认）
+- `"light"` - 初始使用亮色模式
+- `"dark"` - 初始使用暗色模式
 
 <details>
-<summary>Why initialColorScheme is not inside config.ts?</summary>
-To avoid color flickering on page reload, we have to place the theme initialization JavaScript code as early as possible when the page loads. The theme script is split into two parts: a minimal inline script in the `<head>` that sets the theme immediately, and the full script that loads asynchronously. This approach prevents FOUC (Flash of Unstyled Content) while maintaining optimal performance.
+<summary>为什么 initialColorScheme 不在 config.ts 中？</summary>
+为避免页面刷新时出现颜色闪烁，主题初始化的 JavaScript 代码需要尽可能早地在页面加载时执行。主题脚本分为两部分：一个最简的内联脚本放在 `<head>` 中立即设置主题，完整脚本异步加载。这样既能防止 FOUC（无样式内容闪烁），又能保持最优性能。
 </details>
 
-## Customize color schemes
+## 自定义配色方案
 
-Both light & dark color schemes of AstroPaper theme can be customized in the `global.css` file.
+AstroPaper 的明暗配色方案可以在 `global.css` 中自定义。
 
 ```css file="src/styles/global.css"
 @import "tailwindcss";
@@ -113,27 +107,25 @@ html[data-theme="dark"] {
   --muted: #343f60bf;
   --border: #ab4b08;
 }
-/* ... */
 ```
 
-In the AstroPaper theme, the `:root` and `html[data-theme="light"]` selectors define the light color scheme, while `html[data-theme="dark"]` defines the dark color scheme.
+AstroPaper 中，`:root` 和 `html[data-theme="light"]` 定义亮色配色，`html[data-theme="dark"]` 定义暗色配色。
 
-To customize your own color scheme, specify your light colors inside `:root, html[data-theme="light"]`, and your dark colors inside `html[data-theme="dark"]`.
+要自定义配色，在 `:root, html[data-theme="light"]` 中填写亮色值，在 `html[data-theme="dark"]` 中填写暗色值。
 
-Here is the detail explanation of color properties.
+颜色属性说明：
 
-| Color Property | Definition & Usage                                            |
-| -------------- | ------------------------------------------------------------- |
-| `--background` | Primary color of the website. Usually the main background.    |
-| `--foreground` | Secondary color of the website. Usually the text color.       |
-| `--accent`     | Accent color of the website. Link color, hover color etc.     |
-| `--muted`      | Card and scrollbar background color for hover state etc.      |
-| `--border`     | Border color. Used for border utilities and visual separation |
+| 颜色属性       | 定义与用途                        |
+| -------------- | --------------------------------- |
+| `--background` | 网站主色，通常是主背景色          |
+| `--foreground` | 网站辅色，通常是文字颜色          |
+| `--accent`     | 强调色，链接颜色、hover 颜色等     |
+| `--muted`      | 卡片和滚动条背景色等              |
+| `--border`     | 边框颜色，用于边框和视觉分隔      |
 
-Here is an example of changing the light color scheme.
+修改亮色配色示例：
 
 ```css file="src/styles/global.css"
-/* ... */
 :root,
 html[data-theme="light"] {
   --background: #f6eee1;
@@ -142,7 +134,6 @@ html[data-theme="light"] {
   --muted: #efd8b0;
   --border: #dc9891;
 }
-/* ... */
 ```
 
-> Check out some [predefined color schemes](https://astro-paper.pages.dev/posts/predefined-color-schemes/) AstroPaper has already crafted for you.
+> 查看 AstroPaper 已为你准备好的[预定义配色方案](https://astro-paper.pages.dev/posts/predefined-color-schemes/)。

@@ -1,30 +1,30 @@
 ---
-author: Sat Naing
+author: Faris
 pubDatetime: 2022-09-23T04:58:53Z
 modDatetime: 2026-01-10T13:04:53.851Z
-title: How to configure AstroPaper theme
+title: 如何配置 AstroPaper 主题
 slug: how-to-configure-astropaper-theme
 featured: true
 draft: false
 tags:
   - configuration
   - docs
-description: How you can make AstroPaper theme absolutely yours.
+description: 如何将 AstroPaper 主题变成你自己的。
 ---
 
-AstroPaper is a highly customizable Astro blog theme. With AstroPaper, you can customize everything according to your personal taste. This article will explain how you can make some customizations easily in the config file.
+AstroPaper 是一个高度可定制的 Astro 博客主题。你可以根据自己的喜好自定义一切。本文介绍如何通过配置文件轻松完成一些自定义。
 
 ## Table of contents
 
-## Configuring SITE
+## 配置 SITE
 
-The important configurations resides in `src/config.ts` file. Within that file, you'll see the `SITE` object where you can specify your website's main configurations.
+核心配置在 `src/config.ts` 文件中。其中 `SITE` 对象包含网站的主要配置。
 
-During development, it's okay to leave `SITE.website` empty. But in production mode, you should specify your deployed url in `SITE.website` option since this will be used for canonical URL, social card URL etc.. which are important for SEO.
+开发期间 `SITE.website` 可以留空。但在生产模式下，必须在 `SITE.website` 中指定部署域名，因为它会被用于 canonical URL、社交卡片 URL 等，对 SEO 很重要。
 
 ```js file=src/config.ts
 export const SITE = {
-  website: "https://astro-paper.pages.dev/", // replace this with your deployed domain
+  website: "https://astro-paper.pages.dev/", // 替换为你的部署域名
   author: "Sat Naing",
   profile: "https://satnaing.dev/",
   desc: "A minimal, responsive and SEO-friendly Astro blog theme.",
@@ -33,133 +33,91 @@ export const SITE = {
   lightAndDarkMode: true,
   postPerIndex: 4,
   postPerPage: 4,
-  scheduledPostMargin: 15 * 60 * 1000, // 15 minutes
+  scheduledPostMargin: 15 * 60 * 1000, // 15 分钟
   showArchives: true,
-  showBackButton: true, // show back button in post detail
+  showBackButton: true,
   editPost: {
     enabled: true,
     text: "Suggest Changes",
     url: "https://github.com/satnaing/astro-paper/edit/main/",
   },
-  dynamicOgImage: true, // enable automatic dynamic og-image generation
-  dir: "ltr", // "rtl" | "auto"
-  lang: "en", // html lang code. Set this empty and default will be "en"
-  timezone: "Asia/Bangkok", // Default global timezone (IANA format) https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  dynamicOgImage: true,
+  dir: "ltr",
+  lang: "en",
+  timezone: "Asia/Bangkok",
 } as const;
 ```
 
-Here are SITE configuration options
+SITE 配置选项说明：
 
-| Options               | Description                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `website`             | Your deployed website URL                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `author`              | Your name                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `profile`             | Your personal/portfolio website URL which is used for better SEO. Put `null` or empty string `""` if you don't have any.                                                                                                                                                                                                                                                                                                          |
-| `desc`                | Your site description. Useful for SEO and social media sharing.                                                                                                                                                                                                                                                                                                                                                                   |
-| `title`               | Your site name                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `ogImage`             | Your default OG image for the site. Useful for social media sharing. OG images can be an external image URL or they can be placed under `/public` directory.                                                                                                                                                                                                                                                                      |
-| `lightAndDarkMode`    | Enable or disable `light & dark mode` for the website. If disabled, primary color scheme will be used. This option is enabled by default.                                                                                                                                                                                                                                                                                         |
-| `postPerIndex`        | The number of posts to be displayed at the home page under `Recent` section.                                                                                                                                                                                                                                                                                                                                                      |
-| `postPerPage`         | You can specify how many posts will be displayed in each posts page. (eg: if you set `SITE.postPerPage` to 3, each page will only show 3 posts per page)                                                                                                                                                                                                                                                                          |
-| `scheduledPostMargin` | In Production mode, posts with a future `pubDatetime` will not be visible. However, if a post's `pubDatetime` is within the next 15 minutes, it will be visible. You can set `scheduledPostMargin` if you don't like the default 15 minutes margin.                                                                                                                                                                               |
-| `showArchives`        | Determines whether to display the `Archives` menu (positioned between the `About` and `Search` menus) and its corresponding page on the site. This option is set to `true` by default.                                                                                                                                                                                                                                            |
-| `showBackButton`      | Determines whether to display the `Go back` button in each blog post.                                                                                                                                                                                                                                                                                                                                                             |
-| `editPost`            | This option allows users to suggest changes to a blog post by providing an edit link under blog post titles. This feature can be disabled by setting `SITE.editPost.enabled` to `false`.                                                                                                                                                                                                                                          |
-| `dynamicOgImage`      | This option controls whether to [generate dynamic og-image](https://astro-paper.pages.dev/posts/dynamic-og-image-generation-in-astropaper-blog-posts/) if no `ogImage` is specified in the blog post frontmatter. If you have many blog posts, you might want to disable this feature. See the [trade-off](https://astro-paper.pages.dev/posts/dynamic-og-image-generation-in-astropaper-blog-posts/#trade-off) for more details. |
-| `dir`                 | Specifies the text direction of the entire blog. Used as [HTML dir attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/dir) in `<html dir="ltr">`. Supported values: `ltr` \| `rtl` \| `auto`                                                                                                                                                                                                |
-| `lang`                | Used as HTML ISO Language code in `<html lang"en">`. Default is `en`.                                                                                                                                                                                                                                                                                                                                                             |
-| `timezone`            | This option allows you to specify your timezone using the [IANA format](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones). Setting this ensures consistent timestamps across your localhost and deployed site, eliminating time differences.                                                                                                                                                                          |
+| 选项                 | 说明                                                                 |
+| -------------------- | -------------------------------------------------------------------- |
+| `website`            | 部署后的网站 URL                                                     |
+| `author`             | 你的名字                                                             |
+| `profile`            | 个人/作品集网站 URL，用于 SEO。没有则填 `null` 或 `""`                |
+| `desc`               | 站点描述，用于 SEO 和社交分享                                         |
+| `title`              | 站点名称                                                             |
+| `ogImage`            | 站点默认 OG 图片，用于社交分享                                        |
+| `lightAndDarkMode`   | 启用/禁用明暗模式切换。`true` 启用，`false` 禁用                      |
+| `postPerIndex`       | 首页显示的文章数                                                     |
+| `postPerPage`        | 文章列表页每页显示的文章数                                           |
+| `scheduledPostMargin`| 提前多少毫秒显示定时发布的文章（默认 15 分钟）                        |
+| `showArchives`       | 是否显示归档页面                                                     |
+| `showBackButton`     | 是否在文章详情页显示返回按钮                                         |
+| `editPost`           | 编辑文章链接配置                                                     |
+| `dynamicOgImage`     | 是否启用动态 OG 图片生成                                              |
+| `dir`                | 站点文本方向。`"ltr"`、`"rtl"` 或 `"auto"`                           |
+| `lang`               | HTML lang 代码。留空默认 "en"                                        |
+| `timezone`           | 默认全局时区（IANA 格式）                                             |
 
-## Update layout width
+## 自定义 Header 中的 Logo
 
-The default `max-width` for the entire blog is `768px` (`max-w-3xl`). If you'd like to change it, you can easily update the `max-w-app` utility in your `global.css`. For instance:
+三种方式：
 
-```css file=src/styles/global.css
-@utility max-w-app {
-  /* [!code --:1] */
-  @apply max-w-3xl;
-  /* [!code ++:1] */
-  @apply max-w-4xl xl:max-w-5xl;
-}
+### 方式一：使用 SVG 组件（推荐）
+
+- 在 `src/components/` 创建一个 SVG 组件（如 `DummyLogo.astro`）
+- 在 `Header.astro` 中导入并使用，替换 `{SITE.title}`
+
+```astro file=src/components/Header.astro
+---
+import DummyLogo from "./DummyLogo.astro";
+---
+
+<a href="/" class="...">
+  <DummyLogo class="scale-75 dark:invert" />
+  <!-- {SITE.title} -->
+</a>
 ```
 
-You can explore more `max-width` values in the [Tailwind CSS docs](https://tailwindcss.com/docs/max-width).
+最大优点是可以按需定制 SVG 样式，比如暗色模式下反色。
 
-## Configuring logo or title
+### 方式二：直接嵌入 SVG
 
-Prior to AstroPaper v5, you can update your site name/logo in `LOGO_IMAGE` object inside `src/config.ts` file. However, in AstroPaper v5, this option has been removed in favor of Astro's built-in SVG and Image components.
+将 SVG 代码直接粘贴到 `<a>` 标签内替换 `{SITE.title}`。
 
-![An arrow pointing at the website logo](https://res.cloudinary.com/noezectz/v1663911318/astro-paper/AstroPaper-logo-config_goff5l.png)
+### 方式三：使用 Astro Image 组件
 
-There are 3 options you can do:
+如果 logo 是普通图片（非 SVG），可用 Astro 的 Image 组件：
 
-### Option 1: SITE title text
+- 将 logo 放入 `src/assets`（如 `src/assets/dummy-logo.png`）
+- 在 `Header.astro` 导入 `Image` 和 logo
 
-This is the easiest option. You just have to update `SITE.title` in `src/config.ts` file.
+```astro file=src/components/Header.astro
+---
+import { Image } from "astro:assets";
+import dummyLogo from "@/assets/dummy-logo.png";
+---
 
-### Option 2: Astro's SVG component
+<a href="/" class="...">
+  <Image src={dummyLogo} alt="Dummy Blog" class="dark:invert" />
+  <!-- {SITE.title} -->
+</a>
+```
 
-You might want to use this option if you want to use an SVG logo.
+## 配置社交链接
 
-- First add an SVG inside `src/assets` directory. (eg: `src/assets/dummy-logo.svg`)
-- Then import that SVG inside `Header.astro`
-
-  ```astro file=src/components/Header.astro
-  ---
-  // ...
-  import DummyLogo from "@/assets/dummy-logo.svg";
-  ---
-  ```
-
-- Finally, replace `{SITE.title}` with imported logo.
-
-  ```html
-  <a
-    href="/"
-    class="absolute py-1 text-left text-2xl leading-7 font-semibold whitespace-nowrap sm:static"
-  >
-    <DummyLogo class="scale-75 dark:invert" />
-    <!-- {SITE.title} -->
-  </a>
-  ```
-
-The best part of this approach is that you can customize your SVG styles as needed. In the example above, you can see how the SVG logo color can be inverted in dark mode.
-
-### Option 3: Astro's Image component
-
-If your logo is an image but not SVG, you can use Astro's Image component.
-
-- Add your logo inside `src/assets` directory. (eg: `src/assets/dummy-logo.png`)
-- Import `Image` and your logo in `Header.astro`
-
-  ```astro file=src/components/Header.astro
-  ---
-  // ...
-  import { Image } from "astro:assets";
-  import dummyLogo from "@/assets/dummy-logo.png";
-  ---
-  ```
-
-- Then, replace `{SITE.title}` with imported logo.
-
-  <!-- prettier-ignore -->
-  ```html
-  <a
-    href="/"
-    class="absolute py-1 text-left text-2xl leading-7 font-semibold whitespace-nowrap sm:static"
-  >
-    <Image src="{dummyLogo}" alt="Dummy Blog" class="dark:invert" />
-    <!-- {SITE.title} -->
-  </a>
-  ```
-
-With this approach, you can still adjust your image's appearance using CSS classes. However, this might not always fit what you want. If you need to display different logo images based on light or dark mode, check how light/dark icons are handled inside the `Header.astro` component.
-
-## Configuring social links
-
-![An arrow pointing at social link icons](https://github.com/user-attachments/assets/8b895400-d088-442f-881b-02d2443e00cf)
-
-You can configure social links in `SOCIALS` object inside `constants.ts`.
+在 `constants.ts` 的 `SOCIALS` 对象中配置：
 
 ```ts file=src/constants.ts
 export const SOCIALS = [
@@ -190,31 +148,28 @@ export const SOCIALS = [
 ] as const;
 ```
 
-## Configuring share links
+## 配置分享链接
 
-You can configure share links in `SHARE_LINKS` object inside `src/constants.ts`.
+在 `src/constants.ts` 的 `SHARE_LINKS` 对象中配置。
 
-![An arrow pointing at share link icons](https://github.com/user-attachments/assets/4f930b68-b625-45df-8c41-e076dd2b838e)
+## 配置字体
 
-## Configuring fonts
+AstroPaper 使用 Astro 的[实验性 fonts API](https://docs.astro.build/en/reference/experimental-flags/fonts/)，默认字体为 [Google Sans Code](https://fonts.google.com/specimen/Google+Sans+Code)，提供跨平台一致的排版和自动字体优化。
 
-AstroPaper uses Astro's [experimental fonts API](https://docs.astro.build/en/reference/experimental-flags/fonts/) with [Google Sans Code](https://fonts.google.com/specimen/Google+Sans+Code) as the default font. This provides consistent typography across all platforms with automatic font optimizations including preloading and caching.
+### 使用默认字体
 
-### Using the default font
+字体已在 `astro.config.ts` 中配置并在 `Layout.astro` 中加载，无需额外操作。
 
-The font is automatically configured in `astro.config.ts` and loaded in `Layout.astro`. No additional configuration is needed to use the default Google Sans Code font.
+### 自定义字体
 
-### Customizing the font
+使用不同字体需要更新三处：
 
-To use a different font, you need to update three places:
-
-1. **Update the font configuration in `astro.config.ts`:**
+1. **更新 `astro.config.ts` 中的字体配置：**
 
 ```ts file=astro.config.ts
 import { defineConfig, fontProviders } from "astro/config";
 
 export default defineConfig({
-  // ...
   experimental: {
     fonts: [
       {
@@ -230,26 +185,22 @@ export default defineConfig({
 });
 ```
 
-1. **Update the Font component in `Layout.astro`:**
+2. **更新 `Layout.astro` 中的 Font 组件：**
 
 ```astro file=src/layouts/Layout.astro
 ---
 import { Font } from "astro:assets";
-// ...
 ---
 
 <head>
-  <!-- ... -->
-  // [!code highlight:4]
   <Font
     cssVariable="--font-your-font"
     preload={[{ subset: "latin", weight: 400, style: "normal" }]}
   />
-  <!-- ... -->
 </head>
 ```
 
-1. **Update the CSS variable mapping in `global.css`:**
+3. **更新 `global.css` 中的 CSS 变量映射：**
 
 ```css file=src/styles/global.css
 @theme inline {
@@ -262,10 +213,10 @@ import { Font } from "astro:assets";
 }
 ```
 
-The `--font-app` variable is used throughout the theme via the `font-app` Tailwind utility class, so updating this single variable will apply your custom font everywhere.
+`--font-app` 变量通过 `font-app` Tailwind utility class 在主题中全局使用，更新这一个变量即可应用你的自定义字体。
 
-> **Note**: Make sure the font name matches exactly as it appears on [Google Fonts](https://fonts.google.com). For other font providers or local fonts, refer to the [Astro Experimental Fonts API documentation](https://docs.astro.build/en/reference/experimental-flags/fonts/).
+> **注意**：字体名称必须与 [Google Fonts](https://fonts.google.com) 上显示的完全一致。其他字体提供商或本地字体请参考 [Astro Experimental Fonts API 文档](https://docs.astro.build/en/reference/experimental-flags/fonts/)。
 
-## Conclusion
+## 结语
 
-This is the brief specification of how you can customize this theme. You can customize more if you know some coding. For customizing styles, please read [this article](https://astro-paper.pages.dev/posts/customizing-astropaper-theme-color-schemes/). Thanks for reading.✌🏻
+以上是关于如何自定义此主题的简要说明。如果你会编程，还可以做更多自定义。有关样式的自定义，请阅读[这篇文章](https://astro-paper.pages.dev/posts/customizing-astropaper-theme-color-schemes/)。感谢阅读。✌🏻

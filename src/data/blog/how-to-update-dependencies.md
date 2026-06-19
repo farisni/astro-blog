@@ -1,6 +1,6 @@
 ---
-title: How to update dependencies of AstroPaper
-author: Sat Naing
+title: 如何更新 AstroPaper 的依赖
+author: Faris
 pubDatetime: 2023-07-20T15:33:05.569Z
 slug: how-to-update-dependencies
 featured: false
@@ -8,107 +8,107 @@ draft: false
 ogImage: ../../assets/images/forrest-gump-quote.png
 tags:
   - FAQ
-description: How to update project dependencies and AstroPaper template.
+description: 如何更新项目依赖和 AstroPaper 模板。
 ---
 
-Updating the dependencies of a project can be tedious. However, neglecting to update project dependencies is not a good idea either 😬. In this post, I will share how I usually update my projects, focusing on AstroPaper as an example. Nonetheless, these steps can be applied to other js/node projects as well.
+更新项目依赖可能很繁琐。但置之不理也不是好主意 😬。本文分享我通常更新项目的方式，以 AstroPaper 为例，但这些步骤同样适用于其他 js/node 项目。
 
 ![Forrest Gump Fake Quote](@/assets/images/forrest-gump-quote.png)
 
 ## Table of contents
 
-## Updating Package Dependencies
+## 更新包依赖
 
-There are several ways to update dependencies, and I've tried various methods to find the easiest path. One way to do it is by manually updating each package using `npm install package-name@latest`. This method is the most straightforward way of updating. However, it may not be the most efficient option.
+更新依赖有几种方式，我试过不少方法来找最简单的路径。一种方式是手动用 `npm install package-name@latest` 逐个更新，最直接但未必最高效。
 
-My recommended way of updating dependencies is by using the [npm-check-updates package](https://www.npmjs.com/package/npm-check-updates). There's a good [article](https://www.freecodecamp.org/news/how-to-update-npm-dependencies/) from freeCodeCamp about that, so I won't be explaining the details of what it is and how to use that package. Instead, I'll show you my typical approach.
+我推荐使用 [npm-check-updates](https://www.npmjs.com/package/npm-check-updates) 包。freeCodeCamp 有篇很好的[文章](https://www.freecodecamp.org/news/how-to-update-npm-dependencies/)介绍它，这里不再赘述。直接看我的典型做法。
 
-First, install `npm-check-updates` package globally.
+首先，全局安装 `npm-check-updates`：
 
 ```bash
 npm install -g npm-check-updates
 ```
 
-Before making any updates, it’s a good idea to check all new dependencies that can be updated.
+更新前最好先检查有哪些可更新的依赖：
 
 ```bash
 ncu
 ```
 
-Most of the time, patch dependencies can be updated without affecting the project at all. So, I usually update patch dependencies by running either `ncu -i --target patch` or `ncu -u --target patch`. The difference is that `ncu -u --target patch` will update all the patches, while `ncu -i --target patch` will give an option to toggle which package to update. It’s up to you to decide which approach to take.
+大多数情况下 patch 依赖可以安全更新，不影响项目。我通常用 `ncu -i --target patch` 或 `ncu -u --target patch`。区别是 `-u` 全部更新，`-i` 交互式选择。自己决定哪种方式。
 
-The next part involves updating minor dependencies. Minor package updates usually won't break the project, but it is always good to check the release notes of the respective packages. These minor updates often include some cool features that can be applied to our projects.
+接下来是 minor 依赖更新，通常不会破坏项目，但还是建议查看对应包的 release notes。minor 更新经常包含一些可以应用到项目中的新功能。
 
 ```bash
 ncu -i --target minor
 ```
 
-Last but not least, there might be some major package updates in the dependencies. So, check the rest of the dependency updates by running
+最后，可能存在 major 版本更新：
 
 ```bash
 ncu -i
 ```
 
-If there are any major updates (or some updates you still have to make), the above command will output those remaining packages. If the package is a major version update, you have to be very careful since this will likely break the whole project. Therefore, please read the respective release note (or) docs very carefully and make changes accordingly.
+如果有 major 更新，上述命令会列出剩余包。major 版本更新需要格外小心，很可能破坏整个项目。务必仔细阅读对应 release notes 或文档，并相应调整。
 
-If you run `ncu -i` and found no more packages to be updated, _**Congrats!!!**_ you have successfully updated all the dependencies in your project.
+如果运行 `ncu -i` 后发现没有更多包需要更新，_**恭喜！**_ 你已经成功更新了项目的所有依赖。
 
-## Updating AstroPaper template
+## 更新 AstroPaper 模板
 
-Like other open-source projects, AstroPaper is evolving with bug fixes, feature updates, and so on. So if you’re someone who is using AstroPaper as a template, you might also want to update the template when there’s a new release.
+像其他开源项目一样，AstroPaper 也在不断演进，修复 Bug、增加新功能。如果你以 AstroPaper 为模板，新版本发布时可能也想更新。
 
-The thing is, you might already have updated the template according to your flavor. Therefore, I can’t exactly show **"the one-size-fits-all perfect way"** to update the template to the most recent release. However, here are some tips to update the template without breaking your repo. Keep in mind that, most of the time, updating the package dependencies might be sufficient for you.
+问题是，你可能已经按自己的喜好修改了模板。因此无法给出"一刀切"的完美更新方式。不过以下是一些不破坏 repo 的更新提示。大多数情况下，更新包依赖可能已经足够了。
 
-### Files and Directories to keep in mind
+### 需要注意的文件和目录
 
-In most cases, the files and directories you might not want to override (as you've likely updated those files) are `src/content/blog/`, `src/config.ts`, `src/pages/about.md`, and other assets & styles like `public/` and `src/styles/base.css`.
+大多数情况下，你可能不想覆盖的文件和目录包括：`src/content/blog/`、`src/config.ts`、`src/pages/about.md`，以及其他资源如 `public/` 和 `src/styles/base.css`。
 
-If you’re someone who only updates the bare minimum of the template, it should be okay to replace everything with the latest AstroPaper except the above files and directories. It’s like pure Android OS and other vendor-specific OSes like OneUI. The less you modify the base, the less you have to update.
+如果你只做了最小程度的修改，那么把除了上述文件以外的所有内容替换为最新 AstroPaper 应该没问题。就像原生 Android 和 OneUI 的关系——你对基础改得越少，需要同步的就越少。
 
-You can manually replace every file one by one, or you can use the magic of git to update everything. I won’t show you the manual replacement process since it is very straightforward. If you’re not interested in that straightforward and inefficient method, bear with me 🐻.
+可以手动逐个替换文件，也可以用 git 的力量来更新。
 
-### Updating AstroPaper using Git
+### 使用 Git 更新 AstroPaper
 
-**IMPORTANT!!!**
+**重要！！！**
 
-> Only do the following if you know how to resolve merge conflicts. Otherwise, you’d better replace files manually or update dependencies only.
+> 只有在你熟悉如何解决 merge conflicts 时才执行以下操作。否则建议手动替换文件或仅更新依赖。
 
-First, add astro-paper as the remote in your project.
+首先，将 astro-paper 添加为项目的 remote：
 
 ```bash
 git remote add astro-paper https://github.com/satnaing/astro-paper.git
 ```
 
-Checkout to a new branch in order to update the template. If you know what you’re doing and you’re confident with your git skill, you can omit this step.
+切换到新分支以更新模板：
 
 ```bash
 git checkout -b build/update-astro-paper
 ```
 
-Then, pull the changes from astro-paper by running
+然后拉取 astro-paper 的更改：
 
 ```bash
 git pull astro-paper main
 ```
 
-If you face `fatal: refusing to merge unrelated histories` error, you can resolve that by running the following command
+如果遇到 `fatal: refusing to merge unrelated histories` 错误：
 
 ```bash
 git pull astro-paper main --allow-unrelated-histories
 ```
 
-After running the above command, you’re likely to encounter conflicts in your project. You'll need to resolve these conflicts manually and make the necessary adjustments according to your needs.
+执行上述命令后，很可能会遇到冲突。需要手动解决这些冲突，并根据需求做必要调整。
 
-After resolving the conflicts, test your blog thoroughly to ensure everything is working as expected. Check your articles, components, and any customizations you made.
+解决完冲突后，全面测试博客，确保一切正常。检查文章、组件和你的自定义内容。
 
-Once you're satisfied with the result, it's time to merge the update branch into your main branch (only if you are updating the template in another branch). Congratulations! You've successfully updated your template to the latest version. Your blog is now up-to-date and ready to shine! 🎉
+确认无误后，将更新分支合并到 main 分支。恭喜！你已成功更新模板到最新版本！
 
-## Conclusion
+## 结语
 
-In this article, I've shared some of my insights and processes for updating dependencies and the AstroPaper template. I genuinely hope this article proves valuable and assists you in managing your projects more efficiently.
+本文分享了我更新依赖和 AstroPaper 模板的一些心得和方法。希望对你管理项目有所帮助。
 
-If you have any alternative or improved approaches for updating dependencies/AstroPaper, I would love to hear from you. Thus, don't hesitate to start a discussion in the repository, email me, or open an issue. Your input and ideas are highly appreciated!
+如果你有更好的更新方式，欢迎在仓库发起讨论、发邮件或提 issue。你的想法非常宝贵！
 
-Please understand that my schedule is quite busy these days, and I may not be able to respond quickly. However, I promise to get back to you as soon as possible. 😬
+我最近比较忙，可能无法及时回复，但我会尽快回复 😬。
 
-Thank you for taking the time to read this article, and I wish you all the best with your projects!
+感谢阅读，祝你的项目一切顺利！

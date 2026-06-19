@@ -1,50 +1,51 @@
 ---
-author: Sat Naing
+author: Faris
 pubDatetime: 2022-12-28T04:59:04.866Z
 modDatetime: 2025-03-12T13:39:20.763Z
-title: Dynamic OG image generation in AstroPaper blog posts
+title: AstroPaper 博客的动态 OG 图片生成
 slug: dynamic-og-image-generation-in-astropaper-blog-posts
 featured: false
 draft: false
 tags:
   - docs
   - release
-description: New feature in AstroPaper v1.4.0, introducing dynamic OG image generation for blog posts.
+description: AstroPaper v1.4.0 新功能：为博客文章自动生成动态 OG 图片。
 ---
 
-New feature in AstroPaper v1.4.0, introducing dynamic OG image generation for blog posts.
+AstroPaper v1.4.0 新功能：为博客文章自动生成动态 OG 图片。
 
 ## Table of contents
 
-## Intro
+## 前言
 
-OG images (aka Social Images) play an important role in social media engagements. In case you don't know what OG image means, it is an image displayed whenever we share our website URL on social media such as Facebook, Discord etc.
+OG 图片在社交媒体传播中起着重要作用。如果你不知道 OG 图片是什么，它是我们在社交媒体（如 Facebook、Discord 等）分享网站 URL 时显示的图片。
 
-> The Social Image used for Twitter is technically not called OG image. However, in this post, I'll be using the term OG image for all types of Social Images.
+> Twitter 用的社交图片技术上不叫 OG 图片，但本文中我将 OG 图片泛指所有类型社交图片。
 
-## Default/Static OG image (the old way)
+## 默认/静态 OG 图片（旧方式）
 
-AstroPaper already provided a way to add an OG image to a blog post. The author can specify the OG image in the frontmatter `ogImage`. Even when the author doesn't define the OG image in the frontmatter, the default OG image will be used as a fallback (in this case `public/astropaper-og.jpg`). But the problem is that the default OG image is static, which means every blog post that does not include an OG image in the frontmatter will always use the same default OG image despite each post title/content being different from others.
+AstroPaper 原本就支持为博客文章添加 OG 图片。作者可以在 frontmatter 中通过 `ogImage` 指定。即使未指定，也会使用默认 OG 图片作为回退（即 `public/astropaper-og.jpg`）。但问题是默认 OG 图片是静态的，这意味着所有未指定 `ogImage` 的博客文章都会使用同一张图，尽管每篇文章标题和内容都不同。
 
-## Dynamic OG Image
+## 动态 OG 图片
 
-Generating a dynamic OG image for each post allows the author to avoid specifying an OG image for every single blog post. Besides, this will prevent the fallback OG image from being identical to all blog posts.
+为每篇文章动态生成 OG 图片，可以避免作者为每篇文章单独指定 OG 图片。同时也能防止所有文章使用相同的回退 OG 图片。
 
-In AstroPaper v1.4.0, Vercel's [Satori](https://github.com/vercel/satori) package is used for dynamic OG image generation.
+AstroPaper v1.4.0 使用 Vercel 的 [Satori](https://github.com/vercel/satori) 包来实现动态 OG 图片生成。
 
-Dynamic OG images will be generated at build time for blog posts that
+动态 OG 图片在构建时为以下文章自动生成：
 
-- don't include OG image in the frontmatter
-- are not marked as draft.
+- 未在 frontmatter 中包含 OG 图片
+- 未标记为草稿
 
-## Anatomy of AstroPaper dynamic OG image
+## AstroPaper 动态 OG 图片的构成
 
-Dynamic OG image of AstroPaper includes _the blog post title_, _author name_ and _site title_. Author name and site title will be retrieved via `SITE.author` and `SITE.title` of **"src/config.ts"** file. The title is generated from the blog post frontmatter `title`.  
+AstroPaper 的动态 OG 图片包含 _文章标题_、_作者名_ 和 _站点标题_。作者名和站点标题从 `src/config.ts` 的 `SITE.author` 和 `SITE.title` 获取。标题来自文章 frontmatter 的 `title`。
+
 ![Example Dynamic OG Image link](https://user-images.githubusercontent.com/53733092/209704501-e9c2236a-3f4d-4c67-bab3-025aebd63382.png)
 
-### Issue Non-Latin Characters
+### 非拉丁字符问题
 
-Titles with non-latin characters won't display properly out of the box. To resolve this, we have to replace `fontsConfig` inside `loadGoogleFont.ts` with your preferred font.
+含有非拉丁字符的标题默认无法正常显示。解决方法是将 `loadGoogleFont.ts` 中的 `fontsConfig` 替换为合适的字体。
 
 ```ts file=src/utils/loadGoogleFont.ts
 async function loadGoogleFonts(
@@ -77,19 +78,19 @@ async function loadGoogleFonts(
 }
 ```
 
-> Check out [this PR](https://github.com/satnaing/astro-paper/pull/318) for more info.
+> 详情见[此 PR](https://github.com/satnaing/astro-paper/pull/318)。
 
-## Trade-off
+## 取舍
 
-While this is a nice feature to have, there's a trade-off. Each OG image takes roughly one second to generate. This might not be noticeable at first, but as the number of blog posts grows, you might want to disable this feature. Since every OG image takes time to generate, having many of them will increase the build time linearly.
+虽然这是个不错的功能，但也有代价。每张 OG 图片大约需要一秒钟生成。起初可能不明显，但随着文章数增多，你可能会想关闭此功能。因为每张 OG 图片都需要时间生成，数量多了构建时间会线性增长。
 
-For example: If one OG image takes one second to generate, then 60 images will take around one minute, and 600 images will take approximately 10 minutes. This can significantly impact build times as your content scales.
+例如：如果每张 OG 图片生成需要一秒，60 张图大约一分钟，600 张图大约十分钟。随着内容增长，这会显著影响构建时间。
 
-Related issue: [#428](https://github.com/satnaing/astro-paper/issues/428)
+相关 issue：[#428](https://github.com/satnaing/astro-paper/issues/428)
 
-## Limitations
+## 局限
 
-At the time of writing this, [Satori](https://github.com/vercel/satori) is fairly new and has not reached major release yet. So, there are still some limitations to this dynamic OG image feature.
+撰写本文时，[Satori](https://github.com/vercel/satori) 还比较新，尚未达到正式版。因此，动态 OG 图片功能仍有一些局限。
 
-- Besides, RTL languages are not supported yet.
-- [Using emoji](https://github.com/vercel/satori#emojis) in the title might be a little bit tricky.
+- RTL 语言暂不支持
+- 标题中[使用 emoji](https://github.com/vercel/satori#emojis) 可能有点麻烦
