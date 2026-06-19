@@ -6,10 +6,7 @@ slug: how-do-i-develop-my-portfolio-and-blog
 featured: false
 draft: false
 tags:
-  - NextJS
-  - TailwindCSS
-  - HeadlessCMS
-  - Blog
+  - intro
 description:
   "示例文章：使用 NextJS 和 Headless CMS 开发个人作品集网站与博客的经历。"
 timezone: "Asia/Shanghai"

@@ -8,8 +8,6 @@ featured: false
 draft: false
 tags:
   - astro
-  - blog
-  - docs
 description: 使用 Giscus 在 GitHub Pages 托管的静态博客上实现评论功能。
 ---
 

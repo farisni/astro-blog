@@ -4,7 +4,7 @@ pubDatetime: 2024-09-08T20:58:52.737Z
 modDatetime: 2025-03-22T09:25:46.734Z
 title: 如何在 Astro 博客中添加 LaTeX 公式
 tags:
-  - docs
+  - astro
 description: 学习如何在 AstroPaper 的 Markdown 文件中使用 LaTeX 公式，借助 KaTeX 和 remark/rehype 插件。
 ---
 

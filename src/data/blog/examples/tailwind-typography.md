@@ -5,8 +5,7 @@ pubDatetime: 2022-07-05T02:05:51Z
 featured: false
 draft: false
 tags:
-  - TypeScript
-  - Astro
+  - astro
 description: "示例文章：关于 Tailwind Typography 插件及其使用方法。"
 ---
 

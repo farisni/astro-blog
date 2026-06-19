@@ -6,11 +6,7 @@ slug: how-do-i-develop-my-terminal-portfolio-website-with-react
 featured: false
 draft: false
 tags:
-  - JavaScript
-  - ReactJS
-  - ContextAPI
-  - Styled-Components
-  - TypeScript
+  - other
 description:
   "示例文章：使用 ReactJS、TypeScript 和 Styled-Components 开发终端风格网站。包含自动补全、多主题、命令提示等功能。"
 timezone: "Asia/Shanghai"

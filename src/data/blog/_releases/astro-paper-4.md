@@ -6,7 +6,7 @@ slug: "astro-paper-v4"
 featured: false
 ogImage: ../../../assets/images/AstroPaper-v4.png
 tags:
-  - release
+  - astro
 description: "AstroPaper v4：更流畅、功能更丰富的博客体验。"
 ---
 

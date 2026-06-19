@@ -6,8 +6,7 @@ slug: example-draft-post
 featured: false
 draft: true
 tags:
-  - TypeScript
-  - Astro
+  - other
 description:
   这是一篇草稿文章，读者不可见。
 ---

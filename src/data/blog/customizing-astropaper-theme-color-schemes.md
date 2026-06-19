@@ -6,8 +6,7 @@ title: 自定义 AstroPaper 主题配色方案
 featured: false
 draft: false
 tags:
-  - color-schemes
-  - docs
+  - astro
 description:
   如何启用/禁用明暗模式，以及自定义 AstroPaper 主题的配色方案。
 ---

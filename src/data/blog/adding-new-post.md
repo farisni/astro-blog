@@ -7,7 +7,7 @@ slug: adding-new-posts-in-astropaper-theme
 featured: false
 draft: false
 tags:
-  - docs
+  - astro
 description:
   在 AstroPaper 博客主题中创建或添加新文章的一些规则和建议。
 ---
@@ -80,8 +80,7 @@ slug: example-post
 featured: false
 draft: false
 tags:
-  - example
-  - tags
+  - astro
 ogImage: ../../assets/images/example.png # src/assets/images/example.png
 description: 这是示例文章的描述。
 canonicalURL: https://example.org/my-article-was-already-posted-here

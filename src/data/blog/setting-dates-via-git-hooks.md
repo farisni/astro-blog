@@ -6,8 +6,7 @@ title: 如何使用 Git Hooks 自动设置创建和修改日期
 featured: false
 draft: false
 tags:
-  - docs
-  - FAQ
+  - astro
 canonicalURL: https://smale.codes/posts/setting-dates-via-git-hooks/
 description: 如何使用 Git 的 pre-commit hook 在 AstroPaper 博客主题中自动设置创建和修改日期。
 ---

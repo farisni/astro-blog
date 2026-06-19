@@ -6,7 +6,7 @@ slug: astro-paper-v5
 featured: false
 ogImage: ../../../assets/images/AstroPaper-v5.png
 tags:
-  - release
+  - astro
 description: "AstroPaper v5：保持简洁外观，底层全面升级。"
 ---
 

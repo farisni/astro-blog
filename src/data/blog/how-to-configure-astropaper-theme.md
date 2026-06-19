@@ -7,8 +7,7 @@ slug: how-to-configure-astropaper-theme
 featured: false
 draft: false
 tags:
-  - configuration
-  - docs
+  - astro
 description: 如何将 AstroPaper 主题变成你自己的。
 ---
 

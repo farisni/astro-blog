@@ -6,7 +6,7 @@ slug: astro-paper-2
 featured: false
 ogImage: https://user-images.githubusercontent.com/53733092/215771435-25408246-2309-4f8b-a781-1f3d93bdf0ec.png
 tags:
-  - release
+  - astro
 description: AstroPaper 2.0 带来 Astro v2 的增强特性。类型安全的 Markdown 内容、Bug 修复和更好的开发体验。
 ---
 

@@ -6,7 +6,7 @@ slug: astro-paper-v3
 featured: false
 ogImage: https://github.com/satnaing/astro-paper/assets/53733092/1ef0cf03-8137-4d67-ac81-84a032119e3a
 tags:
-  - release
+  - astro
 description: "AstroPaper 3.0：借助 Astro v3 和无缝 View Transitions，提升你的 Web 体验"
 ---
 

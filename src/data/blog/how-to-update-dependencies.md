@@ -7,7 +7,7 @@ featured: false
 draft: false
 ogImage: ../../assets/images/forrest-gump-quote.png
 tags:
-  - FAQ
+  - astro
 description: 如何更新项目依赖和 AstroPaper 模板。
 ---
 

@@ -7,7 +7,7 @@ slug: predefined-color-schemes
 featured: false
 draft: false
 tags:
-  - color-schemes
+  - astro
 description:
   为 AstroPaper 博客主题精心准备的预定义配色方案。
 ---
