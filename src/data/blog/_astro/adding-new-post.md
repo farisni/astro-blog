@@ -81,7 +81,7 @@ featured: false
 draft: false
 tags:
   - astro
-ogImage: ../../assets/images/example.png # src/assets/images/example.png
+ogImage: ../../../assets/images/example.png # src/assets/images/example.png
 description: 这是示例文章的描述。
 canonicalURL: https://example.org/my-article-was-already-posted-here
 ```
@@ -162,7 +162,7 @@ export default defineConfig({
 
 <!-- 或者 -->
 
-![something](../../assets/images/example.jpg)
+![something](../../../assets/images/example.jpg)
 ```
 
 > 技术上说，图片可以放在 `src` 下任意目录，`src/assets` 只是建议。
