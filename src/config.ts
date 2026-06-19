@@ -2,7 +2,7 @@ export const SITE = {
   website: "https://github.com/farisni/", // replace this with your deployed domain
   author: "Faris",
   profile: "https://satnaing.dev/",
-  desc: "A minimal, responsive and SEO-friendly Astro blog theme.",
+  desc: "人生如逆旅，我亦是行人。",
   title: "Dust In The Wind",
   ogImage: "astropaper-og.jpg",
   lightAndDarkMode: true,
