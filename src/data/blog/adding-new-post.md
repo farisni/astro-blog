@@ -4,7 +4,7 @@ pubDatetime: 2022-09-23T15:22:00Z
 modDatetime: 2025-06-13T16:52:45.934Z
 title: 在 AstroPaper 主题中添加新文章
 slug: adding-new-posts-in-astropaper-theme
-featured: true
+featured: false
 draft: false
 tags:
   - docs
