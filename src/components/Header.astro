@@ -1,4 +1,5 @@
 ---
+// ===== 逻辑：路由与导航高亮 =====
 import IconX from "@/assets/icons/IconX.svg";
 import IconMoon from "@/assets/icons/IconMoon.svg";
 import IconSearch from "@/assets/icons/IconSearch.svg";
@@ -11,10 +12,11 @@ import { SITE } from "@/config";
 
 const { pathname } = Astro.url;
 
-// Remove trailing slash from current pathname if exists
+// 去除当前路径末尾斜杠
 const currentPath =
   pathname.endsWith("/") && pathname !== "/" ? pathname.slice(0, -1) : pathname;
 
+// 判断当前路径是否匹配导航项
 const isActive = (path: string) => {
   const currentPathArray = currentPath.split("/").filter(p => p.trim());
   const pathArray = path.split("/").filter(p => p.trim());
@@ -23,6 +25,7 @@ const isActive = (path: string) => {
 };
 ---
 
+<!-- ===== 键盘跳过导航（无障碍） ===== -->
 <a
   id="skip-to-content"
   href="#main-content"
@@ -31,6 +34,7 @@ const isActive = (path: string) => {
   Skip to content
 </a>
 
+<!-- ===== 顶部导航栏 ===== -->
 <header
   class="app-layout flex flex-col items-center justify-between sm:flex-row"
 >
@@ -43,9 +47,10 @@ const isActive = (path: string) => {
       "flex items-baseline justify-between sm:items-center",
     ]}
   >
+    <!-- ===== 站点标题 + RSS 订阅 ===== -->
     <div class="absolute flex items-baseline gap-3 sm:static sm:my-auto">
       <a
-        href="/"
+        href={currentPath === "/about" ? "/" : "/about"}
         class="py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:text-2xl sm:leading-none"
       >
         {SITE.title}
@@ -64,10 +69,13 @@ const isActive = (path: string) => {
         <span class="sr-only">RSS Feed</span>
       </a>
     </div>
+
+    <!-- ===== 导航菜单 ===== -->
     <nav
       id="nav-menu"
       class="flex w-full flex-col items-center sm:ms-2 sm:flex-row sm:justify-end sm:space-x-4 sm:py-0"
     >
+      <!-- 移动端菜单按钮 -->
       <button
         id="menu-btn"
         class="focus-outline self-end p-2 sm:hidden"
@@ -78,6 +86,8 @@ const isActive = (path: string) => {
         <IconX id="close-icon" class="hidden" />
         <IconMenuDeep id="menu-icon" />
       </button>
+
+      <!-- 导航链接列表 -->
       <ul
         id="menu-items"
         class:list={[
@@ -87,21 +97,25 @@ const isActive = (path: string) => {
           "sm:mt-0 sm:flex sm:w-auto sm:gap-x-5 sm:gap-y-0",
         ]}
       >
+        <!-- 首页 -->
+        <li class="col-span-2">
+          <a href="/" class:list={{ "active-nav": isActive("/") }}>
+            首页
+          </a>
+        </li>
+        <!-- 文章 -->
         <li class="col-span-2">
           <a href="/posts" class:list={{ "active-nav": isActive("/posts") }}>
             文章
           </a>
         </li>
+        <!-- 标签 -->
         <li class="col-span-2">
           <a href="/tags" class:list={{ "active-nav": isActive("/tags") }}>
             标签
           </a>
         </li>
-        <li class="col-span-2">
-          <a href="/about" class:list={{ "active-nav": isActive("/about") }}>
-            关于
-          </a>
-        </li>
+        <!-- 归档（可选显示） -->
         {
           SITE.showArchives && (
             <li class="col-span-2">
@@ -122,6 +136,7 @@ const isActive = (path: string) => {
             </li>
           )
         }
+        <!-- 搜索 -->
         <li class="col-span-1 flex items-center justify-center">
           <LinkButton
             href="/search"
@@ -136,6 +151,7 @@ const isActive = (path: string) => {
             <span class="sr-only">Search</span>
           </LinkButton>
         </li>
+        <!-- 明暗主题切换 -->
         {
           SITE.lightAndDarkMode && (
             <li class="col-span-1 flex items-center justify-center">
@@ -157,6 +173,7 @@ const isActive = (path: string) => {
   </div>
 </header>
 
+<!-- ===== 移动端菜单切换脚本 ===== -->
 <script>
   function toggleNav() {
     const menuBtn = document.querySelector("#menu-btn");
@@ -180,6 +197,6 @@ const isActive = (path: string) => {
 
   toggleNav();
 
-  // Runs on view transitions navigation
+  // 视图过渡导航时重新绑定
   document.addEventListener("astro:after-swap", toggleNav);
 </script>
