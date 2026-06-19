@@ -1,6 +1,6 @@
 ---
-title: Example Draft Post
-author: Sat Naing
+title: 示例草稿文章
+author: Faris
 pubDatetime: 2022-06-06T04:06:31Z
 slug: example-draft-post
 featured: false
@@ -9,13 +9,11 @@ tags:
   - TypeScript
   - Astro
 description:
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-  incididunt ut labore et dolore magna aliqua. Praesent elementum facilisis leo vel
-  fringilla est
+  这是一篇草稿文章，读者不可见。
 ---
 
-Users cannot see this post because it is in draft.
+此文章为草稿状态，读者无法查看。
 
-## Motivation
+## 缘由
 
 rec 1
