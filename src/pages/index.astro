@@ -48,7 +48,7 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
       {
         // 仅当至少启用了一个社交链接时才显示
         SOCIALS.length > 0 && (
-          <div class="mt-2 flex max-sm:flex-col sm:items-center"> 
+          <div class="mt-2 flex items-center flex-wrap"> 
             <Socials />
         <span class="text-accent ml-2">faris.ni@outlook.com</span>
           </div>
