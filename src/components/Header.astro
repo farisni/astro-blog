@@ -4,7 +4,6 @@ import IconX from "@/assets/icons/IconX.svg";
 import IconMoon from "@/assets/icons/IconMoon.svg";
 import IconSearch from "@/assets/icons/IconSearch.svg";
 import IconArchive from "@/assets/icons/IconArchive.svg";
-import IconRss from "@/assets/icons/IconRss.svg";
 import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
 import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
 import LinkButton from "./LinkButton.astro";
@@ -47,28 +46,13 @@ const isActive = (path: string) => {
       "flex items-baseline justify-between sm:items-center",
     ]}
   >
-    <!-- ===== 站点标题 + RSS 订阅 ===== -->
-    <div class="absolute flex items-baseline gap-3 sm:static sm:my-auto">
-      <a
-        href={currentPath === "/about" ? "/" : "/about"}
-        class="py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:text-2xl sm:leading-none"
-      >
-        {SITE.title}
-      </a>
-      <a
-        target="_blank"
-        href="/rss.xml"
-        aria-label="rss feed"
-        title="RSS Feed"
-      >
-        <IconRss
-          width={16}
-          height={16}
-          class="scale-125 stroke-accent stroke-3 rtl:-rotate-90"
-        />
-        <span class="sr-only">RSS Feed</span>
-      </a>
-    </div>
+    <!-- ===== 站点标题 ===== -->
+    <a
+      href={currentPath === "/about" ? "/" : "/about"}
+      class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"
+    >
+      {SITE.title}
+    </a>
 
     <!-- ===== 导航菜单 ===== -->
     <nav
