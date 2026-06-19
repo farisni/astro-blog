@@ -22,6 +22,7 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
 <Layout>
   <Header />
   <main id="main-content" data-layout="index" class="app-layout">
+    <!-- ===== 首页顶部 Hero 区域 ===== -->
     <section id="hero" class:list={["pt-8 pb-6", "border-b border-border"]}>
       <h1 class="my-4 inline-block text-4xl font-bold sm:my-8 sm:text-5xl">
         Mingalaba
@@ -54,7 +55,7 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
         </LinkButton> for more info.
       </p>
       {
-        // only display if at least one social link is enabled
+        // 仅当至少启用了一个社交链接时才显示
         SOCIALS.length > 0 && (
           <div class="mt-4 flex max-sm:flex-col sm:items-center">
             <div class="me-2 mb-1 whitespace-nowrap sm:mb-0">Social Links:</div>
@@ -64,6 +65,7 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
       }
     </section>
 
+    <!-- ===== 精选文章区域 ===== -->
     {
       featuredPosts.length > 0 && (
         <section
@@ -83,6 +85,7 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
       )
     }
 
+    <!-- ===== 最近文章区域 ===== -->
     {
       recentPosts.length > 0 && (
         <section id="recent-posts" class="pt-12 pb-6">
@@ -97,6 +100,7 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
       )
     }
 
+    <!-- ===== 查看全部文章按钮 ===== -->
     <div class="my-8 text-center">
       <LinkButton href="/posts/">
         All Posts

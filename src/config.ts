@@ -1,7 +1,7 @@
 export const SITE = {
   website: "https://github.com/farisni/", // replace this with your deployed domain
   author: "Faris",
-  profile: "https://satnaing.dev/",
+  profile: "https://github.com/farisni",
   desc: "人生如逆旅，我亦是行人。",
   title: "Dust In The Wind",
   ogImage: "astropaper-og.jpg",
@@ -14,7 +14,7 @@ export const SITE = {
   editPost: {
     enabled: true,
     text: "Edit page",
-    url: "https://github.com/satnaing/astro-paper/edit/main/",
+    url: "https://github.com/farisni/astro-blog/edit/main/",
   },
   dynamicOgImage: true,
   dir: "ltr", // "rtl" | "auto"
