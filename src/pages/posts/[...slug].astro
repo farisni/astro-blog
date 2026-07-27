@@ -93,11 +93,47 @@ const updatedAt = post.data.updatedAt ?? post.data.publishedAt;
   </article>
 
   <ul class="post-near">
-    <li>
-      {previous ? <a href={`/posts/${getPostSlug(previous)}/`}>← 上一篇：{previous.data.title}</a> : <span>← 已经是第一篇</span>}
+    <li class="post-near-previous">
+      {
+        previous ? (
+          <a href={`/posts/${getPostSlug(previous)}/`} aria-label={`上一篇：${previous.data.title}`}>
+            <svg class="post-near-arrow post-near-arrow-previous" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line class="post-card-arrow-line" x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline class="post-card-arrow-tip" points="12 5 19 12 12 19"></polyline>
+            </svg>
+            <span class="post-near-copy">上一篇：{previous.data.title}</span>
+          </a>
+        ) : (
+          <span aria-disabled="true">
+            <svg class="post-near-arrow post-near-arrow-previous" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line class="post-card-arrow-line" x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline class="post-card-arrow-tip" points="12 5 19 12 12 19"></polyline>
+            </svg>
+            <span class="post-near-copy">上一篇</span>
+          </span>
+        )
+      }
     </li>
-    <li>
-      {next ? <a href={`/posts/${getPostSlug(next)}/`}>下一篇：{next.data.title} →</a> : <span>已经是最新一篇 →</span>}
+    <li class="post-near-next">
+      {
+        next ? (
+          <a href={`/posts/${getPostSlug(next)}/`} aria-label={`下一篇：${next.data.title}`}>
+            <span class="post-near-copy">下一篇：{next.data.title}</span>
+            <svg class="post-near-arrow post-near-arrow-next" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line class="post-card-arrow-line" x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline class="post-card-arrow-tip" points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+        ) : (
+          <span aria-disabled="true">
+            <span class="post-near-copy">下一篇</span>
+            <svg class="post-near-arrow post-near-arrow-next" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line class="post-card-arrow-line" x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline class="post-card-arrow-tip" points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </span>
+        )
+      }
     </li>
   </ul>
 </BaseLayout>
