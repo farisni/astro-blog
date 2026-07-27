@@ -1,8 +1,6 @@
 ---
 import type { PostEntry } from "../lib/posts";
 import { getPostSlug } from "../lib/posts";
-import { formatDate } from "../lib/format";
-import Icon from "./Icon.astro";
 
 interface Props {
   post: PostEntry;
@@ -10,32 +8,60 @@ interface Props {
 
 const { post } = Astro.props;
 const slug = getPostSlug(post);
-const cover = post.data.cover ?? "/images/lite-card-pure.jpg";
+const dateParts = new Intl.DateTimeFormat("zh-CN", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  timeZone: "Asia/Shanghai",
+}).formatToParts(post.data.publishedAt);
+const datePart = (type: Intl.DateTimeFormatPartTypes) =>
+  dateParts.find((part) => part.type === type)?.value ?? "";
+const handsomeDate = `${datePart("year")} 年 ${datePart("month")} 月 ${datePart("day")} 日`;
 ---
 
 <article
-  class:list={["post", "post-card", "has-cover", { "is-featured": post.data.featured }]}
-  style={`--post-cover: url("${cover}")`}
+  class="post post-card"
+  tabindex="0"
+  role="link"
+  aria-label={`阅读文章：${post.data.title}`}
+  data-post-card-href={`/posts/${slug}/`}
 >
-  <a class="post-card-cover" href={`/posts/${slug}/`} tabindex="-1" aria-hidden="true">
-    <img src={cover} alt="" loading="lazy" />
-    {post.data.featured && <strong>LITE · ASTRO CLEANFIT</strong>}
-  </a>
-  <div class="post-card-body">
-    <h2 class="post-title"><a href={`/posts/${slug}/`}>{post.data.title}</a></h2>
-    <p class="post-content">{post.data.description}</p>
-    <a class="post-card-arrow" href={`/posts/${slug}/`} aria-label={`阅读 ${post.data.title}`}>
-      <Icon name="chevron" size={18} />
-    </a>
-    <div class="post-card-footer">
-      <ul class="post-meta">
-        {
-          post.data.category && (
-            <li><span>#</span><a href={`/categories/${post.data.category.slug}/`}>{post.data.category.name}</a></li>
-          )
-        }
-        <li><time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time></li>
-      </ul>
-    </div>
+  <h2 class="post-title">
+    <a href={`/posts/${slug}/`}>{post.data.title}</a>
+    <svg
+      class="post-card-arrow"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <line class="post-card-arrow-line" x1="5" y1="12" x2="19" y2="12"></line>
+      <polyline class="post-card-arrow-tip" points="12 5 19 12 12 19"></polyline>
+    </svg>
+  </h2>
+  <ul class="post-meta">
+    <li class="post-card-category">
+      {
+        post.data.category ? (
+          <a class="post-card-category-tag" href={`/categories/${post.data.category.slug}/`}>
+            <span class="post-card-category-hash">#</span>{post.data.category.name}
+          </a>
+        ) : (
+          <span class="post-card-category-tag">
+            <span class="post-card-category-hash">#</span>未分类
+          </span>
+        )
+      }
+    </li>
+    <li>
+      <span class="post-meta-label">时间：</span>
+      <time class="post-date-handsome" datetime={post.data.publishedAt.toISOString()}>{handsomeDate}</time>
+    </li>
+  </ul>
+  <div class="post-content">
+    <p>{post.data.description}</p>
   </div>
 </article>
