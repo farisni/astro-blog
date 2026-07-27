@@ -1,0 +1,38 @@
+---
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PostList from "../../../components/PostList.astro";
+import Pagination from "../../../components/Pagination.astro";
+import { siteConfig } from "../../../config";
+import { getCategories, getPublishedPosts, type PostEntry } from "../../../lib/posts";
+
+export const getStaticPaths = (async () => {
+  const posts = await getPublishedPosts();
+  return getCategories(posts).map((category) => {
+    const filtered = posts.filter((post) => post.data.category?.slug === category.slug);
+    return {
+      params: { category: category.slug },
+      props: { category, posts: filtered.slice(0, siteConfig.postsPerPage), totalPages: Math.ceil(filtered.length / siteConfig.postsPerPage) },
+    };
+  });
+}) satisfies GetStaticPaths;
+
+interface Props {
+  category: { name: string; slug: string; count: number };
+  posts: PostEntry[];
+  totalPages: number;
+}
+
+const { category, posts, totalPages } = Astro.props;
+---
+
+<BaseLayout title={`分类：${category.name}`}>
+  <header class="lite-category-header">
+    <span>CATEGORY</span>
+    <h1>分类 <strong>{category.name}</strong> 下的文章</h1>
+    <p>共收录 {category.count} 篇文章</p>
+  </header>
+  <nav class="lite-category-breadcrumb"><a href="/">首页</a><span>/</span><span>{category.name}</span></nav>
+  <PostList posts={posts} />
+  <Pagination currentPage={1} totalPages={totalPages} baseUrl={`/categories/${category.slug}/`} />
+</BaseLayout>

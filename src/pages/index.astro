@@ -1,0 +1,16 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PostList from "../components/PostList.astro";
+import Pagination from "../components/Pagination.astro";
+import { siteConfig } from "../config";
+import { getPublishedPosts } from "../lib/posts";
+
+const posts = await getPublishedPosts();
+const totalPages = Math.ceil(posts.length / siteConfig.postsPerPage);
+const pagePosts = posts.slice(0, siteConfig.postsPerPage);
+---
+
+<BaseLayout>
+  <PostList posts={pagePosts} />
+  <Pagination currentPage={1} totalPages={totalPages} baseUrl="/" />
+</BaseLayout>

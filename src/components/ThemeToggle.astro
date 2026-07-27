@@ -1,0 +1,19 @@
+---
+import Icon from "./Icon.astro";
+---
+
+<button class="paper-theme-toggle" type="button" data-theme-toggle aria-label="切换颜色主题" title="切换颜色主题">
+  <span class="theme-icon theme-icon-light"><Icon name="moon" size={20} /></span>
+  <span class="theme-icon theme-icon-dark"><Icon name="sun" size={20} /></span>
+</button>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-theme-toggle]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const current = document.documentElement.dataset.paperTheme;
+      const next = current === "dark" ? "light" : "dark";
+      document.documentElement.dataset.paperTheme = next;
+      localStorage.setItem("cleanfit-theme", next);
+    });
+  });
+</script>

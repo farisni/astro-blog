@@ -1,0 +1,67 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+  mobile?: boolean;
+}
+
+const { headings, mobile = false } = Astro.props;
+const items = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 4);
+---
+
+{
+  items.length > 0 && (
+    mobile ? (
+      <details class="handsome-mobile-toc">
+        <summary>文章目录</summary>
+        <ol>
+          {items.map((item) => (
+            <li style={`--toc-depth: ${item.depth - 2}`}>
+              <a href={`#${item.slug}`}>{item.text}</a>
+            </li>
+          ))}
+        </ol>
+      </details>
+    ) : (
+      <nav class="handsome-article-toc" aria-label="文章目录">
+        <div class="handsome-article-toc-title">文章目录</div>
+        <ol>
+          {items.map((item) => (
+            <li style={`--toc-depth: ${item.depth - 2}`}>
+              <a href={`#${item.slug}`} data-toc-link={item.slug}>{item.text}</a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    )
+  )
+}
+
+{
+  !mobile && (
+    <script>
+      const tocLinks = [...document.querySelectorAll<HTMLElement>("[data-toc-link]")];
+      const headings = tocLinks
+        .map((link) => document.getElementById(link.dataset.tocLink ?? ""))
+        .filter((heading): heading is HTMLElement => Boolean(heading));
+      if (headings.length) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const visible = entries.find((entry) => entry.isIntersecting);
+            if (!visible) return;
+            tocLinks.forEach((link) => {
+              link.classList.toggle("is-active", link.dataset.tocLink === visible.target.id);
+            });
+          },
+          { rootMargin: "-15% 0px -70% 0px" },
+        );
+        headings.forEach((heading) => observer.observe(heading));
+      }
+    </script>
+  )
+}

@@ -1,0 +1,103 @@
+---
+import type { GetStaticPaths } from "astro";
+import { render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ArticleToc from "../../components/ArticleToc.astro";
+import Icon from "../../components/Icon.astro";
+import { siteConfig } from "../../config";
+import { absoluteUrl, formatDate } from "../../lib/format";
+import { getPostSlug, getPublishedPosts, type PostEntry } from "../../lib/posts";
+
+export const getStaticPaths = (async () => {
+  const posts = await getPublishedPosts();
+  return posts.map((post, index) => ({
+    params: { slug: getPostSlug(post) },
+    props: {
+      post,
+      previous: posts[index + 1],
+      next: posts[index - 1],
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  post: PostEntry;
+  previous?: PostEntry;
+  next?: PostEntry;
+}
+
+const { post, previous, next } = Astro.props;
+const { Content, headings } = await render(post);
+const slug = getPostSlug(post);
+const updatedAt = post.data.updatedAt ?? post.data.publishedAt;
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  image={post.data.cover}
+  type="article"
+  headings={headings}
+  showHero={false}
+>
+  <article class="post post-detail">
+    <header class="post-detail-header">
+      <div class="post-detail-header-content">
+        <span class="post-detail-kicker">ARTICLE</span>
+        <h1 class="post-title">{post.data.title}</h1>
+        <ul class="post-meta">
+          <li><Icon name="clock" size={15} /><time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time></li>
+          {post.data.category && <li><Icon name="folder" size={15} /><a href={`/categories/${post.data.category.slug}/`}>{post.data.category.name}</a></li>}
+          <li><Icon name="eye" size={15} /><span>静心阅读</span></li>
+        </ul>
+      </div>
+    </header>
+
+    <nav class="post-breadcrumb" aria-label="面包屑">
+      <span><a href="/">首页</a> / <span>正文</span></span>
+      <span>更新于 {formatDate(updatedAt)}</span>
+    </nav>
+
+    <div class="post-detail-body">
+      {post.data.description && (
+        <aside class="post-ai-summary">
+          <strong>内容摘要</strong>
+          <p>{post.data.description}</p>
+        </aside>
+      )}
+      <ArticleToc headings={headings} mobile />
+      <div class="markdown-body post-content">
+        <Content />
+      </div>
+      <div class="post-ending">
+        <div class="post-ending-rule"></div>
+        <div class="post-ending-meta">
+          <span>最后修改：{formatDate(updatedAt)}</span>
+          <span>© 允许规范转载</span>
+        </div>
+        <p class="tags">
+          标签：
+          {post.data.tags.length
+            ? post.data.tags.map((tag) => <a href={`/tags/${tag.slug}/`}>#{tag.name}</a>)
+            : <span>暂无标签</span>}
+        </p>
+        <div class="post-end-marker"><span>END</span></div>
+        <dl class="post-attribution">
+          <div><dt>本文作者：</dt><dd><a href="/about/">{siteConfig.author.name}</a></dd></div>
+          <div><dt>文章标题：</dt><dd>{post.data.title}</dd></div>
+          <div><dt>本文地址：</dt><dd><a href={absoluteUrl(`/posts/${slug}/`)}>{absoluteUrl(`/posts/${slug}/`)}</a></dd></div>
+          <div><dt>版权说明：</dt><dd>若无特别注明，转载请保留文章出处。</dd></div>
+        </dl>
+      </div>
+    </div>
+  </article>
+
+  <ul class="post-near">
+    <li>
+      {previous ? <a href={`/posts/${getPostSlug(previous)}/`}>← 上一篇：{previous.data.title}</a> : <span>← 已经是第一篇</span>}
+    </li>
+    <li>
+      {next ? <a href={`/posts/${getPostSlug(next)}/`}>下一篇：{next.data.title} →</a> : <span>已经是最新一篇 →</span>}
+    </li>
+  </ul>
+</BaseLayout>

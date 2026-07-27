@@ -1,0 +1,109 @@
+---
+import "../styles/global.css";
+import { siteConfig } from "../config";
+import { absoluteUrl } from "../lib/format";
+import { getArchives, getCategories, getPublishedPosts } from "../lib/posts";
+import Header from "../components/Header.astro";
+import Sidebar from "../components/Sidebar.astro";
+import BlogHeader from "../components/BlogHeader.astro";
+import RightSidebar from "../components/RightSidebar.astro";
+import SearchDialog from "../components/SearchDialog.astro";
+import Footer from "../components/Footer.astro";
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: "website" | "article";
+  headings?: Heading[];
+  showHero?: boolean;
+}
+
+const {
+  title,
+  description = siteConfig.description,
+  image = siteConfig.seo.defaultImage,
+  type = "website",
+  headings = [],
+  showHero = true,
+} = Astro.props;
+
+const pageTitle = title ? `${title} | ${siteConfig.title}` : siteConfig.title;
+const canonical = absoluteUrl(Astro.url.pathname);
+const socialImage = absoluteUrl(image);
+const posts = await getPublishedPosts();
+const categories = getCategories(posts);
+const archives = getArchives(posts);
+const defaultTheme = siteConfig.defaultTheme;
+---
+
+<!doctype html>
+<html lang={siteConfig.language} data-paper-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f5f6f8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" type="application/rss+xml" title={siteConfig.title} href="/rss.xml" />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    {siteConfig.seo.twitter && <meta name="twitter:site" content={siteConfig.seo.twitter} />}
+    <title>{pageTitle}</title>
+    <script is:inline define:vars={{ defaultTheme }}>
+      (() => {
+        const stored = localStorage.getItem("cleanfit-theme");
+        const systemDark = matchMedia("(prefers-color-scheme: dark)").matches;
+        const theme = stored || (defaultTheme === "system" ? (systemDark ? "dark" : "light") : defaultTheme);
+        document.documentElement.dataset.paperTheme = theme;
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="theme-lite theme-handsome handsome-box-model">
+      <Header />
+      <div class="handsome-sidebar-overlay" data-sidebar-overlay></div>
+      <Sidebar categories={categories} pathname={Astro.url.pathname} />
+      <div class="handsome-workspace">
+        {showHero && <BlogHeader />}
+        <div class="handsome-content-grid">
+          <main class="handsome-main-content">
+            <slot />
+          </main>
+          <RightSidebar posts={posts} categories={categories} archives={archives} headings={headings} />
+        </div>
+        <Footer />
+      </div>
+      <SearchDialog />
+    </div>
+    <script>
+      document.querySelectorAll(".post-content pre").forEach((pre) => {
+        const button = document.createElement("button");
+        button.className = "code-copy-button";
+        button.type = "button";
+        button.textContent = "复制";
+        button.addEventListener("click", async () => {
+          await navigator.clipboard.writeText(pre.querySelector("code")?.textContent ?? "");
+          button.textContent = "已复制";
+          setTimeout(() => (button.textContent = "复制"), 1200);
+        });
+        pre.append(button);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,40 @@
+---
+import { pageHref } from "../lib/posts";
+
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  baseUrl: string;
+}
+
+const { currentPage, totalPages, baseUrl } = Astro.props;
+const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
+---
+
+{
+  totalPages > 1 && (
+    <nav aria-label="分页导航">
+      <ol class="page-navigator">
+        <li class:list={{ "is-disabled": currentPage === 1 }}>
+          {currentPage > 1 ? (
+            <a href={pageHref(baseUrl, currentPage - 1)}>« 前一页</a>
+          ) : (
+            <span>« 前一页</span>
+          )}
+        </li>
+        {pages.map((page) => (
+          <li class:list={{ current: page === currentPage }}>
+            <a href={pageHref(baseUrl, page)} aria-current={page === currentPage ? "page" : undefined}>{page}</a>
+          </li>
+        ))}
+        <li class:list={{ "is-disabled": currentPage === totalPages }}>
+          {currentPage < totalPages ? (
+            <a href={pageHref(baseUrl, currentPage + 1)}>后一页 »</a>
+          ) : (
+            <span>后一页 »</span>
+          )}
+        </li>
+      </ol>
+    </nav>
+  )
+}

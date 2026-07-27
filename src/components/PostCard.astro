@@ -1,0 +1,41 @@
+---
+import type { PostEntry } from "../lib/posts";
+import { getPostSlug } from "../lib/posts";
+import { formatDate } from "../lib/format";
+import Icon from "./Icon.astro";
+
+interface Props {
+  post: PostEntry;
+}
+
+const { post } = Astro.props;
+const slug = getPostSlug(post);
+const cover = post.data.cover ?? "/images/lite-card-pure.jpg";
+---
+
+<article
+  class:list={["post", "post-card", "has-cover", { "is-featured": post.data.featured }]}
+  style={`--post-cover: url("${cover}")`}
+>
+  <a class="post-card-cover" href={`/posts/${slug}/`} tabindex="-1" aria-hidden="true">
+    <img src={cover} alt="" loading="lazy" />
+    {post.data.featured && <strong>LITE · ASTRO CLEANFIT</strong>}
+  </a>
+  <div class="post-card-body">
+    <h2 class="post-title"><a href={`/posts/${slug}/`}>{post.data.title}</a></h2>
+    <p class="post-content">{post.data.description}</p>
+    <a class="post-card-arrow" href={`/posts/${slug}/`} aria-label={`阅读 ${post.data.title}`}>
+      <Icon name="chevron" size={18} />
+    </a>
+    <div class="post-card-footer">
+      <ul class="post-meta">
+        {
+          post.data.category && (
+            <li><span>#</span><a href={`/categories/${post.data.category.slug}/`}>{post.data.category.name}</a></li>
+          )
+        }
+        <li><time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time></li>
+      </ul>
+    </div>
+  </div>
+</article>

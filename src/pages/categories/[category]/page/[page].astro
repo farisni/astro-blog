@@ -1,0 +1,39 @@
+---
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import PostList from "../../../../components/PostList.astro";
+import Pagination from "../../../../components/Pagination.astro";
+import { siteConfig } from "../../../../config";
+import { getCategories, getPublishedPosts, type PostEntry } from "../../../../lib/posts";
+
+export const getStaticPaths = (async () => {
+  const posts = await getPublishedPosts();
+  return getCategories(posts).flatMap((category) => {
+    const filtered = posts.filter((post) => post.data.category?.slug === category.slug);
+    const totalPages = Math.ceil(filtered.length / siteConfig.postsPerPage);
+    return Array.from({ length: Math.max(0, totalPages - 1) }, (_, index) => {
+      const page = index + 2;
+      const start = (page - 1) * siteConfig.postsPerPage;
+      return {
+        params: { category: category.slug, page: String(page) },
+        props: { category, page, totalPages, posts: filtered.slice(start, start + siteConfig.postsPerPage) },
+      };
+    });
+  });
+}) satisfies GetStaticPaths;
+
+interface Props {
+  category: { name: string; slug: string };
+  page: number;
+  totalPages: number;
+  posts: PostEntry[];
+}
+
+const { category, page, totalPages, posts } = Astro.props;
+---
+
+<BaseLayout title={`分类：${category.name} · 第 ${page} 页`}>
+  <header class="lite-category-header"><span>CATEGORY</span><h1>{category.name}</h1><p>第 {page} 页</p></header>
+  <PostList posts={posts} />
+  <Pagination currentPage={page} totalPages={totalPages} baseUrl={`/categories/${category.slug}/`} />
+</BaseLayout>

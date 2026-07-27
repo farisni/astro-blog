@@ -1,0 +1,57 @@
+---
+import type { PostEntry } from "../lib/posts";
+import { getPostSlug } from "../lib/posts";
+import ArticleToc from "./ArticleToc.astro";
+import Icon from "./Icon.astro";
+
+interface Category {
+  name: string;
+  slug: string;
+  count: number;
+}
+
+interface Archive {
+  key: string;
+  label: string;
+  count: number;
+}
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  posts: PostEntry[];
+  categories: Category[];
+  archives: Archive[];
+  headings?: Heading[];
+}
+
+const { posts, headings = [] } = Astro.props;
+---
+
+<aside class="handsome-right-sidebar">
+  {
+    headings.length > 0 ? (
+      <ArticleToc headings={headings} />
+    ) : (
+      <>
+        <div class="lite-side-tools" aria-label="文章快捷入口">
+          <button type="button" aria-label="推荐文章"><Icon name="heart" size={18} /></button>
+          <button type="button" aria-label="最近讨论"><Icon name="message" size={18} /></button>
+          <button type="button" aria-label="赞赏支持"><Icon name="gift" size={18} /></button>
+        </div>
+        <ol class="lite-popular-list">
+          {posts.slice(0, 5).map((post, index) => (
+            <li>
+              <span class="lite-post-rank">{String(index + 1).padStart(2, "0")}</span>
+              <a href={`/posts/${getPostSlug(post)}/`}>{post.data.title}</a>
+            </li>
+          ))}
+        </ol>
+      </>
+    )
+  }
+</aside>

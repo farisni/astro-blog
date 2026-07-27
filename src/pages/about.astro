@@ -1,0 +1,20 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { siteConfig } from "../config";
+---
+
+<BaseLayout title="关于">
+  <article class="post post-detail simple-page">
+    <div class="post-detail-body">
+      <div class="about-profile">
+        <img src={siteConfig.author.avatar} width="112" height="112" alt={siteConfig.author.name} />
+        <div><span>ABOUT</span><h1>你好，我是 {siteConfig.author.name}</h1><p>{siteConfig.author.bio}</p></div>
+      </div>
+      <div class="post-content">
+        <h2>关于这个主题</h2>
+        <p>Astro Cleanfit 是一个内容优先的开源博客主题。它保留清晰的三栏结构，同时在手机上将注意力完整交还给文章。</p>
+        <p>请在 <code>src/config.ts</code> 修改站点信息，并直接编辑本页面来介绍你自己。</p>
+      </div>
+    </div>
+  </article>
+</BaseLayout>

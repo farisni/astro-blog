@@ -1,0 +1,31 @@
+{
+  "name": "astro-cleanfit",
+  "version": "1.0.0",
+  "description": "A clean, responsive, content-first Astro blog theme.",
+  "type": "module",
+  "private": false,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "keywords": [
+    "astro",
+    "astro-theme",
+    "blog",
+    "static-site"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@astrojs/rss": "latest",
+    "astro": "latest",
+    "lxgw-wenkai-webfont": "^1.7.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "latest",
+    "typescript": "latest"
+  }
+}

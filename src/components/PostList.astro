@@ -1,0 +1,23 @@
+---
+import type { PostEntry } from "../lib/posts";
+import PostCard from "./PostCard.astro";
+
+interface Props {
+  posts: PostEntry[];
+}
+
+const { posts } = Astro.props;
+---
+
+{
+  posts.length ? (
+    <div class="post-list">
+      {posts.map((post) => <PostCard post={post} />)}
+    </div>
+  ) : (
+    <div class="empty-state">
+      <strong>这里还没有文章</strong>
+      <p>换个分类或标签看看吧。</p>
+    </div>
+  )
+}
