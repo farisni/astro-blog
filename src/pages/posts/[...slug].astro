@@ -53,11 +53,6 @@ const updatedAt = post.data.updatedAt ?? post.data.publishedAt;
       </div>
     </header>
 
-    <nav class="post-breadcrumb" aria-label="面包屑">
-      <span><a href="/">首页</a> / <span>正文</span></span>
-      <span>更新于 {formatDate(updatedAt)}</span>
-    </nav>
-
     <div class="post-detail-body">
       {post.data.description && (
         <aside class="post-ai-summary">
