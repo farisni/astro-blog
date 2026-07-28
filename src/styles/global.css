@@ -124,6 +124,7 @@
 
 @layer components {
 	@import "./components/admonition.css";
+	@import "./components/extended-content.css";
 	@import "./components/github-card.css";
 
 	.cactus-link {
