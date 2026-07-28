@@ -1,12 +1,13 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
+import PageLayout from "@/layouts/Base.astro";
+
+const meta = {
+	description: "Oops! It looks like this page is lost in space!",
+	title: "Oops! You found a missing page!",
+};
 ---
 
-<BaseLayout title="页面未找到" showHero={false}>
-  <section class="error-page">
-    <span>404</span>
-    <h1>这页内容走丢了</h1>
-    <p>它可能被移动、删除，或者从未存在过。</p>
-    <a href="/">返回首页</a>
-  </section>
-</BaseLayout>
+<PageLayout meta={meta}>
+	<h1 class="title mb-12">404 | Oops something went wrong</h1>
+	<p class="mb-8">Please use the navigation to find your way back</p>
+</PageLayout>

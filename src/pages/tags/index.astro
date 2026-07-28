@@ -1,13 +1,34 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getPublishedPosts, getTags } from "../../lib/posts";
+import { getAllPosts, getUniqueTagsWithCount } from "@/data/post";
+import PageLayout from "@/layouts/Base.astro";
 
-const tags = getTags(await getPublishedPosts());
+const allPosts = await getAllPosts();
+const allTags = getUniqueTagsWithCount(allPosts);
+
+const meta = {
+	description: "A list of all the topics I've written about in my posts",
+	title: "All Tags",
+};
 ---
 
-<BaseLayout title="文章标签">
-  <header class="lite-category-header"><span>TOPICS</span><h1>文章标签</h1><p>从关键词进入感兴趣的内容。</p></header>
-  <div class="tag-cloud">
-    {tags.map((tag) => <a href={`/tags/${tag.slug}/`}>#{tag.name}<small>{tag.count}</small></a>)}
-  </div>
-</BaseLayout>
+<PageLayout meta={meta}>
+	<h1 class="title mb-6">Tags</h1>
+	<ul class="space-y-4">
+		{
+			allTags.map(([tag, val]) => (
+				<li class="flex items-center gap-x-2">
+					<a
+						class="cactus-link inline-block"
+						href={`/tags/${tag}/`}
+						title={`View posts with the tag: ${tag}`}
+					>
+						&#35;{tag}
+					</a>
+					<span class="inline-block">
+						- {val} Post{val > 1 && "s"}
+					</span>
+				</li>
+			))
+		}
+	</ul>
+</PageLayout>

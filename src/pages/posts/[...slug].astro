@@ -1,134 +1,24 @@
 ---
-import type { GetStaticPaths } from "astro";
 import { render } from "astro:content";
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import ArticleToc from "../../components/ArticleToc.astro";
-import Icon from "../../components/Icon.astro";
-import { siteConfig } from "../../config";
-import { absoluteUrl, formatDate } from "../../lib/format";
-import { getPostSlug, getPublishedPosts, type PostEntry } from "../../lib/posts";
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
+import { getAllPosts } from "@/data/post";
+import PostLayout from "@/layouts/BlogPost.astro";
 
+// if you're using an adaptor in SSR mode, getStaticPaths wont work -> https://docs.astro.build/en/guides/routing/#modifying-the-slug-example-for-ssr
 export const getStaticPaths = (async () => {
-  const posts = await getPublishedPosts();
-  return posts.map((post, index) => ({
-    params: { slug: getPostSlug(post) },
-    props: {
-      post,
-      previous: posts[index + 1],
-      next: posts[index - 1],
-    },
-  }));
+	const blogEntries = await getAllPosts();
+	return blogEntries.map((post) => ({
+		params: { slug: post.id },
+		props: { post },
+	}));
 }) satisfies GetStaticPaths;
 
-interface Props {
-  post: PostEntry;
-  previous?: PostEntry;
-  next?: PostEntry;
-}
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
-const { post, previous, next } = Astro.props;
-const { Content, headings } = await render(post);
-const slug = getPostSlug(post);
-const updatedAt = post.data.updatedAt ?? post.data.publishedAt;
+const { post } = Astro.props;
+const { Content } = await render(post);
 ---
 
-<BaseLayout
-  title={post.data.title}
-  description={post.data.description}
-  image={post.data.cover}
-  type="article"
-  headings={headings}
-  showHero={false}
->
-  <article class="post post-detail">
-    <header class="post-detail-header">
-      <div class="post-detail-header-content">
-        <span class="post-detail-kicker">ARTICLE</span>
-        <h1 class="post-title">{post.data.title}</h1>
-        <ul class="post-meta">
-          <li><Icon name="clock" size={15} /><time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time></li>
-          {post.data.category && <li><Icon name="folder" size={15} /><a href={`/categories/${post.data.category.slug}/`}>{post.data.category.name}</a></li>}
-          <li><Icon name="eye" size={15} /><span>静心阅读</span></li>
-        </ul>
-      </div>
-    </header>
-
-    <div class="post-detail-body">
-      {post.data.description && (
-        <aside class="post-ai-summary">
-          <strong>内容摘要</strong>
-          <p>{post.data.description}</p>
-        </aside>
-      )}
-      <ArticleToc headings={headings} mobile />
-      <div class="markdown-body post-content">
-        <Content />
-      </div>
-      <div class="post-ending">
-        <div class="post-ending-rule"></div>
-        <div class="post-ending-meta">
-          <span>最后修改：{formatDate(updatedAt)}</span>
-          <span>© 允许规范转载</span>
-        </div>
-        <p class="tags">
-          标签：
-          {post.data.tags.length
-            ? post.data.tags.map((tag) => <a href={`/tags/${tag.slug}/`}>#{tag.name}</a>)
-            : <span>暂无标签</span>}
-        </p>
-        <div class="post-end-marker"><span>END</span></div>
-        <dl class="post-attribution">
-          <div><dt>本文作者：</dt><dd><a href="/about/">{siteConfig.author.name}</a></dd></div>
-          <div><dt>文章标题：</dt><dd>{post.data.title}</dd></div>
-          <div><dt>本文地址：</dt><dd><a href={absoluteUrl(`/posts/${slug}/`)}>{absoluteUrl(`/posts/${slug}/`)}</a></dd></div>
-          <div><dt>版权说明：</dt><dd>若无特别注明，转载请保留文章出处。</dd></div>
-        </dl>
-      </div>
-    </div>
-  </article>
-
-  <ul class="post-near">
-    <li class="post-near-previous">
-      {
-        previous ? (
-          <a href={`/posts/${getPostSlug(previous)}/`} aria-label={`上一篇：${previous.data.title}`}>
-            <svg class="post-near-arrow post-near-arrow-previous" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <line class="post-card-arrow-line" x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline class="post-card-arrow-tip" points="12 5 19 12 12 19"></polyline>
-            </svg>
-            <span class="post-near-copy">上一篇：{previous.data.title}</span>
-          </a>
-        ) : (
-          <span aria-disabled="true">
-            <svg class="post-near-arrow post-near-arrow-previous" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <line class="post-card-arrow-line" x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline class="post-card-arrow-tip" points="12 5 19 12 12 19"></polyline>
-            </svg>
-            <span class="post-near-copy">上一篇</span>
-          </span>
-        )
-      }
-    </li>
-    <li class="post-near-next">
-      {
-        next ? (
-          <a href={`/posts/${getPostSlug(next)}/`} aria-label={`下一篇：${next.data.title}`}>
-            <span class="post-near-copy">下一篇：{next.data.title}</span>
-            <svg class="post-near-arrow post-near-arrow-next" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <line class="post-card-arrow-line" x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline class="post-card-arrow-tip" points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </a>
-        ) : (
-          <span aria-disabled="true">
-            <span class="post-near-copy">下一篇</span>
-            <svg class="post-near-arrow post-near-arrow-next" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <line class="post-card-arrow-line" x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline class="post-card-arrow-tip" points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </span>
-        )
-      }
-    </li>
-  </ul>
-</BaseLayout>
+<PostLayout post={post}>
+	<Content />
+</PostLayout>
