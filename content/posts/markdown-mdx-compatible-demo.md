@@ -49,6 +49,14 @@ Callout 必须单独占一行；Badge 可以写在段落中。组件属性只能
 不要在文章中写表达式属性或导入第三方组件。发布阶段会直接阻止不安全内容进入数据库。
 </Callout>
 
+使用方式：
+
+~~~markdown
+<Callout type="success" title="发布成功">
+文章已经生成，现在可以打开网站查看更新后的内容。
+</Callout>
+~~~
+
 ## Badge 组件
 
 Badge 适合表达简短状态：
@@ -59,23 +67,79 @@ Badge 适合表达简短状态：
 - 提醒状态：<Badge tone="orange">注意</Badge>
 - 危险状态：<Badge tone="red">异常</Badge>
 
+使用方式：
+
+~~~markdown
+默认状态：<Badge>普通</Badge>
+信息状态：<Badge tone="blue">信息</Badge>
+成功状态：<Badge tone="green">完成</Badge>
+提醒状态：<Badge tone="orange">注意</Badge>
+危险状态：<Badge tone="red">异常</Badge>
+~~~
+
 ## Steps 组件
 
 Steps 适合展示有先后顺序的操作流程：
 
-:::steps
-1. **第一步：准备内容**
+<Steps>
 
-   先确定文章主题，并整理需要展示的 Markdown 内容。
+<Step>
 
-2. **第二步：使用扩展**
+**第一步：准备内容**
 
-   在步骤容器中书写普通有序列表，每一步都可以继续使用段落、列表和代码块。
+先确定文章主题，并整理需要展示的 Markdown 内容。
 
-3. **第三步：发布文章**
+</Step>
 
-   保存后，系统会在构建阶段生成 HTML，前台直接读取生成结果。
-:::
+<Step>
+
+**第二步：使用扩展**
+
+在步骤中继续书写段落、列表和代码块。
+
+</Step>
+
+<Step>
+
+**第三步：发布文章**
+
+保存后，系统会在构建阶段生成 HTML，前台直接读取生成结果。
+
+</Step>
+
+</Steps>
+
+使用方式：
+
+~~~markdown
+<Steps>
+
+<Step>
+
+**准备内容**
+
+整理需要发布的文章内容。
+
+</Step>
+
+<Step>
+
+**使用扩展**
+
+在步骤中继续书写段落、列表或代码块。
+
+</Step>
+
+<Step>
+
+**发布文章**
+
+保存并重新构建站点。
+
+</Step>
+
+</Steps>
+~~~
 
 ## Tabs 组件
 
@@ -96,6 +160,26 @@ Tabs 适合把相关内容分组展示：
 </Tab>
 
 </Tabs>
+
+使用方式：
+
+~~~markdown
+<Tabs>
+
+<Tab title="Markdown">
+
+这里展示 Markdown 内容。
+
+</Tab>
+
+<Tab title="MDX">
+
+这里展示白名单 MDX 组件内容。
+
+</Tab>
+
+</Tabs>
+~~~
 
 ## 双栏组件
 
@@ -119,6 +203,30 @@ Tabs 适合把相关内容分组展示：
 
 </Columns>
 
+使用方式：
+
+~~~markdown
+<Columns>
+
+<Column>
+
+### 左栏
+
+左栏内容。
+
+</Column>
+
+<Column>
+
+### 右栏
+
+右栏内容。
+
+</Column>
+
+</Columns>
+~~~
+
 ## Card 组件
 
 <Card title="自定义卡片">
@@ -126,6 +234,16 @@ Tabs 适合把相关内容分组展示：
 卡片可以承载一段独立说明，并保持与当前文章排版一致。
 
 </Card>
+
+使用方式：
+
+~~~markdown
+<Card title="自定义卡片">
+
+卡片可以包含段落、列表、链接和其他标准 Markdown 内容。
+
+</Card>
+~~~
 
 ## 数学公式
 

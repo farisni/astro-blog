@@ -28,15 +28,15 @@ const {
 		</div>
 	)
 }
-{
-	data.draft ? (
-		<span class="bg-accent/10 text-accent mb-2 inline-flex rounded px-1.5 py-0.5 text-xs font-normal tracking-wide">
-			草稿
-		</span>
-	) : null
-}
 <h1 class="title max-w-[37rem] text-3xl leading-tight">
 	{data.title}
+	{
+		data.draft ? (
+			<span class="bg-accent/10 text-accent ms-3 inline-flex align-middle rounded px-1.5 py-0.5 text-xs font-normal tracking-wide">
+				草稿
+			</span>
+		) : null
+	}
 </h1>
 <div class="text-muted mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium tracking-wide opacity-90">
 	<p class="tabular-nums">
