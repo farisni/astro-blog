@@ -36,19 +36,23 @@ export const siteConfig: SiteConfig = {
 export const menuLinks: { path: string; title: string }[] = [
 	{
 		path: "/",
-		title: "首页",
+		title: "Home",
 	},
 	{
 		path: "/about/",
-		title: "关于",
+		title: "About",
 	},
 	{
 		path: "/posts/",
-		title: "文章",
+		title: "Blog",
+	},
+	{
+		path: "/tags/",
+		title: "Tags",
 	},
 	{
 		path: "/notes/",
-		title: "笔记",
+		title: "Notes",
 	},
 ];
 
