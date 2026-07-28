@@ -10,14 +10,20 @@ const {
 } = Astro.props;
 ---
 
-<li class={`${depth > 2 ? "ms-2" : ""}`}>
+<li class="article-toc-item">
 	<a
-		class={`line-clamp-2 hover:text-accent ${depth <= 2 ? "mt-3" : "mt-2 text-xs"}`}
-		href={`#${slug}`}><span aria-hidden="true" class="me-0.5">#</span>{text}</a
+		class="article-toc-link"
+		data-depth={depth}
+		data-toc-link
+		href={`#${slug}`}
+	>
+		<span aria-hidden="true" class="article-toc-marker"></span>
+		<span class="article-toc-label">{text}</span>
+	</a
 	>
 	{
 		!!children.length && (
-			<ol>
+			<ol class="article-toc-list">
 				{children.map((subheading) => (
 					<Astro.self heading={subheading} />
 				))}
@@ -25,3 +31,18 @@ const {
 		)
 	}
 </li>
+
+<style>
+	.article-toc-link[data-depth="3"] .article-toc-marker {
+		width: 0.875rem;
+	}
+
+	.article-toc-link[data-depth="4"] .article-toc-marker {
+		width: 0.625rem;
+	}
+
+	.article-toc-link[data-depth="5"] .article-toc-marker,
+	.article-toc-link[data-depth="6"] .article-toc-marker {
+		width: 0.5rem;
+	}
+</style>

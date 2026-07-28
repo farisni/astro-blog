@@ -13,10 +13,10 @@ const { Content } = await render(note);
 ---
 
 <article
-	class:list={[isPreview && "bg-global-text/5 inline-grid rounded-md px-4 py-3"]}
+	class:list={[isPreview && "bg-global-text/5 inline-grid rounded-md px-5 py-4"]}
 	data-pagefind-body={isPreview ? false : true}
 >
-	<Tag class="title" class:list={{ "text-base": isPreview }}>
+	<Tag class="title leading-tight" class:list={{ "text-base": isPreview }}>
 		{
 			isPreview ? (
 				<a class="cactus-link" href={`/notes/${note.id}/`}>
@@ -28,6 +28,7 @@ const { Content } = await render(note);
 		}
 	</Tag>
 	<FormattedDate
+		class="mt-1.5 block"
 		dateTimeOptions={{
 			hour: "2-digit",
 			minute: "2-digit",
@@ -38,7 +39,7 @@ const { Content } = await render(note);
 		date={note.data.publishDate}
 	/>
 	<div
-		class="prose prose-sm prose-cactus mt-4 max-w-none [&>p:last-of-type]:mb-0"
+		class="prose prose-sm prose-cactus mt-5 max-w-none [&>p:first-child]:mt-0 [&>p:last-of-type]:mb-0"
 		class:list={{ "line-clamp-6": isPreview }}
 	>
 		<Content />

@@ -8,31 +8,41 @@ import { Icon } from "astro-icon/components";
 */
 const socialLinks: {
 	friendlyName: string;
-	isWebmention?: boolean;
 	link: string;
 	name: string;
+	newTab?: boolean;
 }[] = [
 	{
 		friendlyName: "Github",
-		link: "https://github.com/chrismwilliams/astro-cactus",
+		link: "https://github.com/farisni",
 		name: "mdi:github",
+		newTab: true,
+	},
+	{
+		friendlyName: "发送邮件",
+		link: "mailto:wenmengshaonian@gmail.com",
+		name: "mdi:email",
+	},
+	{
+		friendlyName: "RSS",
+		link: "/rss.xml",
+		name: "mdi:rss",
 	},
 ];
 ---
 
-<div class="flex flex-wrap items-end gap-x-2">
-	<p>Find me on</p>
-	<ul class="flex flex-1 items-center gap-x-2 sm:flex-initial">
+<div>
+	<ul class="flex items-center gap-x-5">
 		{
-			socialLinks.map(({ friendlyName, isWebmention, link, name }) => (
+			socialLinks.map(({ friendlyName, link, name, newTab }) => (
 				<li class="flex">
 					<a
-						class="hover:text-link inline-block"
+						class="text-muted hover:text-accent inline-block transition-colors"
 						href={link}
-						rel={`noreferrer ${isWebmention ? "me authn" : ""}`}
-						target="_blank"
+						rel={newTab ? "noreferrer noopener" : undefined}
+						target={newTab ? "_blank" : undefined}
 					>
-						<Icon aria-hidden="true" class="h-8 w-8" focusable="false" name={name} />
+						<Icon aria-hidden="true" class="h-6 w-6" focusable="false" name={name} />
 						<span class="sr-only">{friendlyName}</span>
 					</a>
 				</li>

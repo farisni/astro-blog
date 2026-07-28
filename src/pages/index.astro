@@ -30,9 +30,11 @@ const latestNotes = allNotes
 ---
 
 <PageLayout meta={{ title: "Home" }}>
-	<section>
-		<h1 class="title mb-12">Hello World!</h1>
-		<p class="mb-4">
+<section class="-mt-8 max-w-[70ch]">
+	<h1 class="title mb-6 text-xl">
+		Hello World! <span aria-hidden="true" class="ms-1 inline-block align-[0.08em]">👋🏻</span>
+	</h1>
+		<p class="mb-6 leading-7">
 			Hi, I’m a theme for Astro, a simple starter that you can use to create your website or blog.
 			If you want to know more about how you can customise me, add more posts, and make it your own,
 			click on the GitHub icon link below and it will take you to my repo.
@@ -41,8 +43,8 @@ const latestNotes = allNotes
 	</section>
 	{
 		pinnedPosts.length > 0 && (
-			<section class="mt-16">
-			<h2 class="title mb-6 text-xl">置顶文章</h2>
+			<section class="mt-14">
+				<h2 class="title text-accent mb-6 text-xl">置顶文章</h2>
 				<ul class="space-y-4" role="list">
 					{pinnedPosts.map((p) => (
 						<li class="grid gap-1 sm:grid-cols-[auto_1fr]">
@@ -53,7 +55,7 @@ const latestNotes = allNotes
 			</section>
 		)
 	}
-	<section class="mt-16">
+	<section class="mt-14">
 		<h2 class="title text-accent mb-6 text-xl"><a href="/posts/">文章</a></h2>
 		<ul class="space-y-4" role="list">
 			{
@@ -67,9 +69,9 @@ const latestNotes = allNotes
 	</section>
 	{
 		latestNotes.length > 0 && (
-			<section class="mt-16">
+			<section class="mt-14">
 				<h2 class="title text-accent mb-6 text-xl">
-					<a href="/notes/">Notes</a>
+					<a href="/notes/">笔记</a>
 				</h2>
 				<ul class="space-y-6" role="list">
 					{latestNotes.map((note) => (

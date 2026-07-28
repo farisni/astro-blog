@@ -1,4 +1,5 @@
 import type { AstroExpressiveCodeOptions } from "astro-expressive-code";
+import { codeWindowPlugin } from "./plugins/code-window";
 import type { SiteConfig } from "@/types";
 
 export const siteConfig: SiteConfig = {
@@ -10,7 +11,7 @@ export const siteConfig: SiteConfig = {
 		- The link value found in src/components/layout/Header.astro L:35
 		- In the footer found in src/components/layout/Footer.astro L:12
 	*/
-	title: "Astro Cactus",
+	title: "Dust In The Wind",
 	// Used as both a meta property (src/components/BaseHead.astro L:31 + L:49) & the generated satori png (src/pages/og-image/[slug].png.ts)
 	author: "Chris Williams",
 	// Used as the default description meta property and webmanifest description
@@ -20,7 +21,7 @@ export const siteConfig: SiteConfig = {
 	// Meta property, found in src/components/BaseHead.astro L:42
   ogLocale: "en_GB",
   // Determines whether to show the logo in the templates header
-	showLogo: true,
+	showLogo: false,
 	// Date.prototype.toLocaleDateString() parameters, found in src/utils/date.ts.
 	date: {
 		options: {
@@ -53,13 +54,16 @@ export const menuLinks: { path: string; title: string }[] = [
 
 // https://expressive-code.com/reference/configuration/
 export const expressiveCodeOptions: AstroExpressiveCodeOptions = {
+	plugins: [codeWindowPlugin()],
 	styleOverrides: {
-		borderRadius: "4px",
+		borderRadius: "12px",
 		codeFontFamily:
 			'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
-		codeFontSize: "0.875rem",
-		codeLineHeight: "1.7142857rem",
-		codePaddingInline: "1rem",
+		codeFontSize: "13.5px",
+		codeFontWeight: "500",
+		codeLineHeight: "1.72",
+		codePaddingBlock: "16px",
+		codePaddingInline: "16px",
 		frames: {
 			frameBoxShadowCssValue: "none",
 		},
