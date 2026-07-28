@@ -86,14 +86,45 @@ const latestNotes = allNotes
 </PageLayout>
 
 <style>
+	.home-post-list :global(.post-title-group) {
+		position: relative;
+		z-index: 0;
+		display: inline-flex;
+		width: fit-content;
+		align-items: baseline;
+		isolation: isolate;
+	}
+
 	.home-post-list :global(a.cactus-link) {
 		font-weight: 450;
 		text-decoration: none;
+		transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1);
 	}
 
-	.home-post-list :global(a.cactus-link:hover) {
-		text-decoration-line: underline;
-		text-decoration-thickness: 1px;
-		text-underline-offset: 2px;
+	.home-post-list :global(.post-title-group)::before {
+		position: absolute;
+		z-index: -1;
+		inset: -0.4rem -0.55rem;
+		border-radius: 0.375rem;
+		background: #f2f4f7;
+		content: "";
+		opacity: 0;
+		transform: scale(0.85);
+		transition:
+			opacity 150ms cubic-bezier(0.4, 0, 0.2, 1),
+			transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.home-post-list :global(.post-title-group:hover)::before {
+		opacity: 1;
+		transform: scale(1);
+	}
+
+	:global(html[data-theme="dark"]) .home-post-list :global(.post-title-group)::before {
+		background: #1e293b;
+	}
+
+	.home-post-list :global(.post-title-group:hover a.cactus-link) {
+		color: var(--color-accent);
 	}
 </style>

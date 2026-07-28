@@ -15,7 +15,7 @@ const { as: Tag = "div", post, withDesc = false } = Astro.props;
 	class="text-muted min-w-28 text-xs font-medium tracking-wide tabular-nums opacity-85"
 	date={post.data.publishDate}
 />
-<Tag>
+<Tag class="post-title-group">
 	{
 		post.data.draft && (
 			<span class="bg-accent/10 text-accent me-2 inline-flex rounded px-1.5 py-0.5 text-xs font-normal">
