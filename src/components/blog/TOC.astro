@@ -91,12 +91,12 @@ const toc = generateToc(headings);
 	}
 
 	.article-toc-link.is-active {
-		color: var(--color-accent);
+		color: color-mix(in srgb, var(--color-accent) 80%, white);
 		font-weight: 600;
 	}
 
 	.article-toc-link.is-active .article-toc-marker {
-		background: var(--color-accent);
+		background: color-mix(in srgb, var(--color-accent) 80%, white);
 	}
 
 	@media (max-width: 1023px) {
