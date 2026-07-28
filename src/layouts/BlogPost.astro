@@ -61,6 +61,8 @@ const readingTime: string = remarkPluginFrontmatter.readingTime;
 </BaseLayout>
 
 <script>
+	import mermaid from "mermaid";
+
 	const scrollBtn = document.getElementById("to-top-btn") as HTMLButtonElement;
 	const targetHeader = document.getElementById("blog-hero") as HTMLDivElement;
 
@@ -77,4 +79,39 @@ const readingTime: string = remarkPluginFrontmatter.readingTime;
 
 	const observer = new IntersectionObserver(callback);
 	observer.observe(targetHeader);
+
+	async function renderMermaid(reset = false) {
+		const diagrams = [...document.querySelectorAll<HTMLElement>(".mermaid")];
+
+		if (reset) {
+			for (const diagram of diagrams) {
+				diagram.removeAttribute("data-processed");
+				diagram.textContent = diagram.dataset.mermaidSource ?? "";
+			}
+		}
+
+		const pendingDiagrams = diagrams.filter((diagram) => diagram.dataset.processed !== "true");
+		if (!pendingDiagrams.length) return;
+
+		mermaid.initialize({
+			fontFamily: "inherit",
+			securityLevel: "strict",
+			startOnLoad: false,
+			theme: document.documentElement.dataset.theme === "dark" ? "dark" : "default",
+		});
+
+		await mermaid.run({
+			nodes: pendingDiagrams,
+			suppressErrors: true,
+		});
+	}
+
+	void renderMermaid();
+	document.addEventListener("astro:page-load", () => void renderMermaid());
+
+	const themeObserver = new MutationObserver(() => void renderMermaid(true));
+	themeObserver.observe(document.documentElement, {
+		attributeFilter: ["data-theme"],
+		attributes: true,
+	});
 </script>

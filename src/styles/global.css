@@ -6,6 +6,7 @@
 @import "lxgw-wenkai-webfont/lxgwwenkai-light.css";
 @import "lxgw-wenkai-webfont/lxgwwenkai-regular.css";
 @import "lxgw-wenkai-webfont/lxgwwenkai-bold.css";
+@import "katex/dist/katex.min.css";
 
 /* tailwind to ignore satori generated og-image */
 @source not "../pages/og-image";
@@ -144,6 +145,41 @@
 	--tw-prose-links: var(--color-global-text);
 	--tw-prose-quotes: var(--color-quote);
 	--tw-prose-th-borders: #666;
+}
+
+.math-inline {
+	white-space: nowrap;
+}
+
+.math-inline .katex {
+	font-size: 1em;
+}
+
+.math-display {
+	margin: 1.5rem 0;
+	padding: 0.5rem 0;
+	overflow-x: auto;
+	overflow-y: hidden;
+	text-align: center;
+}
+
+.math-display .katex-display {
+	margin: 0;
+}
+
+.mermaid {
+	display: flex;
+	margin: 1.5rem 0;
+	padding: 1rem 0;
+	justify-content: center;
+	overflow-x: auto;
+	background: transparent;
+	font-family: inherit;
+}
+
+.mermaid svg {
+	max-width: 100%;
+	height: auto;
 }
 
 .prose :where(code):not(:where(pre code)) {
