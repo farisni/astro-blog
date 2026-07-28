@@ -6,6 +6,8 @@ import { h } from "../utils/remark";
 type DirectiveAttributes = Record<string, null | string | undefined>;
 
 const MEDIA_DIRECTIVES = new Set(["youtube", "bilibili", "spotify", "tweet", "codepen"]);
+const CALLOUT_TYPES = new Set(["info", "success", "warning", "danger", "note"]);
+const BADGE_TONES = new Set(["default", "blue", "green", "orange", "red"]);
 
 function escapeAttribute(value: string) {
 	return value
@@ -148,8 +150,119 @@ export function satteriExtendedDirectivesPlugin(): MdastPluginDefinition {
 	return {
 		name: "cactus-extended-directives",
 		containerDirective(node, ctx) {
+			if (node.name === "callout") {
+				const { content, label } = extractLabel(node.children);
+				const requestedType = node.attributes?.type?.trim() || "info";
+				const type = CALLOUT_TYPES.has(requestedType) ? requestedType : "info";
+
+				return h(
+					"aside",
+					{
+						class: "content-callout",
+						"data-callout-type": type,
+						"data-title": label || type,
+					},
+					content,
+				);
+			}
+
+			if (node.name === "badge") {
+				const { content, label } = extractLabel(node.children);
+				const text =
+					label ||
+					content
+						.map((child) => mdastToString(child))
+						.join(" ")
+						.trim();
+				const requestedTone = node.attributes?.tone?.trim() || "default";
+				const tone = BADGE_TONES.has(requestedTone) ? requestedTone : "default";
+
+				if (!text) {
+					ctx.report({
+						message: ":::badge 必须提供文字，例如 :::badge[完成]{tone=\"green\"}",
+						node,
+						severity: "warning",
+					});
+					return;
+				}
+
+				return h(
+					"span",
+					{ class: "content-badge", "data-tone": tone },
+					[{ type: "text", value: text }],
+				);
+			}
+
+			if (node.name === "card") {
+				const { content, label } = extractLabel(node.children);
+				return h(
+					"aside",
+					{
+						class: "content-card",
+						...(label ? { "data-title": label } : {}),
+					},
+					content,
+				);
+			}
+
+			if (node.name === "columns") {
+				const { content } = extractLabel(node.children);
+				const columns = content.filter(
+					(child) => child.type === "containerDirective" && child.name === "column",
+				);
+
+				if (!columns.length || columns.length !== content.length) {
+					ctx.report({
+						message: "::::columns 内只能包含 :::column 子指令",
+						node,
+						severity: "warning",
+					});
+					return h("div", { class: "content-columns" }, content);
+				}
+
+				return h(
+					"div",
+					{ class: "content-columns" },
+					columns.map((column) => {
+						const { content: columnContent } = extractLabel(column.children);
+						return h("div", { class: "content-column" }, columnContent);
+					}),
+				);
+			}
+
 			if (node.name === "tabs") {
 				const { content, label } = extractLabel(node.children);
+				const tabs = content.filter(
+					(child) => child.type === "containerDirective" && child.name === "tab",
+				);
+
+				if (tabs.length) {
+					if (tabs.length !== content.length) {
+						ctx.report({
+							message: "::::tabs 内只能包含 :::tab 子指令",
+							node,
+							severity: "warning",
+						});
+						return h("div", {}, content);
+					}
+
+					return h(
+						"div",
+						{ class: "content-tabs-directive" },
+						tabs.map((tab, index) => {
+							const { content: tabContent, label: tabLabel } = extractLabel(tab.children);
+							return h(
+								"div",
+								{
+									class: "content-tab-panel",
+									"data-tab-title": tabLabel || `Tab ${index + 1}`,
+								},
+								tabContent,
+							);
+						}),
+					);
+				}
+
 				const labels = label
 					.split("|")
 					.map((item) => item.trim())
@@ -172,6 +285,20 @@ export function satteriExtendedDirectivesPlugin(): MdastPluginDefinition {
 						class: "code-tabs",
 						"data-tab-labels": JSON.stringify(labels),
 					},
+					content,
+				);
+			}
+
+			if (node.name === "column") {
+				const { content } = extractLabel(node.children);
+				return h("div", { class: "content-column" }, content);
+			}
+
+			if (node.name === "tab") {
+				const { content, label } = extractLabel(node.children);
+				return h(
+					"div",
+					{ class: "content-tab-panel", "data-tab-title": label || "Tab" },
 					content,
 				);
 			}

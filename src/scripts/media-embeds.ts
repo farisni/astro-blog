@@ -136,11 +136,15 @@ document.addEventListener("astro:page-load", setupMediaEmbeds);
 document.addEventListener("wheel", handleGalleryWheel, { passive: false });
 
 const enhanceContentTabs = () => {
-	const groups = document.querySelectorAll<HTMLElement>(".prose tabs:not([data-content-tabs-ready])");
+	const groups = document.querySelectorAll<HTMLElement>(
+		".prose tabs:not([data-content-tabs-ready]), .prose .content-tabs-directive:not([data-content-tabs-ready])",
+	);
 
 	groups.forEach((group, groupIndex) => {
 		const panels = Array.from(group.children).filter(
-			(child): child is HTMLElement => child instanceof HTMLElement && child.tagName.toLowerCase() === "tab",
+			(child): child is HTMLElement =>
+				child instanceof HTMLElement &&
+				(child.tagName.toLowerCase() === "tab" || child.classList.contains("content-tab-panel")),
 		);
 
 		if (!panels.length) return;
@@ -161,7 +165,10 @@ const enhanceContentTabs = () => {
 			button.id = buttonId;
 			button.className = "content-tabs-trigger";
 			button.textContent =
-				panel.getAttribute("label") || panel.getAttribute("title") || `Tab ${panelIndex + 1}`;
+				panel.dataset.tabTitle ||
+				panel.getAttribute("label") ||
+				panel.getAttribute("title") ||
+				`Tab ${panelIndex + 1}`;
 			button.setAttribute("role", "tab");
 			button.setAttribute("aria-controls", panelId);
 

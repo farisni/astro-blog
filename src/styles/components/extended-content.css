@@ -3,14 +3,16 @@
 }
 
 /* Markdown/MDX-compatible two-column content */
-.prose columns {
+.prose columns,
+.prose .content-columns {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 1.25rem;
 	margin-block: 1.5rem;
 }
 
-.prose column {
+.prose column,
+.prose .content-column {
 	display: block;
 	min-width: 0;
 	padding: 1rem 1.125rem;
@@ -18,16 +20,19 @@
 	background: color-mix(in oklab, currentColor 3.5%, transparent);
 }
 
-.prose column > :first-child {
+.prose column > :first-child,
+.prose .content-column > :first-child {
 	margin-top: 0;
 }
 
-.prose column > :last-child {
+.prose column > :last-child,
+.prose .content-column > :last-child {
 	margin-bottom: 0;
 }
 
 @media (max-width: 640px) {
-	.prose columns {
+	.prose columns,
+	.prose .content-columns {
 		grid-template-columns: minmax(0, 1fr);
 		gap: 0.875rem;
 	}
@@ -293,7 +298,8 @@
 }
 
 /* Markdown/MDX-compatible tabs */
-.prose tabs.content-tabs {
+.prose tabs.content-tabs,
+.prose .content-tabs.content-tabs-directive {
 	display: block;
 	margin-block: 1.5rem;
 	overflow: hidden;
@@ -355,21 +361,25 @@
 	background: currentColor;
 }
 
-.prose tabs.content-tabs > tab {
+.prose tabs.content-tabs > tab,
+.prose .content-tabs.content-tabs-directive > .content-tab-panel {
 	display: block;
 	min-width: 0;
 	padding: 1rem 1.125rem;
 }
 
-.prose tabs.content-tabs > tab[hidden] {
+.prose tabs.content-tabs > tab[hidden],
+.prose .content-tabs.content-tabs-directive > .content-tab-panel[hidden] {
 	display: none;
 }
 
-.prose tabs.content-tabs > tab > :first-child {
+.prose tabs.content-tabs > tab > :first-child,
+.prose .content-tabs.content-tabs-directive > .content-tab-panel > :first-child {
 	margin-top: 0;
 }
 
-.prose tabs.content-tabs > tab > :last-child {
+.prose tabs.content-tabs > tab > :last-child,
+.prose .content-tabs.content-tabs-directive > .content-tab-panel > :last-child {
 	margin-bottom: 0;
 }
 
@@ -379,7 +389,8 @@
 }
 
 /* Markdown/MDX-compatible badges */
-.prose badge {
+.prose badge,
+.prose .content-badge {
 	--badge-color: var(--color-muted);
 
 	display: inline-flex;
@@ -397,24 +408,29 @@
 	white-space: nowrap;
 }
 
-.prose badge[tone="blue"] {
+.prose badge[tone="blue"],
+.prose .content-badge[data-tone="blue"] {
 	--badge-color: #337ea9;
 }
 
-.prose badge[tone="green"] {
+.prose badge[tone="green"],
+.prose .content-badge[data-tone="green"] {
 	--badge-color: #448361;
 }
 
-.prose badge[tone="orange"] {
+.prose badge[tone="orange"],
+.prose .content-badge[data-tone="orange"] {
 	--badge-color: #d9730d;
 }
 
-.prose badge[tone="red"] {
+.prose badge[tone="red"],
+.prose .content-badge[data-tone="red"] {
 	--badge-color: #d44c47;
 }
 
 /* Markdown/MDX-compatible callouts */
-.prose callout {
+.prose callout,
+.prose .content-callout {
 	--callout-color: #337ea9;
 
 	display: block;
@@ -426,23 +442,28 @@
 	background: color-mix(in srgb, var(--callout-color) 7%, var(--color-global-bg));
 }
 
-.prose callout[type="success"] {
+.prose callout[type="success"],
+.prose .content-callout[data-callout-type="success"] {
 	--callout-color: #448361;
 }
 
-.prose callout[type="warning"] {
+.prose callout[type="warning"],
+.prose .content-callout[data-callout-type="warning"] {
 	--callout-color: #d9730d;
 }
 
-.prose callout[type="danger"] {
+.prose callout[type="danger"],
+.prose .content-callout[data-callout-type="danger"] {
 	--callout-color: #d44c47;
 }
 
-.prose callout[type="note"] {
+.prose callout[type="note"],
+.prose .content-callout[data-callout-type="note"] {
 	--callout-color: var(--color-muted);
 }
 
-.prose callout[title]::before {
+.prose callout[title]::before,
+.prose .content-callout[data-title]::before {
 	display: block;
 	margin-bottom: 0.375rem;
 	color: var(--callout-color);
@@ -452,16 +473,23 @@
 	line-height: 1.4;
 }
 
-.prose callout > :first-child {
+.prose .content-callout[data-title]::before {
+	content: attr(data-title);
+}
+
+.prose callout > :first-child,
+.prose .content-callout > :first-child {
 	margin-top: 0;
 }
 
-.prose callout > :last-child {
+.prose callout > :last-child,
+.prose .content-callout > :last-child {
 	margin-bottom: 0;
 }
 
 /* Markdown/MDX-compatible cards */
-.prose card {
+.prose card,
+.prose .content-card {
 	display: block;
 	min-width: 0;
 	margin-block: 1.5rem;
@@ -471,7 +499,8 @@
 	background: color-mix(in srgb, var(--color-global-text) 2.5%, var(--color-global-bg));
 }
 
-.prose card[title]::before {
+.prose card[title]::before,
+.prose .content-card[data-title]::before {
 	display: block;
 	margin-bottom: 0.625rem;
 	color: var(--color-global-text);
@@ -481,11 +510,17 @@
 	line-height: 1.4;
 }
 
-.prose card > :first-child {
+.prose .content-card[data-title]::before {
+	content: attr(data-title);
+}
+
+.prose card > :first-child,
+.prose .content-card > :first-child {
 	margin-top: 0;
 }
 
-.prose card > :last-child {
+.prose card > :last-child,
+.prose .content-card > :last-child {
 	margin-bottom: 0;
 }
 

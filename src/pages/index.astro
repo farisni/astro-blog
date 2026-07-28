@@ -43,9 +43,9 @@ const latestNotes = allNotes
 	</section>
 	{
 		pinnedPosts.length > 0 && (
-			<section class="mt-14">
-				<h2 class="title text-accent mb-6 text-xl">TOP</h2>
-				<ul class="space-y-4" role="list">
+			<section class="mt-10">
+				<h2 class="title text-accent mb-3 text-xl">TOP</h2>
+				<ul class="space-y-2" role="list">
 					{pinnedPosts.map((p) => (
 						<li class="grid gap-1 sm:grid-cols-[auto_1fr]">
 							<PostPreview post={p} />
@@ -55,9 +55,9 @@ const latestNotes = allNotes
 			</section>
 		)
 	}
-	<section class="mt-14">
-		<h2 class="title text-accent mb-6 text-xl"><a href="/posts/">Blog</a></h2>
-		<ul class="space-y-4" role="list">
+	<section class="mt-10">
+		<h2 class="title text-accent mb-3 text-xl"><a href="/posts/">Blog</a></h2>
+		<ul class="space-y-2" role="list">
 			{
 				latestPosts.map((p) => (
 					<li class="grid gap-1 sm:grid-cols-[auto_1fr]">
