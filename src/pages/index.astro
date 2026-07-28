@@ -44,8 +44,8 @@ const latestNotes = allNotes
 	{
 		pinnedPosts.length > 0 && (
 			<section class="mt-14">
-				<h2 class="title text-accent mb-6 text-xl">置顶文章</h2>
-				<ul class="space-y-4" role="list">
+				<h2 class="title text-accent mb-6 text-xl">TOP</h2>
+				<ul class="home-post-list space-y-4" role="list">
 					{pinnedPosts.map((p) => (
 						<li class="grid gap-1 sm:grid-cols-[auto_1fr]">
 							<PostPreview post={p} />
@@ -56,8 +56,8 @@ const latestNotes = allNotes
 		)
 	}
 	<section class="mt-14">
-		<h2 class="title text-accent mb-6 text-xl"><a href="/posts/">博客</a></h2>
-		<ul class="space-y-4" role="list">
+		<h2 class="title text-accent mb-6 text-xl"><a href="/posts/">Blog</a></h2>
+		<ul class="home-post-list space-y-4" role="list">
 			{
 				latestPosts.map((p) => (
 					<li class="grid gap-1 sm:grid-cols-[auto_1fr]">
@@ -71,7 +71,7 @@ const latestNotes = allNotes
 		latestNotes.length > 0 && (
 			<section class="mt-14">
 				<h2 class="title text-accent mb-6 text-xl">
-					<a href="/notes/">笔记</a>
+					<a href="/notes/">Notes</a>
 				</h2>
 				<ul class="space-y-6" role="list">
 					{latestNotes.map((note) => (
@@ -84,3 +84,16 @@ const latestNotes = allNotes
 		)
 	}
 </PageLayout>
+
+<style>
+	.home-post-list :global(a.cactus-link) {
+		font-weight: 450;
+		text-decoration: none;
+	}
+
+	.home-post-list :global(a.cactus-link:hover) {
+		text-decoration-line: underline;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 2px;
+	}
+</style>
