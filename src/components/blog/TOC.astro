@@ -12,7 +12,9 @@ const { headings } = Astro.props;
 const toc = generateToc(headings);
 ---
 
-<aside class="article-toc lg:sticky lg:top-[30vh] lg:order-2 lg:-me-40 lg:w-60 lg:shrink-0">
+<aside
+	class="article-toc hidden md:block lg:sticky lg:top-[30vh] lg:order-2 lg:-me-40 lg:w-60 lg:shrink-0"
+>
 	<nav aria-label="文章目录">
 		<ol class="article-toc-list">
 			{toc.map((heading) => <TOCHeading heading={heading} />)}
