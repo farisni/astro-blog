@@ -8,6 +8,7 @@ import { Icon } from "astro-icon/components";
 */
 const socialLinks: {
 	friendlyName: string;
+	label?: string;
 	link: string;
 	name: string;
 	newTab?: boolean;
@@ -19,14 +20,10 @@ const socialLinks: {
 		newTab: true,
 	},
 	{
-		friendlyName: "发送邮件",
-		link: "mailto:wenmengshaonian@gmail.com",
+		friendlyName: "发送邮件至 faris.ni@outlook.com",
+		label: "faris.ni@outlook.com",
+		link: "mailto:faris.ni@outlook.com",
 		name: "mdi:email",
-	},
-	{
-		friendlyName: "RSS",
-		link: "/rss.xml",
-		name: "mdi:rss",
 	},
 ];
 ---
@@ -34,16 +31,17 @@ const socialLinks: {
 <div>
 	<ul class="flex items-center gap-x-5">
 		{
-			socialLinks.map(({ friendlyName, link, name, newTab }) => (
+			socialLinks.map(({ friendlyName, label, link, name, newTab }) => (
 				<li class="flex">
 					<a
-						class="text-muted hover:text-accent inline-block transition-colors"
+						aria-label={friendlyName}
+						class="text-muted hover:text-accent inline-flex items-center gap-2 transition-colors"
 						href={link}
 						rel={newTab ? "noreferrer noopener" : undefined}
 						target={newTab ? "_blank" : undefined}
 					>
 						<Icon aria-hidden="true" class="h-6 w-6" focusable="false" name={name} />
-						<span class="sr-only">{friendlyName}</span>
+						{label && <span class="whitespace-nowrap">{label}</span>}
 					</a>
 				</li>
 			))
