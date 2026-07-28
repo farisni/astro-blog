@@ -1,8 +1,8 @@
 ---
-title: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Id"
-description: "This post is purely for testing if the css is correct for the title on the page"
+title: "这是一篇用于测试页面长标题排版效果的示例文章"
+description: "本文仅用于测试页面标题的 CSS 排版是否正确"
 publishDate: "01 Feb 2023"
-tags: ["test"]
+tags: ["测试"]
 ---
 
-## Testing the title tag
+## 测试标题标签

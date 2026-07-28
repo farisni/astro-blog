@@ -1,66 +1,66 @@
 ---
-title: "Adding Webmentions to Astro Cactus"
-description: "This post describes the process of adding webmentions to your own site"
+title: "为 Astro Cactus 添加 Webmention"
+description: "本文介绍如何为自己的网站添加 Webmention"
 publishDate: "11 Oct 2023"
-tags: ["webmentions", "astro", "social"]
+tags: ["Webmention", "Astro", "社交"]
 updatedDate: 6 December 2024
 pinned: true
 ---
 
-## TLDR
+## 简要步骤
 
-1. Add a link on your homepage to either your GitHub profile and/or email address as per [IndieLogin's](https://indielogin.com/setup) instructions. You _could_ do this via `src/components/SocialList.astro`, just be sure to include `isWebmention` to the relevant link if doing so.
-2. Create an account @ [Webmention.io](https://webmention.io/) by entering your website's address.
-3. Add the link feed and api key to a `.env` file with the key `WEBMENTION_URL` and `WEBMENTION_API_KEY` respectively, you could rename `.env.example` found in this template. You can also add the optional `WEBMENTION_PINGBACK` link here too.
-4. Go to [brid.gy](https://brid.gy/) and sign-in to each social account[s] you wish to link.
-5. Publish and build your website, remember to add the api key, and it should now be ready to receive webmentions!
+1. 按照 [IndieLogin](https://indielogin.com/setup) 的说明，在首页添加 GitHub 个人主页和/或邮箱地址链接。你可以通过 `src/components/SocialList.astro` 完成，只要给相关链接添加 `isWebmention` 属性即可。
+2. 在 [Webmention.io](https://webmention.io/) 中填写你的网站地址并创建账号。
+3. 在 `.env` 文件中分别使用 `WEBMENTION_URL` 和 `WEBMENTION_API_KEY` 保存链接源和 API 密钥。你可以将模板中的 `.env.example` 重命名后使用，也可以在这里添加可选的 `WEBMENTION_PINGBACK` 链接。
+4. 前往 [brid.gy](https://brid.gy/) 并登录你想要关联的社交账号。
+5. 发布并构建网站，记得配置 API 密钥，完成后网站就可以接收 Webmention 了！
 
-## What are webmentions
+## 什么是 Webmention
 
-Put simply, it's a way to show users who like, comment, repost and more, on various pages on your website via social media.
+简单来说，Webmention 可以把用户在社交媒体上的点赞、评论、转发等互动展示在你网站的页面中。
 
-This theme displays the number of likes, mentions and replies each blog post receives. There are a couple of more webmentions that I haven't included, like reposts, which are currently filtered out, but shouldn't be too difficult to include.
+这个主题会显示每篇博客文章收到的点赞、提及和回复数量。我暂时没有加入转发等其他类型的 Webmention，它们目前会被过滤掉，不过后续接入并不困难。
 
-## Steps to add it to your own site
+## 添加到自己的网站
 
-Your going to have to create a couple of accounts to get things up-and-running. But, the first thing you need to ensure is that your social links are correct.
+你需要创建几个账号才能完成配置。首先要确认网站中的社交链接是正确的。
 
-### Add link(s) to your profile(s)
+### 在个人资料中添加链接
 
-Firstly, you need to add a link on your site to prove ownership. If you have a look at [IndieLogin's](https://indielogin.com/setup) instructions, it gives you 2 options, either an email address and/or GitHub account. I've created the component `src/components/SocialList.astro` where you can add your details into the `socialLinks` array, just include the `isWebmention` property to the relevant link which will add the `rel="me authn"` attribute. Whichever way you do it, make sure you have a link in your markup as per IndieLogin's [instructions](https://indielogin.com/setup)
+首先，你需要在网站中添加一个链接来证明网站所有权。[IndieLogin](https://indielogin.com/setup) 提供了两种方式：邮箱地址和/或 GitHub 账号。我创建了 `src/components/SocialList.astro` 组件，你可以在其中的 `socialLinks` 数组里添加自己的信息，只需要给相关链接加入 `isWebmention` 属性，就会添加 `rel="me authn"`。无论选择哪种方式，都要按照 [IndieLogin 的说明](https://indielogin.com/setup) 在页面标记中保留链接。
 
 ```html
 <a href="https://github.com/your-username" rel="me">GitHub</a>
 ```
 
-### Sign up to Webmention.io
+### 注册 Webmention.io
 
-Next, head over to [Webmention.io](https://webmention.io/) and create an account by signing in with your domain name, e.g. `https://astro-cactus.chriswilliams.dev/`. Please note that .app TLDs don't function correctly. Once in, it will give you a couple of links for your domain to accept webmentions. Make a note of these and create a `.env` file (this template include an example `.env.example` which you could rename). Add the link feed and api key with the key/values of `WEBMENTION_URL` and `WEBMENTION_API_KEY` respectively, and the optional `WEBMENTION_PINGBACK` url if required. Please try not to publish this to a repository!
+接着前往 [Webmention.io](https://webmention.io/) 并使用域名登录创建账号，例如 `https://astro-cactus.chriswilliams.dev/`。请注意，`.app` 顶级域名可能无法正常工作。登录后，它会提供几个用于接收 Webmention 的域名链接，请记录下来并创建 `.env` 文件（模板包含一个可以重命名的 `.env.example`）。分别使用 `WEBMENTION_URL` 和 `WEBMENTION_API_KEY` 保存链接源和 API 密钥，如果需要，也可以添加可选的 `WEBMENTION_PINGBACK` 地址。请不要把这些密钥提交到仓库！
 
 :::note
-You don't have to include the pingback link. Maybe coincidentally, but after adding it I started to receive a higher frequency of spam in my mailbox, informing me that my website could be better. TBH they're not wrong. I've now removed it, but it's up to you.
+你不一定要配置 pingback 链接。也许只是巧合，但添加它之后，我收到的垃圾邮件明显变多了，邮件内容说我的网站还可以做得更好。说实话，它们说得没错。我现在已经移除了这个配置，是否使用由你决定。
 :::
 
-### Sign up to Brid.gy
+### 注册 Brid.gy
 
-You're now going to have to use [brid.gy](https://brid.gy/). As the name suggests, it links your website to your social media accounts. For every account you want to set up (e.g. Mastodon), click on the relevant button and connect each account you want brid.gy to search. Just to note again, brid.gy currently has an issue with .app TLDs.
+现在需要使用 [brid.gy](https://brid.gy/)。顾名思义，它会把你的网站与社交媒体账号连接起来。对于想要配置的每个账号（例如 Mastodon），点击对应按钮并连接希望 brid.gy 搜索的账号。再次提醒，brid.gy 目前对 `.app` 顶级域名存在兼容问题。
 
-## Testing everything works
+## 测试配置是否正常
 
-With everything set, it's now time to build and publish your website. **REMEMBER** to set your environment variables `WEBMENTION_API_KEY` & `WEBMENTION_URL` with your host.
+完成所有配置后，就可以构建并发布网站了。**记得**在部署平台中配置环境变量 `WEBMENTION_API_KEY` 和 `WEBMENTION_URL`。
 
-You can check to see if everything is working by sending a test webmention via [webmentions.rocks](https://webmention.rocks/receive/1). Log in with your domain, enter the auth code, and then the url of the page you want to test. For example, to test this page I would add `https://astro-cactus.chriswilliams.dev/posts/webmentions/`. To view it on your website, rebuild or (re)start dev mode locally, and you should see the result at the bottom of your page.
+你可以通过 [webmentions.rocks](https://webmention.rocks/receive/1) 发送测试 Webmention 来确认配置是否正常。使用域名登录，输入授权码，再填入想要测试的页面地址。例如，要测试这个页面，可以填写 `https://astro-cactus.chriswilliams.dev/posts/webmentions/`。要在网站中查看结果，只需重新构建或在本地重新启动开发模式，结果应该会出现在页面底部。
 
-You can also view any test mentions in the browser via their [api](https://github.com/aaronpk/webmention.io#api).
+你也可以通过它的 [API](https://github.com/aaronpk/webmention.io#api) 在浏览器中查看测试提及。
 
-## Things to add, things to consider
+## 可添加的功能与注意事项
 
-- At the moment, fresh webmentions are only fetched on a rebuild or restarting dev mode, which obviously means if you don't update your site very often you wont get a lot of new content. It should be quite trivial to add a cron job to run the `getAndCacheWebmentions()` function in `src/utils/webmentions.ts` and populate your blog with new content. This is probably what I'll add next as a github action.
+- 目前只有在重新构建或重启开发模式时才会获取新的 Webmention。这意味着如果你不经常更新网站，就不会频繁获得新内容。可以添加定时任务来运行 `src/utils/webmentions.ts` 中的 `getAndCacheWebmentions()` 函数，为博客补充新内容。下一步我可能会把它做成 GitHub Action。
 
-- I have seen some mentions have duplicates. Unfortunately, they're quite difficult to filter out as they have different id's.
+- 我发现有些提及会重复出现。遗憾的是，它们使用不同的 ID，因此很难过滤。
 
-- I'm not a huge fan of the little external link icon for linking to comments/replies. It's not particularly great on mobile due to its size, and will likely change it in the future.
+- 我不太喜欢评论或回复链接旁边的小型外链图标。它在移动端的尺寸体验不太好，之后可能会调整。
 
-## Acknowledgements
+## 致谢
 
-Many thanks to [Kieran McGuire](https://github.com/chrismwilliams/astro-theme-cactus/issues/107#issue-1863931105) for sharing this with me, and the helpful posts. I'd never heard of webmentions before, and now with this update hopefully others will be able to make use of them. Additionally, articles and examples from [kld](https://kld.dev/adding-webmentions/) and [ryanmulligan.dev](https://ryanmulligan.dev/blog/) really helped in getting this set up and integrated, both a great resource if you're looking for more information!
+非常感谢 [Kieran McGuire](https://github.com/chrismwilliams/astro-theme-cactus/issues/107#issue-1863931105) 分享相关资料和文章。在此之前我从未听说过 Webmention，希望这次更新能帮助更多人使用它。此外，[kld](https://kld.dev/adding-webmentions/) 和 [ryanmulligan.dev](https://ryanmulligan.dev/blog/) 的文章与示例也对配置和集成过程提供了很大帮助，如果你想了解更多，它们都是很好的资料！
