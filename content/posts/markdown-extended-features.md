@@ -110,6 +110,40 @@ pinned: false
 4. 在浏览器中检查最终效果。
 :::
 
+## 代码标签页
+
+使用 `:::tabs[标签一|标签二]` 把多个代码块组合成可切换的标签页。标签数量需要与代码块数量保持一致。
+
+````markdown
+:::tabs[npm|pnpm|yarn]
+```bash
+npm install astro
+```
+
+```bash
+pnpm add astro
+```
+
+```bash
+yarn add astro
+```
+:::
+````
+
+:::tabs[npm|pnpm|yarn]
+```bash
+npm install astro
+```
+
+```bash
+pnpm add astro
+```
+
+```bash
+yarn add astro
+```
+:::
+
 ## Mermaid 图表
 
 使用语言类型为 `mermaid` 的代码块创建图表。

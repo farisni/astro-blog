@@ -387,21 +387,46 @@
 }
 
 .expressive-code .pretty-code-frame pre {
-	min-width: max-content;
+	width: 100%;
+	min-width: 0;
+	max-width: 100%;
 	margin: 0;
 	padding: 16px;
-	overflow: visible;
+	overflow-x: auto;
+	overflow-y: hidden;
 	border: 0;
 	border-radius: 0;
 	background: #fff;
 	box-shadow: none;
 	counter-reset: code-line;
+	scrollbar-color: color-mix(in srgb, var(--color-global-text) 20%, transparent) transparent;
+	scrollbar-width: thin;
 	tab-size: 2;
+}
+
+.expressive-code .pretty-code-frame pre::-webkit-scrollbar {
+	height: 7px;
+}
+
+.expressive-code .pretty-code-frame pre::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.expressive-code .pretty-code-frame pre::-webkit-scrollbar-thumb {
+	border: 2px solid transparent;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--color-global-text) 18%, transparent);
+	background-clip: content-box;
+}
+
+.expressive-code .pretty-code-frame pre::-webkit-scrollbar-thumb:hover {
+	background: color-mix(in srgb, var(--color-global-text) 30%, transparent);
+	background-clip: content-box;
 }
 
 .expressive-code .pretty-code-frame code {
 	display: grid;
-	min-width: 100%;
+	min-width: max-content;
 }
 
 .expressive-code .pretty-code-frame .ec-line {

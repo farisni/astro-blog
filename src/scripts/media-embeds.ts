@@ -30,12 +30,91 @@ function setupTwitterEmbeds() {
 	document.head.appendChild(script);
 }
 
+function setupCodeTabs() {
+	const containers = document.querySelectorAll<HTMLElement>(
+		".code-tabs:not([data-tabs-ready])",
+	);
+
+	containers.forEach((container, containerIndex) => {
+		let labels: string[];
+		try {
+			labels = JSON.parse(container.dataset.tabLabels ?? "[]");
+		} catch {
+			return;
+		}
+
+		const panels = Array.from(
+			container.querySelectorAll<HTMLElement>(":scope > .expressive-code"),
+		);
+		if (!labels.length || labels.length !== panels.length) return;
+
+		const tabList = document.createElement("div");
+		tabList.className = "code-tabs-list";
+		tabList.setAttribute("role", "tablist");
+		tabList.setAttribute("aria-label", "代码示例");
+
+		const buttons = labels.map((label, index) => {
+			const tabId = `code-tab-${containerIndex}-${index}`;
+			const panelId = `code-panel-${containerIndex}-${index}`;
+			const button = document.createElement("button");
+
+			button.type = "button";
+			button.className = "code-tab";
+			button.id = tabId;
+			button.textContent = label;
+			button.setAttribute("role", "tab");
+			button.setAttribute("aria-controls", panelId);
+			button.setAttribute("aria-selected", String(index === 0));
+			button.tabIndex = index === 0 ? 0 : -1;
+
+			const panel = panels[index];
+			panel.id = panelId;
+			panel.setAttribute("role", "tabpanel");
+			panel.setAttribute("aria-labelledby", tabId);
+			panel.hidden = index !== 0;
+
+			return button;
+		});
+
+		function activateTab(index: number, focus = false) {
+			buttons.forEach((button, buttonIndex) => {
+				const active = buttonIndex === index;
+				button.setAttribute("aria-selected", String(active));
+				button.tabIndex = active ? 0 : -1;
+				panels[buttonIndex].hidden = !active;
+			});
+			if (focus) buttons[index].focus();
+		}
+
+		buttons.forEach((button, index) => {
+			button.addEventListener("click", () => activateTab(index));
+			button.addEventListener("keydown", (event) => {
+				let nextIndex = index;
+				if (event.key === "ArrowRight") nextIndex = (index + 1) % buttons.length;
+				else if (event.key === "ArrowLeft")
+					nextIndex = (index - 1 + buttons.length) % buttons.length;
+				else if (event.key === "Home") nextIndex = 0;
+				else if (event.key === "End") nextIndex = buttons.length - 1;
+				else return;
+
+				event.preventDefault();
+				activateTab(nextIndex, true);
+			});
+			tabList.appendChild(button);
+		});
+
+		container.dataset.tabsReady = "true";
+		container.prepend(tabList);
+	});
+}
+
 function handleGalleryWheel(event: WheelEvent) {
 	const target = event.target;
 	if (!(target instanceof Element)) return;
 
 	const gallery = target.closest<HTMLElement>(".gallery-container");
 	if (!gallery || gallery.scrollWidth <= gallery.clientWidth) return;
+	if (Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
 
 	const previousScrollLeft = gallery.scrollLeft;
 	gallery.scrollLeft += event.deltaY;
@@ -44,6 +123,7 @@ function handleGalleryWheel(event: WheelEvent) {
 
 function setupMediaEmbeds() {
 	setupTwitterEmbeds();
+	setupCodeTabs();
 }
 
 if (document.readyState === "loading") {

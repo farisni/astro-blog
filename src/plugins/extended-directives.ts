@@ -148,6 +148,34 @@ export function satteriExtendedDirectivesPlugin(): MdastPluginDefinition {
 	return {
 		name: "cactus-extended-directives",
 		containerDirective(node, ctx) {
+			if (node.name === "tabs") {
+				const { content, label } = extractLabel(node.children);
+				const labels = label
+					.split("|")
+					.map((item) => item.trim())
+					.filter(Boolean);
+				const onlyCodeBlocks = content.every((child) => child.type === "code");
+
+				if (!labels.length || labels.length !== content.length || !onlyCodeBlocks) {
+					ctx.report({
+						message:
+							":::tabs 标签数量必须与代码块数量一致，例如 :::tabs[npm|pnpm]",
+						node,
+						severity: "warning",
+					});
+					return h("div", {}, content);
+				}
+
+				return h(
+					"div",
+					{
+						class: "code-tabs",
+						"data-tab-labels": JSON.stringify(labels),
+					},
+					content,
+				);
+			}
+
 			if (node.name === "steps") {
 				const { content } = extractLabel(node.children);
 				const [list] = content;
@@ -212,7 +240,7 @@ export function satteriExtendedDirectivesPlugin(): MdastPluginDefinition {
 				return;
 			}
 
-			return { raw: html, mdxExpressions: false };
+			return { raw: html.trim(), mdxExpressions: false };
 		},
 	};
 }
