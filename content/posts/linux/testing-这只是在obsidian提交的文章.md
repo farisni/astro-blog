@@ -14,4 +14,4 @@ pinned: false
 
 22222 obs自己提交啦
 
-!540
+![[Testing：这只是在obsidian提交的文章-1785342306772.webp|540]]
