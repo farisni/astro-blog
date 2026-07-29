@@ -84,16 +84,6 @@ const readingTime: string = remarkPluginFrontmatter.readingTime;
 	async function renderMermaid(reset = false) {
 		const diagrams = [...document.querySelectorAll<HTMLElement>(".mermaid")];
 
-		if (reset) {
-			for (const diagram of diagrams) {
-				diagram.removeAttribute("data-processed");
-				diagram.textContent = diagram.dataset.mermaidSource ?? "";
-			}
-		}
-
-		const pendingDiagrams = diagrams.filter((diagram) => diagram.dataset.processed !== "true");
-		if (!pendingDiagrams.length) return;
-
 		mermaid.initialize({
 			fontFamily: "inherit",
 			securityLevel: "strict",
@@ -101,16 +91,37 @@ const readingTime: string = remarkPluginFrontmatter.readingTime;
 			theme: document.documentElement.dataset.theme === "dark" ? "dark" : "default",
 		});
 
-		await mermaid.run({
-			nodes: pendingDiagrams,
-			suppressErrors: true,
-		});
+		for (const [index, diagram] of diagrams.entries()) {
+			if (!reset && diagram.dataset.processed === "true") continue;
+
+			const source = diagram.dataset.mermaidSource ?? diagram.textContent ?? "";
+			if (!source.trim()) continue;
+
+			try {
+				const id = `mermaid-${Date.now()}-${index}`;
+				const { svg, bindFunctions } = await mermaid.render(id, source);
+				diagram.innerHTML = svg;
+				diagram.dataset.processed = "true";
+				bindFunctions?.(diagram);
+			} catch (error) {
+				diagram.removeAttribute("data-processed");
+				diagram.textContent = source;
+				console.error("Mermaid render failed:", error);
+			}
+		}
 	}
 
-	void renderMermaid();
-	document.addEventListener("astro:page-load", () => void renderMermaid());
+	let mermaidRenderQueue = Promise.resolve();
+	const queueMermaidRender = (reset = false) => {
+		mermaidRenderQueue = mermaidRenderQueue
+			.then(() => renderMermaid(reset))
+			.catch((error) => console.error("Mermaid render queue failed:", error));
+	};
 
-	const themeObserver = new MutationObserver(() => void renderMermaid(true));
+	queueMermaidRender();
+	document.addEventListener("astro:page-load", () => queueMermaidRender());
+
+	const themeObserver = new MutationObserver(() => queueMermaidRender(true));
 	themeObserver.observe(document.documentElement, {
 		attributeFilter: ["data-theme"],
 		attributes: true,

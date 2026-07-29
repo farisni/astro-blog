@@ -53,7 +53,8 @@ function setupCodeTabs() {
 		tabList.setAttribute("role", "tablist");
 		tabList.setAttribute("aria-label", "代码示例");
 
-		const buttons = labels.map((label, index) => {
+		const buttons = panels.map((panel, index) => {
+			const label = labels[index] ?? `Tab ${index + 1}`;
 			const tabId = `code-tab-${containerIndex}-${index}`;
 			const panelId = `code-panel-${containerIndex}-${index}`;
 			const button = document.createElement("button");
@@ -67,7 +68,6 @@ function setupCodeTabs() {
 			button.setAttribute("aria-selected", String(index === 0));
 			button.tabIndex = index === 0 ? 0 : -1;
 
-			const panel = panels[index];
 			panel.id = panelId;
 			panel.setAttribute("role", "tabpanel");
 			panel.setAttribute("aria-labelledby", tabId);
@@ -81,9 +81,10 @@ function setupCodeTabs() {
 				const active = buttonIndex === index;
 				button.setAttribute("aria-selected", String(active));
 				button.tabIndex = active ? 0 : -1;
-				panels[buttonIndex].hidden = !active;
+				const panel = panels[buttonIndex];
+				if (panel) panel.hidden = !active;
 			});
-			if (focus) buttons[index].focus();
+			if (focus) buttons[index]?.focus();
 		}
 
 		buttons.forEach((button, index) => {
@@ -134,3 +135,87 @@ if (document.readyState === "loading") {
 
 document.addEventListener("astro:page-load", setupMediaEmbeds);
 document.addEventListener("wheel", handleGalleryWheel, { passive: false });
+
+const enhanceContentTabs = () => {
+	const groups = document.querySelectorAll<HTMLElement>(
+		".prose tabs:not([data-content-tabs-ready]), .prose .content-tabs-directive:not([data-content-tabs-ready])",
+	);
+
+	groups.forEach((group, groupIndex) => {
+		const panels = Array.from(group.children).filter(
+			(child): child is HTMLElement =>
+				child instanceof HTMLElement &&
+				(child.tagName.toLowerCase() === "tab" || child.classList.contains("content-tab-panel")),
+		);
+
+		if (!panels.length) return;
+
+		group.dataset.contentTabsReady = "true";
+		group.classList.add("content-tabs");
+
+		const tabList = document.createElement("div");
+		tabList.className = "content-tabs-list not-prose";
+		tabList.setAttribute("role", "tablist");
+
+		const buttons = panels.map((panel, panelIndex) => {
+			const button = document.createElement("button");
+			const panelId = `content-tab-panel-${groupIndex}-${panelIndex}`;
+			const buttonId = `content-tab-${groupIndex}-${panelIndex}`;
+
+			button.type = "button";
+			button.id = buttonId;
+			button.className = "content-tabs-trigger";
+			button.textContent =
+				panel.dataset.tabTitle ||
+				panel.getAttribute("label") ||
+				panel.getAttribute("title") ||
+				`Tab ${panelIndex + 1}`;
+			button.setAttribute("role", "tab");
+			button.setAttribute("aria-controls", panelId);
+
+			panel.id = panelId;
+			panel.setAttribute("role", "tabpanel");
+			panel.setAttribute("aria-labelledby", buttonId);
+			panel.removeAttribute("label");
+			panel.removeAttribute("title");
+			tabList.append(button);
+			return button;
+		});
+
+		const activate = (activeIndex: number, focus = false) => {
+			buttons.forEach((button, index) => {
+				const active = index === activeIndex;
+				button.setAttribute("aria-selected", String(active));
+				button.tabIndex = active ? 0 : -1;
+				const panel = panels[index];
+				if (panel) panel.hidden = !active;
+			});
+
+			if (focus) buttons[activeIndex]?.focus();
+		};
+
+		buttons.forEach((button, index) => {
+			button.addEventListener("click", () => activate(index));
+			button.addEventListener("keydown", (event) => {
+				let nextIndex: number | undefined;
+
+				if (event.key === "ArrowRight") nextIndex = (index + 1) % buttons.length;
+				if (event.key === "ArrowLeft") nextIndex = (index - 1 + buttons.length) % buttons.length;
+				if (event.key === "Home") nextIndex = 0;
+				if (event.key === "End") nextIndex = buttons.length - 1;
+				if (nextIndex === undefined) return;
+
+				event.preventDefault();
+				activate(nextIndex, true);
+			});
+		});
+
+		group.prepend(tabList);
+		const hashTarget = location.hash ? group.querySelector<HTMLElement>(location.hash) : null;
+		const initialIndex = hashTarget ? panels.findIndex((panel) => panel.contains(hashTarget)) : 0;
+		activate(initialIndex >= 0 ? initialIndex : 0);
+	});
+};
+
+enhanceContentTabs();
+document.addEventListener("astro:page-load", enhanceContentTabs);

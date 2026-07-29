@@ -2,7 +2,7 @@ import type { Element, ElementContent } from "hast";
 import { defineHastPlugin } from "satteri";
 
 function hasClass(node: Readonly<Element>, className: string) {
-	const value = node.properties.className;
+	const value: unknown = node.properties.className;
 	if (Array.isArray(value)) return value.includes(className);
 	return typeof value === "string" && value.split(/\s+/).includes(className);
 }
@@ -54,6 +54,8 @@ export const satteriImageFiguresPlugin = defineHastPlugin({
 				(child): child is Element => child.type === "element" && child.tagName === "img",
 			);
 			if (!images.length || images.length !== meaningfulChildren.length) return;
+			const [firstImage] = images;
+			if (!firstImage) return;
 
 			if (parentIsGallery) {
 				const figures = images.map((image) => createFigure(image, true) as Element);
@@ -70,7 +72,7 @@ export const satteriImageFiguresPlugin = defineHastPlugin({
 			}
 
 			if (images.length === 1) {
-				const figure = createFigure(images[0]);
+				const figure = createFigure(firstImage);
 				if (figure) ctx.replaceNode(node, figure);
 			}
 		},
