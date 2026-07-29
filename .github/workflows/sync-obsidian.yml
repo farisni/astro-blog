@@ -35,19 +35,18 @@ jobs:
           chmod 600 "$key_file"
           ssh-keyscan github.com > "$known_hosts_file" 2>/dev/null
           export GIT_SSH_COMMAND="ssh -i $key_file -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$known_hosts_file"
-          mkdir -p "$GITHUB_WORKSPACE/vault"
-          git -C "$GITHUB_WORKSPACE/vault" init --quiet
-          git -C "$GITHUB_WORKSPACE/vault" remote add origin \
+          mkdir -p "$GITHUB_WORKSPACE/vault-repo" "$GITHUB_WORKSPACE/vault"
+          git -C "$GITHUB_WORKSPACE/vault-repo" init --quiet
+          git -C "$GITHUB_WORKSPACE/vault-repo" remote add origin \
             git@github.com:farisni/obsidian.git
-          git -C "$GITHUB_WORKSPACE/vault" config core.sparseCheckout true
-          git -C "$GITHUB_WORKSPACE/vault" config core.sparseCheckoutCone false
-          printf '/Linux/**\n' \
-            > "$GITHUB_WORKSPACE/vault/.git/info/sparse-checkout"
-          git -C "$GITHUB_WORKSPACE/vault" fetch \
+          git -C "$GITHUB_WORKSPACE/vault-repo" fetch \
             --filter=blob:none \
             --depth=1 \
             origin main
-          git -C "$GITHUB_WORKSPACE/vault" checkout --detach FETCH_HEAD
+          git -C "$GITHUB_WORKSPACE/vault-repo" ls-tree \
+            -d --exit-code FETCH_HEAD -- Linux > /dev/null
+          git -C "$GITHUB_WORKSPACE/vault-repo" archive FETCH_HEAD -- Linux \
+            | tar -x -C "$GITHUB_WORKSPACE/vault"
           test -d "$GITHUB_WORKSPACE/vault/Linux"
           unset VAULT_DEPLOY_KEY GIT_SSH_COMMAND
 
