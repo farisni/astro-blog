@@ -42,8 +42,9 @@ jobs:
             --branch=main \
             git@github.com:farisni/obsidian.git \
             "$GITHUB_WORKSPACE/vault"
-          git -C "$GITHUB_WORKSPACE/vault" checkout HEAD -- Linux
-          test -d "$GITHUB_WORKSPACE/vault/Linux"
+          mkdir -p "$GITHUB_WORKSPACE/vault/Linux"
+          git -C "$GITHUB_WORKSPACE/vault" archive HEAD:Linux \
+            | tar -x -C "$GITHUB_WORKSPACE/vault/Linux"
           unset VAULT_DEPLOY_KEY GIT_SSH_COMMAND
 
       - name: Install pnpm
