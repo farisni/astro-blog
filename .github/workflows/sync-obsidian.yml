@@ -43,8 +43,6 @@ jobs:
             --filter=blob:none \
             --depth=1 \
             origin main
-          git -C "$GITHUB_WORKSPACE/vault-repo" ls-tree \
-            -d --exit-code FETCH_HEAD -- Linux > /dev/null
           git -C "$GITHUB_WORKSPACE/vault-repo" archive FETCH_HEAD -- Linux \
             | tar -x -C "$GITHUB_WORKSPACE/vault"
           test -d "$GITHUB_WORKSPACE/vault/Linux"
