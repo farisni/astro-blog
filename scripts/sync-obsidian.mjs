@@ -87,11 +87,6 @@ function cleanInlineMarkdown(value) {
 		.trim();
 }
 
-function findFirstHeading(body) {
-	const match = body.match(/^#\s+(.+)$/m);
-	return match ? cleanInlineMarkdown(match[1]) : undefined;
-}
-
 function createDescription(body, title) {
 	let insideFence = false;
 	for (const sourceLine of body.split("\n")) {
@@ -218,7 +213,7 @@ for (const sourcePath of sourceFiles) {
 	const markdown = await readFile(sourcePath, "utf8");
 	const { data, body } = parseFrontmatter(markdown);
 	const fileStat = await stat(sourcePath);
-	const title = String(data.title || findFirstHeading(body) || basename(sourcePath, ".md")).trim();
+	const title = basename(sourcePath, ".md").trim();
 	const transformedBody = transformObsidianMarkdown(body);
 	const description = createDescription(transformedBody, title);
 	const publishDate = normalizeDate(

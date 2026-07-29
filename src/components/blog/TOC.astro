@@ -9,7 +9,10 @@ interface Props {
 
 const { headings } = Astro.props;
 
-const toc = generateToc(headings);
+const toc = generateToc(headings, {
+	maxHeadingLevel: 2,
+	minHeadingLevel: 1,
+});
 ---
 
 <aside
@@ -65,7 +68,7 @@ const toc = generateToc(headings);
 		transition: color 180ms ease;
 	}
 
-	.article-toc-link[data-depth="2"] {
+	.article-toc-link[data-depth="1"] {
 		color: color-mix(in srgb, var(--color-muted) 88%, var(--color-global-bg));
 		font-weight: 500;
 	}
@@ -80,12 +83,8 @@ const toc = generateToc(headings);
 			background-color 180ms ease;
 	}
 
-	.article-toc-link[data-depth="3"] .article-toc-label {
+	.article-toc-link[data-depth="2"] .article-toc-label {
 		padding-inline-start: 1rem;
-	}
-
-	.article-toc-link[data-depth="4"] .article-toc-label {
-		padding-inline-start: 2rem;
 	}
 
 	.article-toc-link:hover {

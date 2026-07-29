@@ -1,0 +1,24 @@
+#!/bin/sh
+
+set -eu
+
+generated_dir="content/posts/linux"
+staged_files="$(git diff --cached --name-only --diff-filter=ACMRD -- "$generated_dir")"
+
+if [ -z "$staged_files" ]; then
+	exit 0
+fi
+
+cat >&2 <<'EOF'
+提交已阻止：content/posts/linux 是 Obsidian 自动生成目录。
+
+本地 pnpm sync:obsidian 仅用于预览，生成文章只允许 GitHub Actions 提交。
+请先取消暂存生成文件：
+
+  git restore --staged content/posts/linux
+
+然后只提交 Astro 业务代码。
+EOF
+
+printf '\n本次暂存的生成文件：\n%s\n' "$staged_files" >&2
+exit 1

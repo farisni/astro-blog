@@ -13,6 +13,7 @@ import { satteriExtendedDirectivesPlugin } from "./src/plugins/extended-directiv
 import { satteriGithubCardPlugin } from "./src/plugins/github-cards";
 import { satteriImageFiguresPlugin } from "./src/plugins/image-figures";
 import { satteriMathPlugin, satteriMermaidPlugin } from "./src/plugins/markdown-extensions";
+import { satteriObsidianCalloutsPlugin } from "./src/plugins/obsidian-callouts";
 import {
 	satteriAutolinkHeadingsPlugin,
 	satteriExternalLinksPlugin,
@@ -74,6 +75,7 @@ export default defineConfig({
 			mdastPlugins: [
 				satteriMathPlugin,
 				satteriMermaidPlugin,
+				satteriObsidianCalloutsPlugin(),
 				satteriUnwrapImagesPlugin(),
 				satteriReadingTimePlugin(),
 				satteriGithubCardPlugin(),
