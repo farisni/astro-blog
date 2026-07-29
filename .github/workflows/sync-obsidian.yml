@@ -35,16 +35,20 @@ jobs:
           chmod 600 "$key_file"
           ssh-keyscan github.com > "$known_hosts_file" 2>/dev/null
           export GIT_SSH_COMMAND="ssh -i $key_file -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$known_hosts_file"
-          git clone \
+          mkdir -p "$GITHUB_WORKSPACE/vault"
+          git -C "$GITHUB_WORKSPACE/vault" init --quiet
+          git -C "$GITHUB_WORKSPACE/vault" remote add origin \
+            git@github.com:farisni/obsidian.git
+          git -C "$GITHUB_WORKSPACE/vault" config core.sparseCheckout true
+          git -C "$GITHUB_WORKSPACE/vault" config core.sparseCheckoutCone false
+          printf '/Linux/\n' \
+            > "$GITHUB_WORKSPACE/vault/.git/info/sparse-checkout"
+          git -C "$GITHUB_WORKSPACE/vault" fetch \
             --filter=blob:none \
-            --no-checkout \
             --depth=1 \
-            --branch=main \
-            git@github.com:farisni/obsidian.git \
-            "$GITHUB_WORKSPACE/vault"
-          mkdir -p "$GITHUB_WORKSPACE/vault/Linux"
-          git -C "$GITHUB_WORKSPACE/vault" archive HEAD:Linux \
-            | tar -x -C "$GITHUB_WORKSPACE/vault/Linux"
+            origin main
+          git -C "$GITHUB_WORKSPACE/vault" checkout --detach FETCH_HEAD
+          test -d "$GITHUB_WORKSPACE/vault/Linux"
           unset VAULT_DEPLOY_KEY GIT_SSH_COMMAND
 
       - name: Install pnpm
