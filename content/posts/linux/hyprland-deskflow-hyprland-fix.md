@@ -1,5 +1,5 @@
 ---
-title: "Deskflow 在 Hyprland 上无法启动的解决方案"
+title: "Hyprland：deskflow-hyprland-fix"
 description: "在 Hyprland（Wayland）下启动 Deskflow Server 模式时报错："
 publishDate: "2026-05-02"
 tags:

@@ -1,5 +1,5 @@
 ---
-title: "Hyprland 配置指南"
+title: "ArchLinux扩展：Hyprland"
 description: "在 /.config/hypr/hyprland.conf 中添加："
 publishDate: "2026-03-15"
 updatedDate: "2026-03-23"

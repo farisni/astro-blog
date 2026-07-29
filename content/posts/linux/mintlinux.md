@@ -1,5 +1,5 @@
 ---
-title: "Linux Mint 配置笔记"
+title: "MintLinux"
 description: "Rufus 弹提示时务必选择 \"以 DD 镜像模式写入\"，确保 U 盘引导兼容 Mac。"
 publishDate: "2026-07-29"
 tags:

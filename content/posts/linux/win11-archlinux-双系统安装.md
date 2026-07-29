@@ -1,5 +1,5 @@
 ---
-title: "MacMini2014 多系统安装"
+title: "Win11+ArchLinux：双系统安装"
 description: "使用 Rufus 制作 U 盘启动盘。"
 publishDate: "2026-03-15"
 tags:
