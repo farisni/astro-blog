@@ -42,9 +42,10 @@ jobs:
             --branch=main \
             git@github.com:farisni/obsidian.git \
             "$GITHUB_WORKSPACE/vault"
-          mkdir -p "$GITHUB_WORKSPACE/vault-public"
-          git -C "$GITHUB_WORKSPACE/vault" archive HEAD Linux \
-            | tar -x -C "$GITHUB_WORKSPACE/vault-public"
+          git -C "$GITHUB_WORKSPACE/vault" sparse-checkout init --cone
+          git -C "$GITHUB_WORKSPACE/vault" sparse-checkout set Linux
+          git -C "$GITHUB_WORKSPACE/vault" checkout main
+          test -d "$GITHUB_WORKSPACE/vault/Linux"
           unset VAULT_DEPLOY_KEY GIT_SSH_COMMAND
 
       - name: Install pnpm
@@ -62,7 +63,7 @@ jobs:
 
       - name: Sync whitelist notes
         working-directory: site
-        run: node scripts/sync-obsidian.mjs "$GITHUB_WORKSPACE/vault-public/Linux"
+        run: node scripts/sync-obsidian.mjs "$GITHUB_WORKSPACE/vault/Linux"
 
       - name: Validate generated content
         working-directory: site
