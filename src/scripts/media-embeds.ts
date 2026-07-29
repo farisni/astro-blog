@@ -53,7 +53,8 @@ function setupCodeTabs() {
 		tabList.setAttribute("role", "tablist");
 		tabList.setAttribute("aria-label", "代码示例");
 
-		const buttons = labels.map((label, index) => {
+		const buttons = panels.map((panel, index) => {
+			const label = labels[index] ?? `Tab ${index + 1}`;
 			const tabId = `code-tab-${containerIndex}-${index}`;
 			const panelId = `code-panel-${containerIndex}-${index}`;
 			const button = document.createElement("button");
@@ -67,7 +68,6 @@ function setupCodeTabs() {
 			button.setAttribute("aria-selected", String(index === 0));
 			button.tabIndex = index === 0 ? 0 : -1;
 
-			const panel = panels[index];
 			panel.id = panelId;
 			panel.setAttribute("role", "tabpanel");
 			panel.setAttribute("aria-labelledby", tabId);
@@ -81,9 +81,10 @@ function setupCodeTabs() {
 				const active = buttonIndex === index;
 				button.setAttribute("aria-selected", String(active));
 				button.tabIndex = active ? 0 : -1;
-				panels[buttonIndex].hidden = !active;
+				const panel = panels[buttonIndex];
+				if (panel) panel.hidden = !active;
 			});
-			if (focus) buttons[index].focus();
+			if (focus) buttons[index]?.focus();
 		}
 
 		buttons.forEach((button, index) => {
@@ -186,7 +187,8 @@ const enhanceContentTabs = () => {
 				const active = index === activeIndex;
 				button.setAttribute("aria-selected", String(active));
 				button.tabIndex = active ? 0 : -1;
-				panels[index].hidden = !active;
+				const panel = panels[index];
+				if (panel) panel.hidden = !active;
 			});
 
 			if (focus) buttons[activeIndex]?.focus();

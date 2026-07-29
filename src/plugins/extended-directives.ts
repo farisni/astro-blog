@@ -4,6 +4,7 @@ import type { MdastPluginDefinition } from "satteri";
 import { h } from "../utils/remark";
 
 type DirectiveAttributes = Record<string, null | string | undefined>;
+type ContainerDirectiveContent = Extract<RootContent, { type: "containerDirective" }>;
 
 const MEDIA_DIRECTIVES = new Set(["youtube", "bilibili", "spotify", "tweet", "codepen"]);
 const CALLOUT_TYPES = new Set(["info", "success", "warning", "danger", "note"]);
@@ -32,6 +33,13 @@ function extractLabel(children: readonly RootContent[]) {
 	}
 
 	return { content, label };
+}
+
+function isNamedContainerDirective(
+	node: RootContent,
+	name: string,
+): node is ContainerDirectiveContent {
+	return node.type === "containerDirective" && node.name === name;
 }
 
 function youtubeEmbed(attributes: DirectiveAttributes) {
@@ -125,6 +133,8 @@ function codepenEmbed(attributes: DirectiveAttributes) {
 	if (!match) return null;
 
 	const [, user, slug] = match;
+	if (!user || !slug) return null;
+
 	return `
 		<figure class="media-embed media-embed-video">
 			<iframe
@@ -208,7 +218,8 @@ export function satteriExtendedDirectivesPlugin(): MdastPluginDefinition {
 			if (node.name === "columns") {
 				const { content } = extractLabel(node.children);
 				const columns = content.filter(
-					(child) => child.type === "containerDirective" && child.name === "column",
+					(child): child is ContainerDirectiveContent =>
+						isNamedContainerDirective(child, "column"),
 				);
 
 				if (!columns.length || columns.length !== content.length) {
@@ -233,7 +244,8 @@ export function satteriExtendedDirectivesPlugin(): MdastPluginDefinition {
 			if (node.name === "tabs") {
 				const { content, label } = extractLabel(node.children);
 				const tabs = content.filter(
-					(child) => child.type === "containerDirective" && child.name === "tab",
+					(child): child is ContainerDirectiveContent =>
+						isNamedContainerDirective(child, "tab"),
 				);
 
 				if (tabs.length) {
@@ -353,6 +365,8 @@ export function satteriExtendedDirectivesPlugin(): MdastPluginDefinition {
 				const { content } = extractLabel(node.children);
 				return h("div", { class: "gallery-container" }, content);
 			}
+
+			return;
 		},
 		leafDirective(node, ctx) {
 			if (!MEDIA_DIRECTIVES.has(node.name)) return;
