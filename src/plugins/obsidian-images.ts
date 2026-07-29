@@ -36,7 +36,7 @@ export function satteriObsidianImagesPlugin(): MdastPluginDefinition {
 			};
 		},
 		paragraph(node): Image | undefined {
-			if (node.children.length !== 1) return;
+			if (!node.children || node.children.length !== 1) return;
 			const child = node.children[0];
 			if (child?.type !== "text") return;
 

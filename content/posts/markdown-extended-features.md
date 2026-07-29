@@ -27,6 +27,12 @@ pinned: false
 :::badge[扩展模式已启用]{tone="green"}
 :::
 
+## 文章链接悬浮预览
+
+将鼠标停留在下面的站内文章链接约 200ms，即可在链接附近预览目标文章。也可以使用键盘聚焦链接，按 `Esc` 关闭预览。
+
+[查看 Markdown 元素示例](/posts/markdown-elements/)
+
 ## 图注
 
 使用标准 Markdown 图片语法即可生成图注。`alt` 会作为图注显示；在 `alt` 前加入下划线 `_` 可以隐藏图注。

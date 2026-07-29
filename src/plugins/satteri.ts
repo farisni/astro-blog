@@ -56,8 +56,8 @@ export function satteriUnwrapImagesPlugin(): MdastPluginDefinition {
 	return {
 		name: "cactus-unwrap-images",
 		paragraph(node): Image | undefined {
-			const child = node.children[0];
-			if (node.children.length === 1 && child?.type === "image") {
+			const child = node.children?.[0];
+			if (node.children?.length === 1 && child?.type === "image") {
 				return child;
 			}
 			return;
