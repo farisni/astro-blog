@@ -5,6 +5,18 @@ import PageLayout from "@/layouts/Base.astro";
 const allPosts = await getAllPosts();
 const allTags = getUniqueTagsWithCount(allPosts);
 
+function tagScale(postCount: number) {
+	if (postCount >= 18) return "2.6rem";
+	if (postCount >= 16) return "2.49rem";
+	if (postCount >= 8) return "1.96rem";
+	if (postCount >= 6) return "1.78rem";
+	if (postCount >= 5) return "1.67rem";
+	if (postCount >= 4) return "1.56rem";
+	if (postCount >= 3) return "1.45rem";
+	if (postCount >= 2) return "1.34rem";
+	return "1.23rem";
+}
+
 const meta = {
 	description: "A list of all the topics I've written about in my posts",
 	title: "All Tags",
@@ -12,23 +24,194 @@ const meta = {
 ---
 
 <PageLayout meta={meta}>
-	<h1 class="title mb-6">Tags</h1>
-	<ul class="space-y-4">
+	<section class="lite-tags-page" aria-labelledby="lite-tags-title">
+		<header class="lite-tags-header">
+			<h1 id="lite-tags-title">Tags</h1>
+			<div class="lite-tags-stats" aria-label="标签统计">
+				<span><strong>{allTags.length}</strong> tags</span>
+				<span><strong>{allPosts.length}</strong> posts</span>
+			</div>
+		</header>
+
+		<div class="lite-tags-cloud" aria-label="标签云">
 		{
-			allTags.map(([tag, val]) => (
-				<li class="flex items-center gap-x-2">
-					<a
-						class="cactus-link inline-block"
-						href={`/tags/${tag}/`}
-						title={`View posts with the tag: ${tag}`}
-					>
-						&#35;{tag}
-					</a>
-					<span class="inline-block">
-						- {val} Post{val > 1 && "s"}
-					</span>
-				</li>
+			allTags.map(([tag, postCount], tagIndex) => (
+				<a
+					class:list={["lite-tag-chip", `color-${tagIndex % 8}`]}
+					href={`/tags/${tag}/`}
+					style={`--lite-tag-size: ${tagScale(postCount)}`}
+				>
+					<span>{tag}</span>
+					<small>{postCount}</small>
+				</a>
 			))
 		}
-	</ul>
+		</div>
+	</section>
 </PageLayout>
+
+<style>
+	.lite-tags-page {
+		width: 100%;
+		max-width: 43.25rem;
+		margin: 0;
+		padding: 0 0 56px;
+		box-sizing: border-box;
+		background: transparent;
+		color: #5f6368;
+	}
+
+	.lite-tags-header {
+		display: flex;
+		max-width: 720px;
+		margin-bottom: 32px;
+		align-items: baseline;
+		gap: 24px;
+		flex-wrap: wrap;
+	}
+
+	.lite-tags-header h1 {
+		display: inline-block;
+		margin: 0;
+		color: #333;
+		font-size: 24px;
+		font-weight: 700;
+		letter-spacing: 0;
+		line-height: 2rem;
+		text-decoration: none;
+	}
+
+	.lite-tags-stats {
+		display: flex;
+		gap: 22px;
+		color: #a0a7ab;
+		font-size: 15px;
+	}
+
+	.lite-tags-stats strong {
+		margin-right: 6px;
+		color: #555;
+		font-size: 22px;
+		font-weight: 600;
+	}
+
+	.lite-tags-cloud {
+		display: flex;
+		width: 100%;
+		max-width: 920px;
+		padding: 20px 16px;
+		align-items: baseline;
+		flex-wrap: wrap;
+		gap: 14px 18px;
+		box-sizing: border-box;
+		border-radius: 10px;
+		background: #fff;
+	}
+
+	.lite-tag-chip {
+		display: inline-flex;
+		padding: 4px 8px;
+		align-items: baseline;
+		gap: 2px;
+		border-radius: 6px;
+		color: #2563eb;
+		font-size: calc(var(--lite-tag-size, 1.23rem) * 0.85);
+		line-height: 1.15;
+		text-decoration: none;
+		transition:
+			color 160ms ease,
+			background-color 160ms ease,
+			transform 180ms ease;
+	}
+
+	.lite-tag-chip small {
+		color: currentColor;
+		font-size: 0.55em;
+		font-weight: 500;
+		opacity: 0.62;
+	}
+
+	.lite-tag-chip:hover {
+		background: color-mix(in srgb, currentColor 4%, transparent);
+		transform: scale(1.04);
+	}
+
+	.lite-tag-chip.color-0 {
+		color: #2563eb;
+	}
+
+	.lite-tag-chip.color-1 {
+		color: #f97316;
+	}
+
+	.lite-tag-chip.color-2 {
+		color: #10a981;
+	}
+
+	.lite-tag-chip.color-3 {
+		color: #8b45f0;
+	}
+
+	.lite-tag-chip.color-4 {
+		color: #ec2361;
+	}
+
+	.lite-tag-chip.color-5 {
+		color: #0ea5c8;
+	}
+
+	.lite-tag-chip.color-6 {
+		color: #5f7df0;
+	}
+
+	.lite-tag-chip.color-7 {
+		color: #e98b36;
+	}
+
+	:global(html[data-theme="dark"]) .lite-tags-page {
+		background: transparent;
+		color: #c3c9d1;
+	}
+
+	:global(html[data-theme="dark"]) .lite-tags-header h1 {
+		color: #eef1f4;
+	}
+
+	:global(html[data-theme="dark"]) .lite-tags-stats {
+		color: #9ca6b3;
+	}
+
+	:global(html[data-theme="dark"]) .lite-tags-stats strong {
+		color: #e0e5eb;
+	}
+
+	:global(html[data-theme="dark"]) .lite-tag-chip {
+		color: #c3c9d1;
+	}
+
+	:global(html[data-theme="dark"]) .lite-tags-cloud {
+		background: #242831;
+	}
+
+	:global(html[data-theme="dark"]) .lite-tag-chip small {
+		color: #8994a2;
+	}
+
+	:global(html[data-theme="dark"]) .lite-tag-chip:hover {
+		color: #7ca8d8;
+	}
+
+	@media (max-width: 760px) {
+		.lite-tags-page {
+			padding: 0 0 56px;
+		}
+
+		.lite-tags-cloud {
+			gap: 14px 18px;
+		}
+
+		.lite-tag-chip {
+			font-size: min(calc(var(--lite-tag-size, 1.23rem) * 0.85), 2.2rem);
+		}
+	}
+</style>

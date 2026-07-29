@@ -3,6 +3,10 @@
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/preflight.css" layer(base);
 @import "tailwindcss/utilities.css" layer(utilities);
+@import "lxgw-wenkai-webfont/lxgwwenkai-light.css";
+@import "lxgw-wenkai-webfont/lxgwwenkai-regular.css";
+@import "lxgw-wenkai-webfont/lxgwwenkai-bold.css";
+@import "katex/dist/katex.min.css";
 
 /* tailwind to ignore satori generated og-image */
 @source not "../pages/og-image";
@@ -36,7 +40,7 @@
 @property --color-accent {
 	syntax: "<color>";
 	inherits: true;
-	initial-value: oklch(55.27% 0.195 19.06);
+	initial-value: #337ea9;
 }
 @property --color-accent-2 {
 	syntax: "<color>";
@@ -46,18 +50,21 @@
 @property --color-quote {
 	syntax: "<color>";
 	inherits: true;
-	initial-value: oklch(55.27% 0.195 19.06);
+	initial-value: #337ea9;
 }
 
 /* you could refactor below to use light-dark(), depending on your target audience */
 @theme {
+	--font-mono:
+		ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+		monospace;
 	--color-global-bg: oklch(98.48% 0 0);
 	--color-global-text: oklch(26.99% 0.0096 235.05);
 	--color-muted: oklch(44.6% 0.03 256.802);
 	--color-link: oklch(55.44% 0.0431 185.69);
-	--color-accent: oklch(55.27% 0.195 19.06);
+	--color-accent: #337ea9;
 	--color-accent-2: oklch(18.15% 0 0);
-	--color-quote: oklch(55.27% 0.195 19.06);
+	--color-quote: #337ea9;
 }
 
 @layer base {
@@ -117,6 +124,7 @@
 
 @layer components {
 	@import "./components/admonition.css";
+	@import "./components/extended-content.css";
 	@import "./components/github-card.css";
 
 	.cactus-link {
@@ -138,6 +146,41 @@
 	--tw-prose-links: var(--color-global-text);
 	--tw-prose-quotes: var(--color-quote);
 	--tw-prose-th-borders: #666;
+}
+
+.math-inline {
+	white-space: nowrap;
+}
+
+.math-inline .katex {
+	font-size: 1em;
+}
+
+.math-display {
+	margin: 1.5rem 0;
+	padding: 0.5rem 0;
+	overflow-x: auto;
+	overflow-y: hidden;
+	text-align: center;
+}
+
+.math-display .katex-display {
+	margin: 0;
+}
+
+.mermaid {
+	display: flex;
+	margin: 1.5rem 0;
+	padding: 1rem 0;
+	justify-content: center;
+	overflow-x: auto;
+	background: transparent;
+	font-family: inherit;
+}
+
+.mermaid svg {
+	max-width: 100%;
+	height: auto;
 }
 
 .prose :where(code):not(:where(pre code)) {
@@ -344,21 +387,46 @@
 }
 
 .expressive-code .pretty-code-frame pre {
-	min-width: max-content;
+	width: 100%;
+	min-width: 0;
+	max-width: 100%;
 	margin: 0;
 	padding: 16px;
-	overflow: visible;
+	overflow-x: auto;
+	overflow-y: hidden;
 	border: 0;
 	border-radius: 0;
 	background: #fff;
 	box-shadow: none;
 	counter-reset: code-line;
+	scrollbar-color: color-mix(in srgb, var(--color-global-text) 20%, transparent) transparent;
+	scrollbar-width: thin;
 	tab-size: 2;
+}
+
+.expressive-code .pretty-code-frame pre::-webkit-scrollbar {
+	height: 7px;
+}
+
+.expressive-code .pretty-code-frame pre::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.expressive-code .pretty-code-frame pre::-webkit-scrollbar-thumb {
+	border: 2px solid transparent;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--color-global-text) 18%, transparent);
+	background-clip: content-box;
+}
+
+.expressive-code .pretty-code-frame pre::-webkit-scrollbar-thumb:hover {
+	background: color-mix(in srgb, var(--color-global-text) 30%, transparent);
+	background-clip: content-box;
 }
 
 .expressive-code .pretty-code-frame code {
 	display: grid;
-	min-width: 100%;
+	min-width: max-content;
 }
 
 .expressive-code .pretty-code-frame .ec-line {

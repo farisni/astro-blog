@@ -30,7 +30,7 @@ const latestNotes = allNotes
 ---
 
 <PageLayout meta={{ title: "Home" }}>
-<section class="-mt-8 max-w-[70ch]">
+<section class="max-w-[43.25rem]">
 	<h1 class="title mb-6 text-xl">
 		Hello World! <span aria-hidden="true" class="ms-1 inline-block align-[0.08em]">👋🏻</span>
 	</h1>
@@ -43,9 +43,9 @@ const latestNotes = allNotes
 	</section>
 	{
 		pinnedPosts.length > 0 && (
-			<section class="mt-14">
-				<h2 class="title text-accent mb-6 text-xl">置顶文章</h2>
-				<ul class="space-y-4" role="list">
+			<section class="mt-10">
+				<h2 class="title text-accent mb-3 text-xl">TOP</h2>
+				<ul class="space-y-2" role="list">
 					{pinnedPosts.map((p) => (
 						<li class="grid gap-1 sm:grid-cols-[auto_1fr]">
 							<PostPreview post={p} />
@@ -55,9 +55,9 @@ const latestNotes = allNotes
 			</section>
 		)
 	}
-	<section class="mt-14">
-		<h2 class="title text-accent mb-6 text-xl"><a href="/posts/">文章</a></h2>
-		<ul class="space-y-4" role="list">
+	<section class="mt-10">
+		<h2 class="title text-accent mb-3 text-xl"><a href="/posts/">Blog</a></h2>
+		<ul class="space-y-2" role="list">
 			{
 				latestPosts.map((p) => (
 					<li class="grid gap-1 sm:grid-cols-[auto_1fr]">
@@ -71,7 +71,7 @@ const latestNotes = allNotes
 		latestNotes.length > 0 && (
 			<section class="mt-14">
 				<h2 class="title text-accent mb-6 text-xl">
-					<a href="/notes/">笔记</a>
+					<a href="/notes/">Notes</a>
 				</h2>
 				<ul class="space-y-6" role="list">
 					{latestNotes.map((note) => (

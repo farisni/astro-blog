@@ -9,7 +9,10 @@ import icon from "astro-icon";
 import robotsTxt from "astro-robots-txt";
 import webmanifest from "astro-webmanifest";
 import { satteriAdmonitionsPlugin } from "./src/plugins/admonitions";
+import { satteriExtendedDirectivesPlugin } from "./src/plugins/extended-directives";
 import { satteriGithubCardPlugin } from "./src/plugins/github-cards";
+import { satteriImageFiguresPlugin } from "./src/plugins/image-figures";
+import { satteriMathPlugin, satteriMermaidPlugin } from "./src/plugins/markdown-extensions";
 import {
 	satteriAutolinkHeadingsPlugin,
 	satteriExternalLinksPlugin,
@@ -67,14 +70,18 @@ export default defineConfig({
 	],
 	markdown: {
 		processor: satteri({
-			features: { directive: true },
+			features: { directive: true, math: true },
 			mdastPlugins: [
+				satteriMathPlugin,
+				satteriMermaidPlugin,
 				satteriUnwrapImagesPlugin(),
 				satteriReadingTimePlugin(),
 				satteriGithubCardPlugin(),
+				satteriExtendedDirectivesPlugin(),
 				satteriAdmonitionsPlugin(),
 			],
 			hastPlugins: [
+				satteriImageFiguresPlugin,
 				satteriHeadingIdsPlugin(),
 				satteriAutolinkHeadingsPlugin(),
 				satteriFootnoteLabelPlugin(),

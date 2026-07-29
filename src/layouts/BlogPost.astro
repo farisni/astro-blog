@@ -32,7 +32,7 @@ const readingTime: string = remarkPluginFrontmatter.readingTime;
 		<div class="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
 			{!!headings.length && <TOC headings={headings} />}
 			<div
-				class="prose prose-sm max-w-[37rem] prose-headings:font-semibold prose-headings:text-accent-2"
+				class="prose prose-sm max-w-[43.25rem] prose-headings:font-semibold prose-headings:text-accent-2"
 			>
 				<slot />
 				<WebMentions />
@@ -61,6 +61,9 @@ const readingTime: string = remarkPluginFrontmatter.readingTime;
 </BaseLayout>
 
 <script>
+	import "@/scripts/media-embeds";
+	import mermaid from "mermaid";
+
 	const scrollBtn = document.getElementById("to-top-btn") as HTMLButtonElement;
 	const targetHeader = document.getElementById("blog-hero") as HTMLDivElement;
 
@@ -77,4 +80,50 @@ const readingTime: string = remarkPluginFrontmatter.readingTime;
 
 	const observer = new IntersectionObserver(callback);
 	observer.observe(targetHeader);
+
+	async function renderMermaid(reset = false) {
+		const diagrams = [...document.querySelectorAll<HTMLElement>(".mermaid")];
+
+		mermaid.initialize({
+			fontFamily: "inherit",
+			securityLevel: "strict",
+			startOnLoad: false,
+			theme: document.documentElement.dataset.theme === "dark" ? "dark" : "default",
+		});
+
+		for (const [index, diagram] of diagrams.entries()) {
+			if (!reset && diagram.dataset.processed === "true") continue;
+
+			const source = diagram.dataset.mermaidSource ?? diagram.textContent ?? "";
+			if (!source.trim()) continue;
+
+			try {
+				const id = `mermaid-${Date.now()}-${index}`;
+				const { svg, bindFunctions } = await mermaid.render(id, source);
+				diagram.innerHTML = svg;
+				diagram.dataset.processed = "true";
+				bindFunctions?.(diagram);
+			} catch (error) {
+				diagram.removeAttribute("data-processed");
+				diagram.textContent = source;
+				console.error("Mermaid render failed:", error);
+			}
+		}
+	}
+
+	let mermaidRenderQueue = Promise.resolve();
+	const queueMermaidRender = (reset = false) => {
+		mermaidRenderQueue = mermaidRenderQueue
+			.then(() => renderMermaid(reset))
+			.catch((error) => console.error("Mermaid render queue failed:", error));
+	};
+
+	queueMermaidRender();
+	document.addEventListener("astro:page-load", () => queueMermaidRender());
+
+	const themeObserver = new MutationObserver(() => queueMermaidRender(true));
+	themeObserver.observe(document.documentElement, {
+		attributeFilter: ["data-theme"],
+		attributes: true,
+	});
 </script>
