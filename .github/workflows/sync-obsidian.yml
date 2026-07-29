@@ -43,8 +43,9 @@ jobs:
             --filter=blob:none \
             --depth=1 \
             origin main
-          git -C "$GITHUB_WORKSPACE/vault-repo" archive FETCH_HEAD -- Linux \
-            | tar -x -C "$GITHUB_WORKSPACE/vault"
+          git -C "$GITHUB_WORKSPACE/vault-repo" archive \
+            FETCH_HEAD -- faris-vault/Linux \
+            | tar -x --strip-components=1 -C "$GITHUB_WORKSPACE/vault"
           test -d "$GITHUB_WORKSPACE/vault/Linux"
           unset VAULT_DEPLOY_KEY GIT_SSH_COMMAND
 
