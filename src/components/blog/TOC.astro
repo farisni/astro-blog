@@ -18,23 +18,76 @@ const toc = generateToc(headings, {
 <aside
 	class="article-toc hidden md:block lg:sticky lg:top-[30vh] lg:order-2 lg:-me-40 lg:w-56 lg:shrink-0"
 >
-	<nav aria-label="文章目录">
-		<ol class="article-toc-list">
-			{toc.map((heading) => <TOCHeading heading={heading} />)}
-		</ol>
-	</nav>
+	<div class="article-toc-frame" data-toc-frame>
+		<div class="article-toc-scroll" data-toc-scroll>
+			<nav aria-label="文章目录">
+				<ol class="article-toc-list">
+					{toc.map((heading) => <TOCHeading heading={heading} />)}
+				</ol>
+			</nav>
+		</div>
+		<span aria-hidden="true" class="article-toc-fade article-toc-fade-top"></span>
+		<span aria-hidden="true" class="article-toc-fade article-toc-fade-bottom"></span>
+	</div>
 </aside>
 
 <style is:global>
 	.article-toc {
+		max-height: 58vh;
+	}
+
+	.article-toc-frame {
+		position: relative;
+		max-height: 58vh;
+	}
+
+	.article-toc-scroll {
 		max-height: 58vh;
 		overflow-y: auto;
 		padding: 0.25rem 0.5rem;
 		scrollbar-width: none;
 	}
 
-	.article-toc::-webkit-scrollbar {
+	.article-toc-scroll::-webkit-scrollbar {
 		display: none;
+	}
+
+	.article-toc-fade {
+		position: absolute;
+		z-index: 2;
+		inset-inline: 0;
+		height: 1.75rem;
+		pointer-events: none;
+		opacity: 0;
+		transition: opacity 180ms ease;
+		backdrop-filter: blur(2px);
+	}
+
+	.article-toc-fade-top {
+		top: 0;
+		background: linear-gradient(
+			to bottom,
+			color-mix(in srgb, var(--color-global-bg) 94%, transparent),
+			transparent
+		);
+		-webkit-mask-image: linear-gradient(to bottom, #000 20%, transparent);
+		mask-image: linear-gradient(to bottom, #000 20%, transparent);
+	}
+
+	.article-toc-fade-bottom {
+		bottom: 0;
+		background: linear-gradient(
+			to top,
+			color-mix(in srgb, var(--color-global-bg) 94%, transparent),
+			transparent
+		);
+		-webkit-mask-image: linear-gradient(to top, #000 20%, transparent);
+		mask-image: linear-gradient(to top, #000 20%, transparent);
+	}
+
+	.article-toc-frame[data-fade-top="true"] .article-toc-fade-top,
+	.article-toc-frame[data-fade-bottom="true"] .article-toc-fade-bottom {
+		opacity: 1;
 	}
 
 	.article-toc-list {
@@ -101,14 +154,45 @@ const toc = generateToc(headings, {
 	}
 
 	@media (max-width: 1023px) {
-		.article-toc {
+		.article-toc,
+		.article-toc-frame,
+		.article-toc-scroll {
 			max-height: none;
+		}
+
+		.article-toc-scroll {
 			padding: 0.5rem 0;
+		}
+
+		.article-toc-fade {
+			display: none;
 		}
 	}
 </style>
 
 <script>
+	const tocFrame = document.querySelector<HTMLElement>("[data-toc-frame]");
+	const tocScroll = tocFrame?.querySelector<HTMLElement>("[data-toc-scroll]");
+
+	const updateTocFades = () => {
+		if (!tocFrame || !tocScroll) return;
+
+		const hasOverflow = tocScroll.scrollHeight > tocScroll.clientHeight + 1;
+		const canScrollUp = hasOverflow && tocScroll.scrollTop > 2;
+		const canScrollDown =
+			hasOverflow &&
+			tocScroll.scrollTop + tocScroll.clientHeight < tocScroll.scrollHeight - 2;
+
+		tocFrame.dataset.fadeTop = canScrollUp.toString();
+		tocFrame.dataset.fadeBottom = canScrollDown.toString();
+	};
+
+	tocScroll?.addEventListener("scroll", updateTocFades, { passive: true });
+	if (tocScroll) {
+		new ResizeObserver(updateTocFades).observe(tocScroll);
+		updateTocFades();
+	}
+
 	const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>("[data-toc-link]"));
 	const tocHeadings = tocLinks
 		.map((link) => {
