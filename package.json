@@ -9,6 +9,7 @@
 		"build": "astro build",
 		"postbuild": "pagefind --site dist",
 		"preview": "astro preview",
+		"sync:obsidian": "node scripts/sync-obsidian.mjs",
 		"check": "astro check && biome check",
 		"lint": "biome check --write",
 		"format": "prettier -w . --cache"
