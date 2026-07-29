@@ -44,7 +44,7 @@ jobs:
             "$GITHUB_WORKSPACE/vault"
           git -C "$GITHUB_WORKSPACE/vault" sparse-checkout init --cone
           git -C "$GITHUB_WORKSPACE/vault" sparse-checkout set Linux
-          git -C "$GITHUB_WORKSPACE/vault" checkout main
+          git -C "$GITHUB_WORKSPACE/vault" read-tree -mu HEAD
           test -d "$GITHUB_WORKSPACE/vault/Linux"
           unset VAULT_DEPLOY_KEY GIT_SSH_COMMAND
 
