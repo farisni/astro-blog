@@ -24,15 +24,14 @@ jobs:
           path: site
 
       - name: Checkout Obsidian Linux whitelist
-        uses: actions/checkout@v7
+        uses: actions/checkout@v6
         with:
           repository: farisni/obsidian
           ref: main
           ssh-key: ${{ secrets.VAULT_DEPLOY_KEY }}
           path: vault
-          sparse-checkout: |
-            /Linux/**
-          sparse-checkout-cone-mode: false
+          sparse-checkout: Linux
+          sparse-checkout-cone-mode: true
           persist-credentials: false
 
       - name: Install pnpm
