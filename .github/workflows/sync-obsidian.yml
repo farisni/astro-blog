@@ -30,8 +30,9 @@ jobs:
           ref: main
           ssh-key: ${{ secrets.VAULT_DEPLOY_KEY }}
           path: vault
-          sparse-checkout: Linux
-          sparse-checkout-cone-mode: true
+          sparse-checkout: |
+            /Linux/**
+          sparse-checkout-cone-mode: false
           persist-credentials: false
 
       - name: Install pnpm
