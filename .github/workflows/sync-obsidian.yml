@@ -1,10 +1,8 @@
 name: Sync Obsidian Linux notes
 
 on:
-  push:
-    branches: [obsidian-sync]
-    paths:
-      - ".obsidian-source-sha"
+  schedule:
+    - cron: "*/10 * * * *"
   workflow_dispatch:
 
 permissions:
