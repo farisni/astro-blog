@@ -162,6 +162,35 @@ pinned: false
 :::
 ::::
 
+### 代码块半折叠
+
+在代码围栏的语言标识后添加 `fold`，超过 8 行的代码块会默认显示前 8 行。点击“展开全部”可以查看完整代码，再次点击可以收起。
+
+````markdown
+```lua fold
+local function greet(name)
+  return "Hello, " .. name
+end
+```
+````
+
+下面是一个会触发半折叠的实际示例：
+
+```lua fold
+local users = {
+  { name = "Faris", active = true },
+  { name = "Astro", active = true },
+  { name = "Cactus", active = false },
+}
+
+for _, user in ipairs(users) do
+  if user.active then
+    local message = string.format("Hello, %s!", user.name)
+    print(message)
+  end
+end
+```
+
 ### 代码标签页
 
 使用 `:::tabs[标签一|标签二]` 把多个代码块组合成可切换的标签页。标签数量需要与代码块数量保持一致。

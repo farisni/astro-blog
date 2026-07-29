@@ -68,12 +68,20 @@ function findElement(node: Element, predicate: (element: Element) => boolean): E
 }
 
 export function codeWindowPlugin(): ExpressiveCodePlugin {
+	const semiFoldedBlocks = new WeakSet<object>();
+
 	return {
 		name: "Cleanfit code window",
 		hooks: {
 			preprocessMetadata({ codeBlock }) {
 				codeBlock.props.frame = "code";
 				codeBlock.props.title = "";
+
+				const hasFoldMeta =
+					codeBlock.metaOptions.getBoolean("fold") === true ||
+					/(?:^|\s)fold(?:\s|$)/i.test(codeBlock.meta);
+				const lineCount = codeBlock.code.split(/\r?\n/).length;
+				if (hasFoldMeta && lineCount > 8) semiFoldedBlocks.add(codeBlock);
 			},
 			postprocessRenderedBlock({ codeBlock, renderData }) {
 				const figure = renderData.blockAst;
@@ -95,6 +103,7 @@ export function codeWindowPlugin(): ExpressiveCodePlugin {
 				figure.properties.className = [
 					...classes.filter((className) => className !== "has-title"),
 					"pretty-code-frame",
+					...(semiFoldedBlocks.has(codeBlock) ? ["is-semi-foldable"] : []),
 				];
 
 				const copyButton = findElement(figure, (element) => element.tagName === "button");
@@ -126,6 +135,21 @@ export function codeWindowPlugin(): ExpressiveCodePlugin {
 					]),
 					element("span", ["pretty-code-language-short"], [{ type: "text", value: meta.short }]),
 				];
+
+				if (semiFoldedBlocks.has(codeBlock)) {
+					figure.children.push(
+						element(
+							"button",
+							["pretty-code-expand"],
+							[{ type: "text", value: "展开全部" }],
+							{
+								type: "button",
+								ariaExpanded: "false",
+								ariaLabel: "展开全部代码",
+							},
+						),
+					);
+				}
 			},
 		},
 	};

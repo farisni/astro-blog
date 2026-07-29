@@ -449,6 +449,63 @@
 	padding-right: 18px;
 }
 
+.expressive-code .pretty-code-frame.is-semi-foldable {
+	position: relative;
+}
+
+.expressive-code .pretty-code-frame.is-semi-foldable pre {
+	transition: max-height 260ms ease;
+}
+
+.expressive-code .pretty-code-frame.is-semi-foldable:not(.is-expanded) pre {
+	max-height: calc(13.76em + 32px);
+}
+
+.expressive-code .pretty-code-expand {
+	display: flex;
+	width: 100%;
+	height: 38px;
+	align-items: center;
+	justify-content: center;
+	border: 0;
+	border-top: 0;
+	background: #fff;
+	color: var(--color-global-accent);
+	cursor: pointer;
+	font: inherit;
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+}
+
+.expressive-code .pretty-code-expand::after {
+	width: 14px;
+	height: 14px;
+	margin-left: 5px;
+	background: currentColor;
+	content: "";
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+		center / contain no-repeat;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+		center / contain no-repeat;
+	transition: transform 180ms ease;
+}
+
+.expressive-code .pretty-code-frame.is-expanded .pretty-code-expand::after {
+	transform: rotate(180deg);
+}
+
+.expressive-code .pretty-code-frame.is-semi-foldable:not(.is-expanded) .pretty-code-expand {
+	position: absolute;
+	z-index: 2;
+	bottom: 0;
+	left: 0;
+	height: 68px;
+	padding-top: 28px;
+	border-top: 0;
+	background: linear-gradient(to bottom, rgb(255 255 255 / 0%), #fff 56%);
+}
+
 [data-theme="dark"] .expressive-code .pretty-code-frame {
 	border-color: #30343c;
 	background: #282c34;
@@ -495,6 +552,17 @@
 
 [data-theme="dark"] .expressive-code .pretty-code-frame .ec-line::before {
 	color: rgb(171 178 191 / 44%);
+}
+
+[data-theme="dark"] .expressive-code .pretty-code-expand {
+	background: #282c34;
+}
+
+[data-theme="dark"]
+	.expressive-code
+	.pretty-code-frame.is-semi-foldable:not(.is-expanded)
+	.pretty-code-expand {
+	background: linear-gradient(to bottom, rgb(40 44 52 / 0%), #282c34 56%);
 }
 
 @media (max-width: 760px) {

@@ -125,6 +125,32 @@ function handleGalleryWheel(event: WheelEvent) {
 function setupMediaEmbeds() {
 	setupTwitterEmbeds();
 	setupCodeTabs();
+	setupSemiFoldedCodeBlocks();
+}
+
+function setupSemiFoldedCodeBlocks() {
+	const frames = document.querySelectorAll<HTMLElement>(
+		".pretty-code-frame.is-semi-foldable:not([data-semi-fold-ready])",
+	);
+
+	frames.forEach((frame) => {
+		const button = frame.querySelector<HTMLButtonElement>(":scope > .pretty-code-expand");
+		if (!button) return;
+
+		const setExpanded = (expanded: boolean) => {
+			frame.classList.toggle("is-expanded", expanded);
+			button.setAttribute("aria-expanded", String(expanded));
+			button.setAttribute("aria-label", expanded ? "收起代码" : "展开全部代码");
+			button.textContent = expanded ? "收起代码" : "展开全部";
+		};
+
+		button.addEventListener("click", () => {
+			setExpanded(!frame.classList.contains("is-expanded"));
+		});
+
+		frame.dataset.semiFoldReady = "true";
+		setExpanded(false);
+	});
 }
 
 if (document.readyState === "loading") {
