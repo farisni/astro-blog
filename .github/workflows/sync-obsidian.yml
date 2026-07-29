@@ -77,7 +77,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add content/posts/linux public/images/obsidian/linux
+          git add content/posts/linux
           if git diff --cached --quiet; then
             echo "No public note changes to commit."
             exit 0

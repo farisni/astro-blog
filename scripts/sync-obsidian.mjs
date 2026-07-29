@@ -17,10 +17,9 @@ const sourceRoot = resolve(process.argv[2] ?? process.env.OBSIDIAN_LINUX_DIR ?? 
 const outputRoot = resolve(process.argv[3] ?? join(projectRoot, "content/posts/linux"));
 const allowedOutputRoot = `${join(projectRoot, "content/posts")}${sep}`;
 const manifestPath = join(outputRoot, ".obsidian-sync.json");
-const assetOutputRoot = resolve(projectRoot, "public/images/obsidian/linux");
-const allowedAssetOutputRoot = `${join(projectRoot, "public/images/obsidian")}${sep}`;
+const assetOutputRoot = resolve(outputRoot, "images");
+const allowedAssetOutputRoot = `${outputRoot}${sep}`;
 const assetManifestPath = join(assetOutputRoot, ".obsidian-sync.json");
-const assetPublicBase = "/images/obsidian/linux";
 const imageExtensions = new Set([
 	".avif",
 	".gif",
@@ -36,7 +35,7 @@ if (!outputRoot.startsWith(allowedOutputRoot)) {
 }
 
 if (!assetOutputRoot.startsWith(allowedAssetOutputRoot)) {
-	throw new Error(`附件输出目录必须位于 public/images/obsidian 内：${assetOutputRoot}`);
+	throw new Error(`附件输出目录必须位于 content/posts/linux 内：${assetOutputRoot}`);
 }
 
 if (sourceRoot === outputRoot || outputRoot.startsWith(`${sourceRoot}${sep}`)) {
@@ -153,18 +152,7 @@ function slugifyFile(value) {
 }
 
 function slugifyAssetPath(sourcePath) {
-	return relative(sourceRoot, sourcePath)
-		.split(sep)
-		.map((segment, index, segments) => {
-			if (index < segments.length - 1) return slugifyFile(segment) || "assets";
-			const extension = extname(segment).toLowerCase();
-			return `${slugifyFile(basename(segment, extension)) || "image"}${extension}`;
-		})
-		.join("/");
-}
-
-function escapeImageAlt(value) {
-	return value.replace(/\\/g, "\\\\").replace(/\]/g, "\\]");
+	return basename(sourcePath).normalize("NFC");
 }
 
 function resolveImageAsset(target, sourcePath, assetBySource, assetByBasename) {
@@ -191,28 +179,25 @@ function resolveImageAsset(target, sourcePath, assetBySource, assetByBasename) {
 	throw new Error(`找不到 Obsidian 图片附件：${target}（文章：${sourcePath}）`);
 }
 
-function transformObsidianMarkdown(
+function collectReferencedImageAssets(
 	body,
 	sourcePath,
 	assetBySource,
 	assetByBasename,
 	referencedAssets,
 ) {
-	let transformed = body.replace(
+	body.replace(
 		/!\[\[([^|\]]+\.(?:avif|gif|jpe?g|png|svg|webp))(?:\|([^\]]+))?\]\]/gi,
-		(_match, target, alias) => {
+		(_match, target) => {
 			const asset = resolveImageAsset(target, sourcePath, assetBySource, assetByBasename);
 			referencedAssets.add(asset);
-			const normalizedAlias = alias?.trim();
-			const alt =
-				normalizedAlias && !/^\d+(?:x\d+)?$/i.test(normalizedAlias)
-					? normalizedAlias
-					: basename(target, extname(target));
-			return `![${escapeImageAlt(alt)}](${asset.publicUrl})`;
+			return _match;
 		},
 	);
+}
 
-	transformed = transformed.replace(
+function transformObsidianMarkdown(body) {
+	let transformed = body.replace(
 		/\[\[#([^|\]]+)(?:\|([^\]]+))?\]\]/g,
 		(_match, heading, label) => `[${label ?? heading}](#${slugifyHeading(heading)})`,
 	);
@@ -335,7 +320,6 @@ for (const sourcePath of sourceAssets) {
 	const asset = {
 		sourcePath,
 		outputPath,
-		publicUrl: `${assetPublicBase}/${outputRelativePath}`,
 	};
 	assetBySource.set(resolve(sourcePath), asset);
 	assetByOutput.set(outputPath, asset);
@@ -356,13 +340,14 @@ for (const sourcePath of sourceFiles) {
 	const { data, body } = parseFrontmatter(markdown);
 	const fileStat = await stat(sourcePath);
 	const title = basename(sourcePath, ".md").trim();
-	const transformedBody = transformObsidianMarkdown(
+	collectReferencedImageAssets(
 		body,
 		sourcePath,
 		assetBySource,
 		assetByBasename,
 		referencedAssets,
 	);
+	const transformedBody = transformObsidianMarkdown(body);
 	const description = createDescription(transformedBody, title);
 	const publishDate = normalizeDate(
 		data.publishDate || data.date || data.created,

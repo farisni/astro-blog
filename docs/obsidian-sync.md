@@ -40,8 +40,8 @@ Obsidian 是唯一内容源，Astro 是内容消费者。Obsidian 推送后只�
 | CI 临时输入目录 | `vault/Linux` |
 | Astro 生成目录 | `content/posts/linux` |
 | 生成目录安全标记 | `content/posts/linux/.obsidian-sync.json` |
-| Astro 图片目录 | `public/images/obsidian/linux` |
-| 图片目录安全标记 | `public/images/obsidian/linux/.obsidian-sync.json` |
+| Astro 图片目录 | `content/posts/linux/images` |
+| 图片目录安全标记 | `content/posts/linux/images/.obsidian-sync.json` |
 
 `faris-vault` 本身不是 Git 仓库根目录。因此，远端路径必须使用 `faris-vault/Linux`，不能写成 `Linux`。
 
@@ -68,7 +68,9 @@ content/posts/linux/*.md
 - 根据现有内容集合补齐必要的描述和发布日期。
 - 保留受支持的更新时间、标签、草稿和置顶信息。
 - 转换受支持的 Obsidian Wikilink。
-- 将 `![[图片.webp]]` 等 Obsidian 图片嵌入改写为标准 Markdown 图片。
+- 保留 `![[图片.webp]]` 等 Obsidian 图片嵌入原语法，由 Astro 的 Satteri AST 插件在渲染阶段生成标准图片节点。
+- 支持 `![[图片.webp|540]]` 宽度语法，桌面端最大宽度为 540px，窄屏下自动限制在正文宽度内。
+- 支持 `![[图片.webp|540x320]]` 尺寸语法，并保持响应式宽度和图片原始比例。
 - 只复制文章实际引用的白名单目录内图片附件。
 - 将当前文章内的标题链接转换为 Markdown 锚点。
 - 将白名单外的 Wikilink 降级为普通文字，避免生成无效博客链接。
@@ -170,7 +172,7 @@ Astro 定时任务继续作为兜底，配置为每小时的 `03、13、23、33�
 | 在 `Linux` 新增 Markdown | 在 `content/posts/linux` 生成对应文章 |
 | 修改 `Linux` 中的 Markdown | 重新生成对应文章 |
 | 删除 `Linux` 中的 Markdown | 删除对应的生成文章 |
-| 文章引用 `Linux` 内图片 | 复制到 `public/images/obsidian/linux` 并改写图片 URL |
+| 文章引用 `Linux` 内图片 | 复制到 `content/posts/linux/images`，由解析插件生成相对图片 URL |
 | 删除文章中的图片引用 | 下一次同步删除不再被引用的生成图片 |
 | 修改 Vault 其他目录 | 不生成博客文章 |
 | 转换结果没有变化 | 不创建 Git 提交 |
@@ -190,14 +192,14 @@ Astro -X-> Obsidian
 
 ## 8. 生成目录安全保护
 
-`content/posts/linux/.obsidian-sync.json` 和 `public/images/obsidian/linux/.obsidian-sync.json` 用于标记对应目录由同步脚本管理。
+`content/posts/linux/.obsidian-sync.json` 和 `content/posts/linux/images/.obsidian-sync.json` 用于标记对应目录由同步脚本管理。
 
 同步脚本在清理旧生成文件前会检查该标记。如果输出目录不是同步脚本创建的受管目录，脚本会拒绝清空，避免误删手写博客文章。
 
 因此：
 
 - Obsidian 同步文章统一放入 `content/posts/linux`。
-- Obsidian 同步图片统一放入 `public/images/obsidian/linux`。
+- Obsidian 同步图片统一放入 `content/posts/linux/images`，与 Obsidian 的 `Linux/images` 目录保持一致。
 - 普通手写文章继续放在其他内容目录。
 - 不要删除或手动伪造 `.obsidian-sync.json`。
 - 不要在受管目录内长期维护手写文件。
@@ -325,7 +327,8 @@ faris-vault/Linux/**
 - Astro 同步工作流：`.github/workflows/sync-obsidian.yml`
 - Obsidian 触发 Secret：`ASTRO_BLOG_ACTIONS_TOKEN`
 - Astro 读取 Secret：`VAULT_DEPLOY_KEY`
+- Obsidian 图片解析插件：`src/plugins/obsidian-images.ts`
 - 转换脚本：`scripts/sync-obsidian.mjs`
 - npm 命令：`sync:obsidian`
 - Astro 输出：`content/posts/linux`
-- Astro 图片输出：`public/images/obsidian/linux`
+- Astro 图片输出：`content/posts/linux/images`

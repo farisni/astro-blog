@@ -7,9 +7,17 @@ function hasClass(node: Readonly<Element>, className: string) {
 	return typeof value === "string" && value.split(/\s+/).includes(className);
 }
 
+function isObsidianImage(node: Readonly<Element>) {
+	const src = node.properties.src;
+	return (
+		hasClass(node, "obsidian-embed-image") ||
+		(typeof src === "string" && src.startsWith("./images/"))
+	);
+}
+
 function createFigure(image: Readonly<Element>, gallery = false): Element | null {
 	const alt = typeof image.properties.alt === "string" ? image.properties.alt : "";
-	const hideCaption = !alt || alt.startsWith("_");
+	const hideCaption = isObsidianImage(image) || !alt || alt.startsWith("_");
 	if (hideCaption && !gallery) return null;
 
 	const children: ElementContent[] = [structuredClone(image) as Element];
