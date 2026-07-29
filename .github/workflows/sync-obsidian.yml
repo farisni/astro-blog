@@ -41,7 +41,7 @@ jobs:
             git@github.com:farisni/obsidian.git
           git -C "$GITHUB_WORKSPACE/vault" config core.sparseCheckout true
           git -C "$GITHUB_WORKSPACE/vault" config core.sparseCheckoutCone false
-          printf '/Linux/\n' \
+          printf '/Linux/**\n' \
             > "$GITHUB_WORKSPACE/vault/.git/info/sparse-checkout"
           git -C "$GITHUB_WORKSPACE/vault" fetch \
             --filter=blob:none \
