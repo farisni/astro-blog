@@ -16,12 +16,13 @@ const {
 
 {
 	data.coverImage && (
-		<div class="mb-6 aspect-video">
+		<div class="mb-6 aspect-video max-w-[43.25rem] overflow-hidden">
 			<Image
 				alt={data.coverImage.alt}
+				class="h-full w-full object-cover"
 				layout="constrained"
-				width={748}
-				height={420}
+				width={692}
+				height={389}
 				priority
 				src={data.coverImage.src}
 			/>
