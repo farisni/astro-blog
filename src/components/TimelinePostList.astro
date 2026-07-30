@@ -25,9 +25,9 @@ function formatTimelineDate(date: Date) {
 }
 ---
 
-<section class="mb-10 last:mb-0">
-  <header class="mb-5 flex items-center gap-3">
-    <h3 class="shrink-0 text-4.5 c-secondary font-navbar font-medium leading-[1.4] tracking-wide">
+<section class="mb-7 last:mb-0">
+  <header class="mb-3.5 flex items-center gap-3">
+    <h3 class="shrink-0 text-4 c-secondary font-navbar font-medium leading-[1.4] tracking-wide">
       {year}
     </h3>
     <span aria-hidden="true" class="h-px min-w-8 flex-1 bg-secondary/20" />
@@ -43,10 +43,10 @@ function formatTimelineDate(date: Date) {
       const isRepeatedDate = dateKey === previousDateKey
 
       return (
-        <li class="mb-7 grid grid-cols-[2.75rem_minmax(0,1fr)] items-start gap-x-3 last:mb-0 lg:grid-cols-[3.25rem_minmax(0,1fr)] lg:gap-x-4">
+        <li class="mb-5 grid grid-cols-[2.75rem_minmax(0,1fr)] items-start gap-x-3 last:mb-0 lg:grid-cols-[3.25rem_minmax(0,1fr)] lg:gap-x-4">
           <time
             class:list={[
-              'timeline-date h-[1.540625rem] flex items-center text-3.25 c-secondary/70 font-sans font-normal leading-none tracking-normal lg:h-[1.63125rem] lg:text-3.5',
+              'timeline-date h-[1.45rem] flex items-center text-3 c-secondary/70 font-sans font-normal leading-none tracking-normal lg:h-[1.540625rem] lg:text-3.25',
               isRepeatedDate ? 'op-0 select-none' : '',
             ]}
             datetime={dateKey}
@@ -60,14 +60,14 @@ function formatTimelineDate(date: Date) {
               href={getPostPath(slug, lang)}
             >
               <h4
-                class="min-w-0 text-4.25 c-primary/82 font-medium leading-[1.45] transition-colors cjk:tracking-wide lg:text-4.5"
+                class="min-w-0 text-4 c-primary/82 font-medium leading-[1.45] transition-colors cjk:tracking-wide lg:text-4.25"
                 transition:name={`post-${slug}${lang ? `-${lang}` : ''}`}
                 data-disable-theme-toggle-transition
               >
                 {post.data.title}
               </h4>
 
-              <p class="mt-2 text-3.5 c-secondary/90 leading-1.65em cjk:tracking-wide lg:text-3.75">
+              <p class="mt-1.25 text-3.25 c-secondary/90 leading-1.65em cjk:tracking-wide lg:text-3.5">
                 {getPostDescription(post, 'list')}
               </p>
             </a>

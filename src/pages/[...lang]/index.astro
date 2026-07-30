@@ -50,9 +50,9 @@ const recentLabels: Record<Language, string> = {
 <Layout>
   <!-- Pinned Posts -->
   {pinnedPosts.length > 0 && (
-    <section class="mb-10">
-      <header class="mb-5">
-        <h2 class="text-6 c-primary font-navbar font-bold leading-[1.4] tracking-wide">
+    <section class="mb-7">
+      <header class="mb-3.5">
+        <h2 class="text-5.5 c-primary font-navbar font-bold leading-[1.4] tracking-wide">
           <span class="section-heading-highlight highlight-static">
             {recentLabels[currentLang]}
           </span>
@@ -70,9 +70,9 @@ const recentLabels: Record<Language, string> = {
 
   <!-- Regular Posts -->
   {postsByYear.size > 0 && (
-    <section class="mb-10">
-      <header class="mb-5">
-        <h2 class="text-6 c-primary font-navbar font-bold leading-[1.4] tracking-wide">
+    <section class="mb-7">
+      <header class="mb-3.5">
+        <h2 class="text-5.5 c-primary font-navbar font-bold leading-[1.4] tracking-wide">
           <span class="section-heading-highlight highlight-static">
             {ui[currentLang].posts}
           </span>
