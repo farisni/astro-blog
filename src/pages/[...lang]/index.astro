@@ -32,18 +32,18 @@ function groupPostsByYear(posts: Post[]) {
 }
 
 const recentPostsByYear = groupPostsByYear(pinnedPosts)
-const recentLabels: Record<Language, string> = {
-  de: 'Neueste',
-  en: 'Recent',
-  es: 'Recientes',
-  fr: 'Récents',
-  ja: '最近',
-  ko: '최근',
-  pl: 'Ostatnie',
-  pt: 'Recentes',
-  ru: 'Недавние',
-  zh: '最近',
-  'zh-tw': '最近',
+const pinnedLabels: Record<Language, string> = {
+  de: 'Angeheftet',
+  en: 'Pinned',
+  es: 'Destacados',
+  fr: 'Épinglés',
+  ja: '固定',
+  ko: '고정',
+  pl: 'Przypięte',
+  pt: 'Fixados',
+  ru: 'Закреплённые',
+  zh: '置顶',
+  'zh-tw': '置頂',
 }
 ---
 
@@ -54,7 +54,7 @@ const recentLabels: Record<Language, string> = {
       <header class="mb-3.5">
         <h2 class="text-5.5 c-primary font-navbar font-bold leading-[1.4] tracking-wide">
           <span class="section-heading-highlight highlight-static">
-            {recentLabels[currentLang]}
+            {pinnedLabels[currentLang]}
           </span>
         </h2>
       </header>
