@@ -25,12 +25,6 @@ function getNavItemClass(isActive: boolean) {
     : 'c-secondary transition-colors hover:c-primary'
 }
 
-function getNavLabelClass(isActive: boolean) {
-  return isActive
-    ? 'bottom-bar-nav-label underline'
-    : 'bottom-bar-nav-label hover:underline'
-}
-
 const navItems = [
   {
     href: '/',
@@ -64,7 +58,7 @@ const navItems = [
           item.active ? 'c-primary font-bold' : 'c-secondary hover:c-primary',
         ]}
       >
-        <span class={getNavLabelClass(item.active)}>{item.label}</span>
+        <span>{item.label}</span>
       </a>
     ))}
   </div>
@@ -88,7 +82,7 @@ const navItems = [
               href={getLocalizedPath(item.href)}
               class={getNavItemClass(item.active)}
             >
-              <span class={getNavLabelClass(item.active)}>{item.label}</span>
+              <span>{item.label}</span>
             </a>
           ))}
         </nav>
@@ -181,8 +175,6 @@ const navItems = [
 
 <style>
   #bottom-bar-shell {
-    --bottom-bar-underline: #ffea00;
-
     position: fixed;
     right: 0;
     bottom: 0;
@@ -191,16 +183,6 @@ const navItems = [
     padding-bottom: env(safe-area-inset-bottom);
     transform: translateY(0);
     transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  :global(html.dark) #bottom-bar-shell {
-    --bottom-bar-underline: #ffea00;
-  }
-
-  .bottom-bar-nav-label {
-    text-decoration-color: var(--bottom-bar-underline);
-    text-decoration-thickness: 0.12em;
-    text-underline-offset: 0.06em;
   }
 
   .bottom-bar-theme-sun,

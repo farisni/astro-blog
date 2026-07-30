@@ -1,10 +1,11 @@
 ---
-import PostList from '@/components/PostList.astro'
+import TimelinePostList from '@/components/TimelinePostList.astro'
 import { allLocales } from '@/config'
 import type { Language } from '@/i18n/config'
 import { getLangFromLocale, getLangRouteParam } from '@/i18n/lang'
 import { ui } from '@/i18n/ui'
 import Layout from '@/layouts/Layout.astro'
+import type { Post } from '@/types'
 import { getPinnedPosts, getPostsByYear } from '@/utils/content'
 
 export async function getStaticPaths() {
@@ -16,19 +17,33 @@ export async function getStaticPaths() {
 const currentLang = getLangFromLocale(Astro.currentLocale)
 const pinnedPosts = await getPinnedPosts(currentLang)
 const postsByYear = await getPostsByYear(currentLang)
-const regularPosts = Array.from(postsByYear.values()).flat()
-const pinnedLabels: Record<Language, string> = {
-  de: 'Angeheftet',
-  en: 'Pinned',
-  es: 'Destacados',
-  fr: 'Épinglés',
-  ja: '固定',
-  ko: '고정',
-  pl: 'Przypięte',
-  pt: 'Fixados',
-  ru: 'Закреплённые',
-  zh: '置顶',
-  'zh-tw': '置頂',
+
+function groupPostsByYear(posts: Post[]) {
+  const groups = new Map<number, Post[]>()
+
+  posts.forEach((post) => {
+    const year = post.data.publishDate.getFullYear()
+    const yearPosts = groups.get(year) ?? []
+    yearPosts.push(post)
+    groups.set(year, yearPosts)
+  })
+
+  return groups
+}
+
+const recentPostsByYear = groupPostsByYear(pinnedPosts)
+const recentLabels: Record<Language, string> = {
+  de: 'Neueste',
+  en: 'Recent',
+  es: 'Recientes',
+  fr: 'Récents',
+  ja: '最近',
+  ko: '최근',
+  pl: 'Ostatnie',
+  pt: 'Recentes',
+  ru: 'Недавние',
+  zh: '最近',
+  'zh-tw': '最近',
 }
 ---
 
@@ -37,27 +52,39 @@ const pinnedLabels: Record<Language, string> = {
   {pinnedPosts.length > 0 && (
     <section class="mb-10">
       <header class="mb-5">
-        <h2 class="text-5 c-primary font-navbar font-bold leading-[1.4] tracking-wide">
+        <h2 class="text-6 c-primary font-navbar font-bold leading-[1.4] tracking-wide">
           <span class="section-heading-highlight highlight-static">
-            {pinnedLabels[currentLang]}
+            {recentLabels[currentLang]}
           </span>
         </h2>
       </header>
-      <PostList posts={pinnedPosts} lang={currentLang} />
+      {Array.from(recentPostsByYear.entries(), ([year, posts]) => (
+        <TimelinePostList
+          posts={posts}
+          lang={currentLang}
+          year={year}
+        />
+      ))}
     </section>
   )}
 
   <!-- Regular Posts -->
-  {regularPosts.length > 0 && (
+  {postsByYear.size > 0 && (
     <section class="mb-10">
       <header class="mb-5">
-        <h2 class="text-5 c-primary font-navbar font-bold leading-[1.4] tracking-wide">
+        <h2 class="text-6 c-primary font-navbar font-bold leading-[1.4] tracking-wide">
           <span class="section-heading-highlight highlight-static">
             {ui[currentLang].posts}
           </span>
         </h2>
       </header>
-      <PostList posts={regularPosts} lang={currentLang} />
+      {Array.from(postsByYear.entries(), ([year, posts]) => (
+        <TimelinePostList
+          posts={posts}
+          lang={currentLang}
+          year={year}
+        />
+      ))}
     </section>
   )}
 </Layout>
