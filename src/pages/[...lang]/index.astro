@@ -1,7 +1,9 @@
 ---
 import PostList from '@/components/PostList.astro'
 import { allLocales } from '@/config'
+import type { Language } from '@/i18n/config'
 import { getLangFromLocale, getLangRouteParam } from '@/i18n/lang'
+import { ui } from '@/i18n/ui'
 import Layout from '@/layouts/Layout.astro'
 import { getPinnedPosts, getPostsByYear } from '@/utils/content'
 
@@ -14,22 +16,55 @@ export async function getStaticPaths() {
 const currentLang = getLangFromLocale(Astro.currentLocale)
 const pinnedPosts = await getPinnedPosts(currentLang)
 const postsByYear = await getPostsByYear(currentLang)
+const regularPosts = Array.from(postsByYear.values()).flat()
+const pinnedLabels: Record<Language, string> = {
+  de: 'Angeheftet',
+  en: 'Pinned',
+  es: 'Destacados',
+  fr: 'Épinglés',
+  ja: '固定',
+  ko: '고정',
+  pl: 'Przypięte',
+  pt: 'Fixados',
+  ru: 'Закреплённые',
+  zh: '置顶',
+  'zh-tw': '置頂',
+}
 ---
 
 <Layout>
   <!-- Pinned Posts -->
   {pinnedPosts.length > 0 && (
-    <section class="mb-7.5">
-      <div class="uno-decorative-line" />
-      <PostList posts={pinnedPosts} lang={currentLang} pinned={true} />
+    <section class="mb-10">
+      <header class="mb-5">
+        <h2 class="text-5 c-primary font-navbar font-bold leading-[1.4] tracking-wide">
+          <span class="section-heading-highlight highlight-static">
+            {pinnedLabels[currentLang]}
+          </span>
+        </h2>
+      </header>
+      <PostList posts={pinnedPosts} lang={currentLang} />
     </section>
   )}
 
   <!-- Regular Posts -->
-  {Array.from(postsByYear.entries(), ([_year, posts]) => (
-    <section class="mb-7.5">
-      <div class="uno-decorative-line" />
-      <PostList posts={posts} lang={currentLang} />
+  {regularPosts.length > 0 && (
+    <section class="mb-10">
+      <header class="mb-5">
+        <h2 class="text-5 c-primary font-navbar font-bold leading-[1.4] tracking-wide">
+          <span class="section-heading-highlight highlight-static">
+            {ui[currentLang].posts}
+          </span>
+        </h2>
+      </header>
+      <PostList posts={regularPosts} lang={currentLang} />
     </section>
-  ))}
+  )}
 </Layout>
+
+<style>
+  .section-heading-highlight::after {
+    bottom: 0.42em;
+    height: 0.34em;
+  }
+</style>

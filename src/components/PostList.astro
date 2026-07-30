@@ -1,7 +1,6 @@
 ---
 import type { Language } from '@/i18n/config'
 import type { Post } from '@/types'
-import PinIcon from '@/assets/icons/pin-icon.svg'
 import PostDate from '@/components/PostDate.astro'
 import { getPostPath } from '@/i18n/path'
 import { getPostDescription } from '@/utils/description'
@@ -10,11 +9,24 @@ import { isHomePage } from '@/utils/page'
 export interface Props {
   posts: Post[]
   lang: Language
-  pinned?: boolean
 }
 
-const { posts, lang, pinned = false } = Astro.props
+const { posts, lang } = Astro.props
 const isHome = isHomePage(Astro.url.pathname)
+const publishedLabels: Record<Language, string> = {
+  de: 'Veröffentlicht am',
+  en: 'Published on',
+  es: 'Publicado el',
+  fr: 'Publié le',
+  ja: '公開日',
+  ko: '게시일',
+  pl: 'Opublikowano',
+  pt: 'Publicado em',
+  ru: 'Опубликовано',
+  zh: '发布于',
+  'zh-tw': '發布於',
+}
+const publishedLabel = publishedLabels[lang]
 ---
 
 <ul>
@@ -24,63 +36,107 @@ const isHome = isHomePage(Astro.url.pathname)
     return (
       <li
         class:list={[
-          'mb-5.5',
-          isHome ? 'lg:mb-10' : '',
+          'mb-7 last:mb-0',
+          isHome ? 'lg:mb-7' : '',
         ]}
       >
-        {/* post title */}
-        <h3 class="inline transition-colors hover:c-primary">
+        <article>
           <a
-            class:list={[
-              'cjk:tracking-wide',
-              isHome ? 'lg:font-medium lg:text-4.5' : '',
-            ]}
+            class="post-card inline-block max-w-full w-auto"
             href={getPostPath(slug, lang)}
-            transition:name={`post-${slug}${lang ? `-${lang}` : ''}`}
-            data-disable-theme-toggle-transition
           >
-            {post.data.title}
+            {/* post title */}
+            <h3
+              class:list={[
+                'post-card-title min-w-0 c-primary/82 font-medium leading-[1.45] transition-colors cjk:tracking-wide',
+                isHome ? 'lg:text-4.5' : '',
+              ]}
+              transition:name={`post-${slug}${lang ? `-${lang}` : ''}`}
+              data-disable-theme-toggle-transition
+            >
+              {post.data.title}
+            </h3>
+
+            {/* publication metadata */}
+            <div
+              class:list={[
+                'post-card-meta mt-1 text-3.25 c-secondary/70 font-sans font-normal leading-1.35em tracking-normal',
+                isHome ? 'lg:text-3.5' : '',
+              ]}
+              transition:name={`time-${slug}${lang ? `-${lang}` : ''}`}
+              data-disable-theme-toggle-transition
+            >
+              <span>{publishedLabel}</span>
+              <span class="c-primary/85">
+                <PostDate
+                  date={post.data.publishDate}
+                  minutes={post.remarkPluginFrontmatter.minutes}
+                  showReadingTime={false}
+                />
+              </span>
+              {post.data.tags?.slice(0, 1).map(tag => (
+                <span class="post-card-tag c-secondary/85">
+                  <span aria-hidden="true"># </span>
+                  <span class="underline decoration-secondary/60 underline-offset-0.12em">
+                    {tag}
+                  </span>
+                </span>
+              ))}
+            </div>
+
+            {/* desktop post description */}
+            {isHome && (
+              <div class="mt-2 hidden text-3.75 c-secondary/90 leading-1.65em lg:block cjk:tracking-wide">
+                <p>{getPostDescription(post, 'list')}</p>
+              </div>
+            )}
           </a>
-          {/* pinned icon */}
-          {pinned && (
-            <PinIcon
-              aria-hidden="true"
-              class="ml-0.25em inline-block aspect-square w-0.98em translate-y--0.1em lg:(w-1.05em translate-y--0.15em)"
-              fill="currentColor"
-            />
-          )}
-        </h3>
-
-        {/* mobile post time */}
-        <div
-          class="py-0.8 text-3.5 font-time lg:hidden"
-          transition:name={`time-${slug}${lang ? `-${lang}` : ''}`}
-          data-disable-theme-toggle-transition
-        >
-          <PostDate
-            date={post.data.publishDate}
-            minutes={post.remarkPluginFrontmatter.minutes}
-          />
-        </div>
-
-        {/* desktop post time */}
-        <div class="hidden text-3.65 font-time lg:(ml-2.5 inline)">
-          <PostDate
-            date={post.data.publishDate}
-            minutes={post.remarkPluginFrontmatter.minutes}
-          />
-        </div>
-
-        {/* desktop post description */}
-        {isHome && (
-          <div
-            class="heti hidden"
-            lg="mt-2.25 block"
-          >
-            <p>{getPostDescription(post, 'list')}</p>
-          </div>
-        )}
+        </article>
       </li>
     )
   })}
 </ul>
+
+<style>
+  .post-card {
+    position: relative;
+    z-index: 0;
+    isolation: isolate;
+  }
+
+  .post-card-meta {
+    display: grid;
+    grid-template-columns: max-content max-content minmax(0, 1fr);
+    align-items: baseline;
+    column-gap: 0.75rem;
+  }
+
+  .post-card-tag {
+    min-width: 0;
+  }
+
+  .post-card::before {
+    position: absolute;
+    z-index: -1;
+    inset: -0.7rem -0.9rem;
+    border-radius: 0.5rem;
+    background: oklch(88% 0.04 235 / 0.14);
+    content: '';
+    opacity: 0;
+    transform: scale(0.85);
+    transition:
+      opacity 150ms cubic-bezier(0.4, 0, 0.2, 1),
+      transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .post-card:hover::before,
+  .post-card:focus-visible::before {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  :global(html.dark) .post-card::before {
+    background: oklch(78% 0.04 235 / 0.08);
+  }
+
+</style>

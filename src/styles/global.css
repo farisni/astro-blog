@@ -19,6 +19,7 @@ body::selection {
 .highlight-static,
 .highlight-hover {
   --at-apply: 'relative inline-block';
+  isolation: isolate;
 }
 .highlight-static::after,
 .highlight-hover::after {
