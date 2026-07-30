@@ -1,123 +1,115 @@
-import fs from "node:fs";
-import { satteri, satteriHeadingIdsPlugin } from "@astrojs/markdown-satteri";
-import mdx from "@astrojs/mdx";
-import sitemap from "@astrojs/sitemap";
-import tailwind from "@tailwindcss/vite";
-import { defineConfig, envField } from "astro/config";
-import expressiveCode from "astro-expressive-code";
-import icon from "astro-icon";
-import robotsTxt from "astro-robots-txt";
-import webmanifest from "astro-webmanifest";
-import { satteriAdmonitionsPlugin } from "./src/plugins/admonitions";
-import { satteriExtendedDirectivesPlugin } from "./src/plugins/extended-directives";
-import { satteriGithubCardPlugin } from "./src/plugins/github-cards";
-import { satteriImageFiguresPlugin } from "./src/plugins/image-figures";
-import { satteriMathPlugin, satteriMermaidPlugin } from "./src/plugins/markdown-extensions";
-import { satteriObsidianCalloutsPlugin } from "./src/plugins/obsidian-callouts";
-import { satteriObsidianImagesPlugin } from "./src/plugins/obsidian-images";
-import {
-	satteriAutolinkHeadingsPlugin,
-	satteriExternalLinksPlugin,
-	satteriFootnoteLabelPlugin,
-	satteriReadingTimePlugin,
-	satteriUnwrapImagesPlugin,
-} from "./src/plugins/satteri";
-import { expressiveCodeOptions, siteConfig } from "./src/site.config";
+import mdx from '@astrojs/mdx'
+import partytown from '@astrojs/partytown'
+import sitemap from '@astrojs/sitemap'
+import Compress from 'astro-compress'
+import { defineConfig } from 'astro/config'
+import rehypeKatex from 'rehype-katex'
+import rehypeMermaid from 'rehype-mermaid'
+import rehypeSlug from 'rehype-slug'
+import remarkDirective from 'remark-directive'
+import remarkMath from 'remark-math'
+import UnoCSS from 'unocss/astro'
+import { base, defaultLocale, themeConfig } from './src/config'
+import { langMap } from './src/i18n/config'
+import { rehypeCodeCopyButton } from './src/plugins/rehype-code-copy-button.mjs'
+import { rehypeExternalLinks } from './src/plugins/rehype-external-links.mjs'
+import { rehypeHeadingAnchor } from './src/plugins/rehype-heading-anchor.mjs'
+import { rehypeImageProcessor } from './src/plugins/rehype-image-processor.mjs'
+import { remarkContainerDirectives } from './src/plugins/remark-container-directives.mjs'
+import { remarkLeafDirectives } from './src/plugins/remark-leaf-directives.mjs'
+import { remarkReadingTime } from './src/plugins/remark-reading-time.mjs'
 
-// https://astro.build/config
+const { url: site } = themeConfig.site
+const { imageHostURL } = themeConfig.preload ?? {}
+const imageConfig = imageHostURL
+  ? { image: { domains: [imageHostURL], remotePatterns: [{ protocol: 'https' }] } }
+  : {}
+
 export default defineConfig({
-	site: siteConfig.url,
-	image: {
-		domains: ["webmention.io"],
-	},
-	integrations: [
-		expressiveCode(expressiveCodeOptions),
-		icon(),
-		sitemap(),
-		mdx(),
-		robotsTxt(),
-		webmanifest({
-			// See: https://github.com/alextim/astro-lib/blob/main/packages/astro-webmanifest/README.md
-			name: siteConfig.title,
-			description: siteConfig.description,
-			lang: siteConfig.lang,
-			icon: "public/icon.svg", // the source for generating favicon & icons
-			icons: [
-				{
-					src: "icons/apple-touch-icon.png", // used in src/components/BaseHead.astro L:26
-					sizes: "180x180",
-					type: "image/png",
-				},
-				{
-					src: "icons/icon-192.png",
-					sizes: "192x192",
-					type: "image/png",
-				},
-				{
-					src: "icons/icon-512.png",
-					sizes: "512x512",
-					type: "image/png",
-				},
-			],
-			start_url: "/",
-			background_color: "#1d1f21",
-			theme_color: "#2bbc8a",
-			display: "standalone",
-			config: {
-				insertFaviconLinks: false,
-				insertThemeColorMeta: false,
-				insertManifestLink: false,
-			},
-		}),
-	],
-	markdown: {
-		processor: satteri({
-			features: { directive: true, math: true },
-			mdastPlugins: [
-				satteriMathPlugin,
-				satteriMermaidPlugin,
-				satteriObsidianCalloutsPlugin(),
-				satteriObsidianImagesPlugin(),
-				satteriUnwrapImagesPlugin(),
-				satteriReadingTimePlugin(),
-				satteriGithubCardPlugin(),
-				satteriExtendedDirectivesPlugin(),
-				satteriAdmonitionsPlugin(),
-			],
-			hastPlugins: [
-				satteriImageFiguresPlugin,
-				satteriHeadingIdsPlugin(),
-				satteriAutolinkHeadingsPlugin(),
-				satteriFootnoteLabelPlugin(),
-				satteriExternalLinksPlugin(),
-			],
-		}),
-	},
-	vite: {
-		plugins: [tailwind(), rawFonts([".ttf", ".woff"])],
-	},
-	env: {
-		schema: {
-			WEBMENTION_API_KEY: envField.string({ context: "server", access: "secret", optional: true }),
-			WEBMENTION_URL: envField.string({ context: "client", access: "public", optional: true }),
-			WEBMENTION_PINGBACK: envField.string({ context: "client", access: "public", optional: true }),
-		},
-	},
-});
+  site,
+  base,
+  server: {
+    port: 3009,
+  },
+  trailingSlash: 'always', // Not recommended to change
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: 'viewport', // hover, tap, viewport, load
+  },
+  ...imageConfig,
+  i18n: {
+    locales: Object.entries(langMap).map(([path, codes]) => ({
+      path,
+      codes: [...codes] as [string, ...string[]],
+    })),
+    defaultLocale,
+  },
+  integrations: [
+    UnoCSS({
+      injectReset: true,
+    }),
+    mdx(),
+    partytown({
+      config: {
+        forward: ['dataLayer.push', 'gtag'],
+      },
+    }),
+    sitemap(),
+    Compress({
+      CSS: true,
+      HTML: true,
+      Image: false,
+      JavaScript: true,
+      SVG: false,
+    }),
+  ],
+  markdown: {
+    remarkPlugins: [
+      remarkDirective,
+      remarkMath,
+      remarkContainerDirectives,
+      remarkLeafDirectives,
+      remarkReadingTime,
+    ],
+    rehypePlugins: [
+      rehypeKatex,
+      [rehypeMermaid, { strategy: 'pre-mermaid' }],
+      rehypeSlug,
+      rehypeHeadingAnchor,
+      rehypeImageProcessor,
+      rehypeExternalLinks,
+      rehypeCodeCopyButton,
+    ],
+    syntaxHighlight: {
+      type: 'shiki',
+      excludeLangs: ['mermaid'],
+    },
+    shikiConfig: {
+      // Available themes: https://shiki.style/themes
+      themes: {
+        light: 'github-light',
+        dark: 'github-dark',
+      },
+    },
+  },
+  vite: {
+    plugins: [
+      {
+        name: 'prefix-font-urls-with-base',
+        transform(code, id) {
+          if (!id.split('?')[0].endsWith('src/styles/font.css')) {
+            return null
+          }
 
-function rawFonts(ext: string[]) {
-	return {
-		name: "vite-plugin-raw-fonts",
-		// @ts-expect-error:next-line
-		transform(_, id) {
-			if (ext.some((e) => id.endsWith(e))) {
-				const buffer = fs.readFileSync(id);
-				return {
-					code: `export default ${JSON.stringify(buffer)}`,
-					map: null,
-					moduleType: "js",
-				};
-			}
-		},
-	};
-}
+          return code.replace(/url\(\s*(['"]?)\/fonts\//g, `url($1${base}/fonts/`)
+        },
+      },
+    ],
+    build: {
+      chunkSizeWarningLimit: 600,
+    },
+  },
+  devToolbar: {
+    enabled: false,
+  },
+})

@@ -1,0 +1,27 @@
+---
+import { getCollection } from 'astro:content'
+import Layout from '@/layouts/Layout.astro'
+import PostDate from '@/components/PostDate.astro'
+
+const notes = (await getCollection('notes')).sort(
+  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf(),
+)
+---
+
+<Layout>
+  <div class="uno-decorative-line" />
+  <h1 class="mb-8 text-8 c-primary font-bold font-title lg:text-9">笔记</h1>
+  <ul class="space-y-5">
+    {notes.map((note) => (
+      <li>
+        <h2 class="inline text-4.5 font-medium transition-colors hover:c-primary">
+          <a href={`/notes/${note.id}/`}>{note.data.title}</a>
+        </h2>
+        <div class="mt-1 text-3.5 font-time c-secondary">
+          <PostDate date={note.data.publishDate} minutes={1} />
+        </div>
+        {note.data.description && <p class="heti mt-2 c-secondary">{note.data.description}</p>}
+      </li>
+    ))}
+  </ul>
+</Layout>

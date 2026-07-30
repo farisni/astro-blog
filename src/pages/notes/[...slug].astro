@@ -1,30 +1,33 @@
 ---
-import { getCollection } from "astro:content";
-import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
-import Note from "@/components/note/Note.astro";
-import PageLayout from "@/layouts/Base.astro";
+import { getCollection, render } from 'astro:content'
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro'
+import BackButton from '@/components/Widgets/BackButton.astro'
+import TOC from '@/components/Widgets/TOC.astro'
+import PostDate from '@/components/PostDate.astro'
+import Layout from '@/layouts/Layout.astro'
 
-// if you're using an adaptor in SSR mode, getStaticPaths wont work -> https://docs.astro.build/en/guides/routing/#modifying-the-slug-example-for-ssr
 export const getStaticPaths = (async () => {
-	const allNotes = await getCollection("note");
-	return allNotes.map((note) => ({
-		params: { slug: note.id },
-		props: { note },
-	}));
-}) satisfies GetStaticPaths;
+  const notes = await getCollection('notes')
+  return notes.map((note) => ({ params: { slug: note.id }, props: { note } }))
+}) satisfies GetStaticPaths
 
-export type Props = InferGetStaticPropsType<typeof getStaticPaths>;
-
-const { note } = Astro.props;
-
-const meta = {
-	description:
-		note.data.description ||
-		`Read about my note posted on: ${note.data.publishDate.toLocaleDateString()}`,
-	title: note.data.title,
-};
+type Props = InferGetStaticPropsType<typeof getStaticPaths>
+const { note } = Astro.props as Props
+const { Content, headings, remarkPluginFrontmatter } = await render(note)
 ---
 
-<PageLayout meta={meta}>
-	<Note as="h1" note={note} />
-</PageLayout>
+<Layout postTitle={note.data.title} postDescription={note.data.description}>
+  <article class="heti">
+    <div class="relative">
+      <BackButton />
+      <h1 class="post-title">{note.data.title}</h1>
+    </div>
+    <div id="post-date" class="mb-17.2 block c-primary font-time">
+      <PostDate date={note.data.publishDate} minutes={remarkPluginFrontmatter.minutes ?? 1} />
+    </div>
+    {headings.length > 0 && <TOC headings={headings} />}
+    <div id="post-content">
+      <Content />
+    </div>
+  </article>
+</Layout>
