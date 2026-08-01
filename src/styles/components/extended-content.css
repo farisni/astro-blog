@@ -428,6 +428,37 @@
 	--badge-color: #d44c47;
 }
 
+/* Obsidian responsive column callouts */
+.prose .obsidian-columns {
+	display: grid;
+	grid-template-columns:
+		minmax(0, var(--obsidian-column-first, 1fr))
+		minmax(0, var(--obsidian-column-second, 1fr));
+	align-items: start;
+	gap: clamp(0.875rem, 2vw, 1.25rem);
+	margin-block: 1.5rem;
+}
+
+.prose .obsidian-column {
+	min-width: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.prose .obsidian-column > :first-child {
+	margin-top: 0;
+}
+
+.prose .obsidian-column > :last-child {
+	margin-bottom: 0;
+}
+
+@media (max-width: 48rem) {
+	.prose .obsidian-columns {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
 /* Markdown/MDX-compatible callouts */
 .prose callout,
 .prose .content-callout {

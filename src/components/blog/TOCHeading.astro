@@ -8,6 +8,12 @@ interface Props {
 const {
 	heading: { children, depth, slug, text },
 } = Astro.props;
+
+const emojiMatch = text.match(
+	/^(\p{Extended_Pictographic}(?:\uFE0E|\uFE0F)?\p{Emoji_Modifier}?(?:\u200D\p{Extended_Pictographic}(?:\uFE0E|\uFE0F)?\p{Emoji_Modifier}?)*)\s*(.*)$/u,
+);
+const leadingEmoji = emojiMatch?.[1];
+const labelText = emojiMatch?.[2] || text;
 ---
 
 <li class="article-toc-item">
@@ -18,7 +24,10 @@ const {
 		href={`#${slug}`}
 	>
 		<span aria-hidden="true" class="article-toc-marker"></span>
-		<span class="article-toc-label">{text}</span>
+		<span class:list={["article-toc-label", { "has-leading-emoji": leadingEmoji }]}>
+			{leadingEmoji && <span class="article-toc-emoji">{leadingEmoji}</span>}
+			<span class="article-toc-text">{labelText}</span>
+		</span>
 	</a
 	>
 	{

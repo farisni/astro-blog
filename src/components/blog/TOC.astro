@@ -140,6 +140,17 @@ const toc = generateToc(headings, {
 		padding-inline-start: 1rem;
 	}
 
+	.article-toc-label.has-leading-emoji {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
+		align-items: start;
+		column-gap: 0.45em;
+	}
+
+	.article-toc-text {
+		min-width: 0;
+	}
+
 	.article-toc-link:hover {
 		color: var(--color-global-text);
 	}

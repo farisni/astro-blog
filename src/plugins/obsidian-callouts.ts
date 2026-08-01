@@ -34,9 +34,21 @@ const CALLOUT_TYPE_ALIASES = new Map<string, string>([
 
 const CALLOUT_MARKER =
 	/^\[!([A-Za-z0-9_-]+)\]([+-])?[ \t]*([^\n]*)(?:\n|$)/;
+const COLUMNS_TYPE = /^columns-(\d+)-(\d+)$/;
 
 function defaultTitle(type: string) {
 	return type.charAt(0).toUpperCase() + type.slice(1);
+}
+
+function parseColumnRatio(type: string) {
+	const match = type.match(COLUMNS_TYPE);
+	if (!match) return;
+
+	const first = Number(match[1]);
+	const second = Number(match[2]);
+	if (first < 1 || second < 1 || first > 12 || second > 12) return;
+
+	return { first, second };
 }
 
 function parseCallout(node: Blockquote) {
@@ -89,6 +101,23 @@ export function satteriObsidianCalloutsPlugin(): MdastPluginDefinition {
 		blockquote(node) {
 			const callout = parseCallout(node);
 			if (!callout) return;
+
+			const columnRatio = parseColumnRatio(callout.sourceType);
+			if (columnRatio) {
+				return h(
+					"div",
+					{
+						class: "obsidian-columns",
+						"data-column-ratio": `${columnRatio.first}-${columnRatio.second}`,
+						style: `--obsidian-column-first: ${columnRatio.first}fr; --obsidian-column-second: ${columnRatio.second}fr`,
+					},
+					callout.content,
+				);
+			}
+
+			if (callout.sourceType === "plain") {
+				return h("div", { class: "obsidian-column" }, callout.content);
+			}
 
 			const attributes = {
 				class: "content-callout obsidian-callout",
