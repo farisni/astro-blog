@@ -39,9 +39,33 @@ export const satteriMathPlugin = defineMdastPlugin({
 		});
 
 		return {
-			raw: `<span class="math-inline">${html}</span>`,
-			mdxExpressions: false,
+			type: "html",
+			value: `<span class="math-inline">${html}</span>`,
 		};
+	},
+});
+
+export const satteriLooseStrongPlugin = defineMdastPlugin({
+	name: "render-loose-strong-markers",
+	text(node) {
+		if (!node.value.includes("**")) return;
+
+		const strongPattern = /\*\*([\s\S]+?)\*\*/g;
+		let match = strongPattern.exec(node.value);
+		if (!match) return;
+
+		let cursor = 0;
+		let html = "";
+		do {
+			const [source, content] = match;
+			html += escapeHtml(node.value.slice(cursor, match.index));
+			html += `<strong>${escapeHtml(content ?? "")}</strong>`;
+			cursor = match.index + source.length;
+			match = strongPattern.exec(node.value);
+		} while (match);
+
+		html += escapeHtml(node.value.slice(cursor));
+		return { type: "html", value: html };
 	},
 });
 

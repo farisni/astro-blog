@@ -12,7 +12,11 @@ import { satteriAdmonitionsPlugin } from "./src/plugins/admonitions";
 import { satteriExtendedDirectivesPlugin } from "./src/plugins/extended-directives";
 import { satteriGithubCardPlugin } from "./src/plugins/github-cards";
 import { satteriImageFiguresPlugin } from "./src/plugins/image-figures";
-import { satteriMathPlugin, satteriMermaidPlugin } from "./src/plugins/markdown-extensions";
+import {
+	satteriLooseStrongPlugin,
+	satteriMathPlugin,
+	satteriMermaidPlugin,
+} from "./src/plugins/markdown-extensions";
 import { satteriObsidianCalloutsPlugin } from "./src/plugins/obsidian-callouts";
 import { satteriObsidianImagesPlugin } from "./src/plugins/obsidian-images";
 import {
@@ -80,6 +84,7 @@ export default defineConfig({
 				satteriObsidianImagesPlugin(),
 				satteriUnwrapImagesPlugin(),
 				satteriReadingTimePlugin(),
+				satteriLooseStrongPlugin,
 				satteriGithubCardPlugin(),
 				satteriExtendedDirectivesPlugin(),
 				satteriAdmonitionsPlugin(),

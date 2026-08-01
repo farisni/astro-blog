@@ -2,12 +2,12 @@
 
 set -eu
 
-generated_posts_dir="content/posts/linux"
-generated_assets_dir="content/posts/linux/images"
+generated_linux_dir="content/posts/linux"
+generated_assembly_dir="content/posts/assembly"
 staged_files="$(
 	git diff --cached --name-only --diff-filter=ACMRD -- \
-		"$generated_posts_dir" \
-		"$generated_assets_dir"
+		"$generated_linux_dir" \
+		"$generated_assembly_dir"
 )"
 
 if [ -z "$staged_files" ]; then
@@ -18,12 +18,12 @@ cat >&2 <<'EOF'
 提交已阻止：以下目录由 Obsidian 自动同步管理：
 
   content/posts/linux
-  content/posts/linux/images
+  content/posts/assembly
 
 本地 pnpm sync:obsidian 仅用于预览，生成文章和图片只允许 GitHub Actions 提交。
 请先取消暂存生成文件：
 
-  git restore --staged content/posts/linux
+  git restore --staged content/posts/linux content/posts/assembly
 
 然后只提交 Astro 业务代码。
 EOF

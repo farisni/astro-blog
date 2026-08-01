@@ -428,6 +428,21 @@
 	--badge-color: #d44c47;
 }
 
+.prose strong,
+.prose .byte-term {
+	color: #b85f14 !important;
+	font-weight: 400 !important;
+}
+
+.prose blockquote strong {
+	font-weight: inherit !important;
+}
+
+[data-theme="dark"] .prose strong,
+[data-theme="dark"] .prose .byte-term {
+	color: #df8d3b !important;
+}
+
 /* Obsidian responsive column callouts */
 .prose .obsidian-columns {
 	display: grid;
