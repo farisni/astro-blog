@@ -14,8 +14,6 @@ pinned: false
 
 <!-- 由 scripts/sync-obsidian.mjs 自动生成，请勿直接编辑。 -->
 
-# 💿 安装
-
 ## Rufus 设置参考
 
 | 选项 | 设置 | 说明 |

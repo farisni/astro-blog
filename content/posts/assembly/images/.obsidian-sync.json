@@ -1,7 +1,15 @@
 {
   "source": "汇编",
-  "generatedAt": "2026-08-01T11:15:19.820Z",
+  "generatedAt": "2026-08-01T16:18:38.879Z",
   "files": [
+    "content/posts/assembly/images/01-取指执行循环.png",
+    "content/posts/assembly/images/02-指令与数据.png",
+    "content/posts/assembly/images/03-数据段初始化.png",
+    "content/posts/assembly/images/04-段地址与偏移.png",
+    "content/posts/assembly/images/05-位宽与寄存器.png",
+    "content/posts/assembly/images/06-八位运算与溢出.png",
+    "content/posts/assembly/images/07-程序退出.png",
+    "content/posts/assembly/images/08-伪指令与机器指令.png",
     "content/posts/assembly/images/143069fdcd4f583eb8ac8c506563b206834f29d908a02159acdb127a0118c8cb.jpg",
     "content/posts/assembly/images/e5a8f9361d05587dffc2e119a5cb63fb61074569e9021f502c07a467697087c7.jpg"
   ]
