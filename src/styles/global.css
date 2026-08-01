@@ -454,6 +454,55 @@
 	padding-right: 18px;
 }
 
+/* Stronger, language-scoped token colors for 8086 Assembly blocks. */
+.expressive-code
+	.pretty-code-frame
+	pre[data-language="asm"]
+	.ec-line
+	.code
+	> :is(.asm-token-instruction, span[style*="--1:#BF3441"]) {
+	color: #b4234d;
+	font-weight: 700;
+}
+
+.expressive-code
+	.pretty-code-frame
+	pre[data-language="asm"]
+	.ec-line
+	.code
+	> :is(.asm-token-register, span[style*="--1:#005CC5"]) {
+	color: #075ea8;
+	font-weight: 650;
+}
+
+.expressive-code
+	.pretty-code-frame
+	pre[data-language="asm"]
+	.ec-line
+	.code
+	> .asm-token-number {
+	color: #6d3fc0;
+}
+
+.expressive-code
+	.pretty-code-frame
+	pre[data-language="asm"]
+	.ec-line
+	.code
+	> :is(.asm-token-operator, .asm-token-label, span[style*="--1:#24292E"]) {
+	color: #9a5b13;
+}
+
+.expressive-code
+	.pretty-code-frame
+	pre[data-language="asm"]
+	.ec-line
+	.code
+	> .asm-token-comment {
+	color: #527853;
+	font-style: italic;
+}
+
 .expressive-code .pretty-code-frame.is-semi-foldable {
 	position: relative;
 }
@@ -557,6 +606,56 @@
 
 [data-theme="dark"] .expressive-code .pretty-code-frame .ec-line::before {
 	color: rgb(171 178 191 / 44%);
+}
+
+[data-theme="dark"]
+	.expressive-code
+	.pretty-code-frame
+	pre[data-language="asm"]
+	.ec-line
+	.code
+	> :is(.asm-token-instruction, span[style*="--0:#FF79C6"]) {
+	color: #ff79c6;
+}
+
+[data-theme="dark"]
+	.expressive-code
+	.pretty-code-frame
+	pre[data-language="asm"]
+	.ec-line
+	.code
+	> :is(.asm-token-register, span[style*="--0:#BD93F9"]) {
+	color: #8be9fd;
+}
+
+[data-theme="dark"]
+	.expressive-code
+	.pretty-code-frame
+	pre[data-language="asm"]
+	.ec-line
+	.code
+	> .asm-token-number {
+	color: #bd93f9;
+}
+
+[data-theme="dark"]
+	.expressive-code
+	.pretty-code-frame
+	pre[data-language="asm"]
+	.ec-line
+	.code
+	> :is(.asm-token-operator, .asm-token-label, span[style*="--0:#F8F8F2"]) {
+	color: #ffb86c;
+}
+
+[data-theme="dark"]
+	.expressive-code
+	.pretty-code-frame
+	pre[data-language="asm"]
+	.ec-line
+	.code
+	> .asm-token-comment {
+	color: #7fa777;
 }
 
 [data-theme="dark"] .expressive-code .pretty-code-expand {
