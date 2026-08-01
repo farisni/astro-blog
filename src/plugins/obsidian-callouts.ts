@@ -41,6 +41,8 @@ function defaultTitle(type: string) {
 }
 
 function parseColumnRatio(type: string) {
+	if (type === "columns") return { first: 1, second: 1 };
+
 	const match = type.match(COLUMNS_TYPE);
 	if (!match) return;
 

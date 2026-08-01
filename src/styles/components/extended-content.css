@@ -490,7 +490,13 @@
 
 .prose callout[type="note"],
 .prose .content-callout[data-callout-type="note"] {
-	--callout-color: var(--color-muted);
+	--callout-color: #587b98;
+	background: color-mix(in srgb, var(--callout-color) 6%, var(--color-global-bg));
+}
+
+[data-theme="dark"] .prose callout[type="note"],
+[data-theme="dark"] .prose .content-callout[data-callout-type="note"] {
+	--callout-color: #8fb0c9;
 }
 
 .prose callout[title]::before,
