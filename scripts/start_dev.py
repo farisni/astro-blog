@@ -3,8 +3,8 @@
 
 This launcher is intended for a repository where branches may use different
 dependency versions. It refreshes pnpm links when package metadata changes,
-stops the previous Astro daemon, clears the requested port, and starts a fresh
-background server.
+syncs all whitelisted Obsidian documents, stops the previous Astro daemon,
+clears the requested port, and starts a fresh background server.
 """
 
 from __future__ import annotations
@@ -217,6 +217,11 @@ def stop_astro() -> None:
     run(["pnpm", "astro", "dev", "stop"], check=False, capture=True)
 
 
+def sync_obsidian_whitelist() -> None:
+    log("同步 Obsidian 白名单文档到本地预览目录。")
+    run(["pnpm", "run", "sync:obsidian"])
+
+
 def wait_until_ready(host: str, port: int, timeout: float) -> None:
     url = f"http://{host}:{port}/"
     deadline = time.monotonic() + timeout
@@ -243,7 +248,7 @@ def wait_until_ready(host: str, port: int, timeout: float) -> None:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="同步分支依赖、清理旧端口并启动 Astro 开发服务器。"
+        description="同步分支依赖与 Obsidian 白名单、清理旧端口并启动 Astro 开发服务器。"
     )
     parser.add_argument("--host", default="127.0.0.1", help="监听地址")
     parser.add_argument("--port", type=int, default=3009, help="监听端口")
@@ -281,6 +286,7 @@ def main() -> int:
             else:
                 log("依赖指纹未变化，跳过 pnpm install。")
 
+        sync_obsidian_whitelist()
         stop_astro()
         clear_port(args.port)
         run(
