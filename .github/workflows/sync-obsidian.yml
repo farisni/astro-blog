@@ -1,4 +1,4 @@
-name: Sync Obsidian Linux notes
+name: Sync Obsidian whitelist notes
 
 on:
   schedule:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: sync-obsidian-linux
+  group: sync-obsidian-whitelist
   cancel-in-progress: true
 
 jobs:
@@ -23,7 +23,7 @@ jobs:
           ref: main
           path: site
 
-      - name: Export Obsidian Linux whitelist
+      - name: Export Obsidian whitelist
         env:
           VAULT_DEPLOY_KEY: ${{ secrets.VAULT_DEPLOY_KEY }}
         run: |
@@ -44,9 +44,10 @@ jobs:
             --depth=1 \
             origin main
           git -C "$GITHUB_WORKSPACE/vault-repo" archive \
-            FETCH_HEAD -- faris-vault/Linux \
+            FETCH_HEAD -- faris-vault/Linux faris-vault/汇编 \
             | tar -x --strip-components=1 -C "$GITHUB_WORKSPACE/vault"
           test -d "$GITHUB_WORKSPACE/vault/Linux"
+          test -d "$GITHUB_WORKSPACE/vault/汇编"
           unset VAULT_DEPLOY_KEY GIT_SSH_COMMAND
 
       - name: Install pnpm
@@ -64,7 +65,7 @@ jobs:
 
       - name: Sync whitelist notes
         working-directory: site
-        run: node scripts/sync-obsidian.mjs "$GITHUB_WORKSPACE/vault/Linux"
+        run: node scripts/sync-obsidian-whitelist.mjs "$GITHUB_WORKSPACE/vault"
 
       - name: Validate generated content
         working-directory: site
@@ -77,10 +78,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add content/posts/linux
+          git add content/posts/linux content/posts/assembly
           if git diff --cached --quiet; then
             echo "No public note changes to commit."
             exit 0
           fi
-          git commit -m "content: 同步 Obsidian Linux 笔记"
+          git commit -m "content: 同步 Obsidian 白名单笔记"
           git push

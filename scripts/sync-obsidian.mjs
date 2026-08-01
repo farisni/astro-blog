@@ -13,8 +13,15 @@ import { basename, dirname, extname, join, relative, resolve, sep } from "node:p
 
 const projectRoot = resolve(import.meta.dirname, "..");
 const defaultSource = join(homedir(), "Note/obsidian/faris-vault/Linux");
-const sourceRoot = resolve(process.argv[2] ?? process.env.OBSIDIAN_LINUX_DIR ?? defaultSource);
+const sourceRoot = resolve(
+	process.argv[2] ??
+		process.env.OBSIDIAN_SYNC_DIR ??
+		process.env.OBSIDIAN_LINUX_DIR ??
+		defaultSource,
+);
 const outputRoot = resolve(process.argv[3] ?? join(projectRoot, "content/posts/linux"));
+const sourceLabel = basename(sourceRoot);
+const sourceTag = sourceLabel.toLowerCase();
 const allowedOutputRoot = `${join(projectRoot, "content/posts")}${sep}`;
 const manifestPath = join(outputRoot, ".obsidian-sync.json");
 const assetOutputRoot = resolve(outputRoot, "images");
@@ -35,7 +42,7 @@ if (!outputRoot.startsWith(allowedOutputRoot)) {
 }
 
 if (!assetOutputRoot.startsWith(allowedAssetOutputRoot)) {
-	throw new Error(`附件输出目录必须位于 content/posts/linux 内：${assetOutputRoot}`);
+	throw new Error(`附件输出目录必须位于当前同步输出目录内：${assetOutputRoot}`);
 }
 
 if (sourceRoot === outputRoot || outputRoot.startsWith(`${sourceRoot}${sep}`)) {
@@ -127,7 +134,7 @@ function createDescription(body, title) {
 				: description;
 		}
 	}
-	return `${title}，同步自 Obsidian Linux 笔记。`;
+	return `${title}，同步自 Obsidian ${sourceLabel} 笔记。`;
 }
 
 function slugifyHeading(value) {
@@ -189,6 +196,18 @@ function collectReferencedImageAssets(
 	body.replace(
 		/!\[\[([^|\]]+\.(?:avif|gif|jpe?g|png|svg|webp))(?:\|([^\]]+))?\]\]/gi,
 		(_match, target) => {
+			const asset = resolveImageAsset(target, sourcePath, assetBySource, assetByBasename);
+			referencedAssets.add(asset);
+			return _match;
+		},
+	);
+
+	body.replace(
+		/!\[[^\]]*\]\(\s*<?([^\s)>]+\.(?:avif|gif|jpe?g|png|svg|webp))>?(?:\s+["'][^"']*["'])?\s*\)/gi,
+		(_match, target) => {
+			if (/^(?:https?:)?\/\//i.test(target) || target.startsWith("data:")) {
+				return _match;
+			}
 			const asset = resolveImageAsset(target, sourcePath, assetBySource, assetByBasename);
 			referencedAssets.add(asset);
 			return _match;
@@ -359,7 +378,9 @@ for (const sourcePath of sourceFiles) {
 		: data.tags
 			? [String(data.tags)]
 			: [];
-	if (!tags.some((tag) => tag.toLowerCase() === "linux")) tags.push("linux");
+	if (!tags.some((tag) => tag.toLowerCase() === sourceTag)) {
+		tags.push(sourceTag);
+	}
 
 	const relativeSource = relative(sourceRoot, sourcePath);
 	const relativeDirectory = dirname(relativeSource);
@@ -406,7 +427,7 @@ await writeFile(
 	manifestPath,
 	`${JSON.stringify(
 		{
-			source: "Linux",
+			source: sourceLabel,
 			generatedAt: new Date().toISOString(),
 			files: generated,
 		},
@@ -420,7 +441,7 @@ await writeFile(
 	assetManifestPath,
 	`${JSON.stringify(
 		{
-			source: "Linux",
+			source: sourceLabel,
 			generatedAt: new Date().toISOString(),
 			files: generatedAssets,
 		},
@@ -430,7 +451,7 @@ await writeFile(
 	"utf8",
 );
 
-console.log(`已从 Obsidian Linux 白名单同步 ${generated.length} 篇文章：`);
+console.log(`已从 Obsidian ${sourceLabel} 白名单同步 ${generated.length} 篇文章：`);
 for (const file of generated) console.log(`- ${file}`);
 console.log(`已同步 ${generatedAssets.length} 个文章图片附件：`);
 for (const file of generatedAssets) console.log(`- ${file}`);

@@ -9,7 +9,7 @@
 		"build": "astro build",
 		"postbuild": "pagefind --site dist",
 		"preview": "astro preview",
-		"sync:obsidian": "node scripts/sync-obsidian.mjs",
+		"sync:obsidian": "node scripts/sync-obsidian-whitelist.mjs",
 		"hooks:setup": "git config core.hooksPath .githooks",
 		"check": "astro check && biome check",
 		"lint": "biome check --write",
