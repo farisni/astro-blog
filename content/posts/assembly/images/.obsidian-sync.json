@@ -1,6 +1,6 @@
 {
   "source": "汇编",
-  "generatedAt": "2026-08-02T06:17:11.112Z",
+  "generatedAt": "2026-08-02T08:39:59.556Z",
   "files": [
     "content/posts/assembly/images/01-取指执行循环.png",
     "content/posts/assembly/images/01-orangeos-overview.png",
@@ -27,6 +27,7 @@
     "content/posts/assembly/images/143069fdcd4f583eb8ac8c506563b206834f29d908a02159acdb127a0118c8cb.jpg",
     "content/posts/assembly/images/15-protected-mode-capabilities.png",
     "content/posts/assembly/images/8086-汇编入门教程-1785608957360.webp",
+    "content/posts/assembly/images/8086-汇编入门教程-1785655009304.webp",
     "content/posts/assembly/images/e5a8f9361d05587dffc2e119a5cb63fb61074569e9021f502c07a467697087c7.jpg"
   ]
 }

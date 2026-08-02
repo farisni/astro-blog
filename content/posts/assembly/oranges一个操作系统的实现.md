@@ -50,7 +50,17 @@ Loader 加载器
 - 生成512字节引导扇区
 - 写入软盘镜像
 - 使用 Bochs 启动
-- 搭建 NASM、GCC、Make 等开发环境
+
+## 🛠️ 开发环境
+
+| 工具 | 作用 | 安装（macOS / Linux） |
+|---|---|---|
+| NASM | 汇编编译器：`.asm` → `.bin` / `.o` | `brew install nasm` / `sudo apt install nasm` |
+| GCC | C 编译器：`.c` → `.o`（32位需 `-m32`） | `brew install gcc` / `sudo apt install gcc-multilib` |
+| ld | 链接器：多个 `.o` → `kernel.elf` | 随 binutils 自带 |
+| Make | 自动化构建：`make` / `make run` | `brew install make` / `sudo apt install make` |
+| Bochs | x86 模拟器：启动、调试系统镜像 | `brew install bochs` / `sudo apt install bochs` |
+| dd | 把 `boot.bin` 写入磁盘第0扇区 | 系统自带 |
 
 最开始的"操作系统"实际上只是：
 
@@ -1071,6 +1081,8 @@ Loader：空间大，负责复杂准备
 
 ## 📦 三、Loader 加载内核
 
+> **Loader是Boot和Kernel之间的桥。**
+
 Loader 需要在磁盘中找到 `kernel.elf`，然后把它读取到内存。
 
 ```text
@@ -1189,6 +1201,9 @@ C语言：实现调度、驱动、文件系统等复杂逻辑
 
 ## 🚪 六、建立内核入口
 
+>Loader（内核加载器）**把 CPU 的 `RIP`（下一条指令地址寄存器）改成 ELF 头中记录的入口地址，然后 CPU 从那里继续取机器指令执行。**
+如果是RustOS本质上就是：**把 CPU 的下一条指令地址改成 Rust 函数对应的机器码地址，然后从那里继续执行。**
+
 链接内核时会指定入口符号，例如 `_start` 或 `kernel_entry`。
 
 ELF 头保存这个入口地址：
@@ -1214,6 +1229,149 @@ CPU 开始执行 Kernel
 ```
 
 从此以后，控制计算机的是内核。
+
+### ❓ Q&A：Loader 是怎么"跳"进内核的？Linux和RustOS
+
+在进入内核的上，**Linux0.0.1和Rust Blos本质完全一样**。
+
+> Loader（内核加载器）把 CPU 的 `RIP`（下一条指令地址寄存器）改成 ELF 头中记录的入口地址，然后 CPU 从那里继续取机器指令执行。
+
+#### 动态过程
+
+假设 ELF（内核可执行文件格式）头记录：
+
+```text
+e_entry = 0x10000001f40
+```
+
+Loader 先完成：
+
+```text
+读取 ELF
+    ↓
+把代码段加载到内存
+    ↓
+建立虚拟地址映射
+    ↓
+准备内核栈
+    ↓
+准备 BootInfo 参数
+```
+
+然后执行类似：
+
+```asm
+jmp 0x10000001f40
+```
+
+CPU 内部就是（**RIP，64位指令地址寄存器**）：
+
+```text
+RIP = 0x10000001f40
+```
+
+接下来：
+
+```text
+CPU从0x10000001f40读取机器指令
+        ↓
+执行一条
+        ↓
+RIP自动指向下一条
+        ↓
+继续执行
+```
+
+#### CPU 不认识 Rust 和 Kernel
+
+CPU 不知道：
+
+```text
+这是 Rust 函数
+这是 Kernel
+Loader 已经结束
+```
+
+CPU 只看到：
+
+```text
+把 RIP 改成一个新地址
+        ↓
+从新地址读取机器码
+```
+
+"Loader 交接给 Kernel" 是我们从软件结构上对这次跳转的解释。
+
+对 CPU 来说只是：
+
+```text
+之前执行地址A附近的指令
+        ↓
+遇到 jmp
+        ↓
+接下来执行地址B附近的指令
+```
+
+#### `e_entry` 不一定直接是源码中的 `kernel_main`
+
+你的代码写了：
+
+```rust
+entry_point!(kernel_main);
+```
+
+这个宏会生成一个符合 Bootloader 要求的入口包装函数。
+
+所以真实关系更可能是：
+
+```text
+ELF.e_entry
+    ↓
+entry_point! 生成的入口机器码
+    ↓
+整理 BootInfo 参数
+    ↓
+调用 kernel_main(boot_info)
+```
+
+因此 `e_entry` 指向的是编译后的正式程序入口，不一定直接指向你肉眼看到的 `kernel_main` 第一行。
+
+#### 为什么不能随便跳到某个 Rust 函数？
+
+跳转之前必须保证：
+
+```text
+函数代码已经加载到对应地址
+页表允许执行这个地址
+CPU已经进入正确模式
+栈指针 RSP 已经设置
+参数放在约定的寄存器中
+内存映射符合函数预期
+```
+
+否则即使地址正确，也可能立即异常。
+
+所以 Loader 的本质任务是：
+
+```text
+把 Kernel 需要的运行环境准备好
+              ↓
+最后设置 RIP 为 Kernel 入口
+```
+
+你的运行日志正好体现了这个过程：
+
+```text
+Entry point at: 0x10000001f40
+        ↓
+Create bootinfo
+        ↓
+Jumping to kernel entry point
+        ↓
+Hello from Rust kernel!
+```
+
+> **一句话总结：ELF 的 `e_entry` 保存内核入口机器码的地址；Loader 准备好环境后，把 CPU 的 `RIP` 改成这个地址，从而让 CPU 开始执行内核。**
 
 ## ⚡ 七、建立中断处理框架
 
@@ -1584,3 +1742,109 @@ Linux 0.11：看真实内核
 ```
 
 你 Drive 中的文件：[OrangeS一个操作系统的实现（于渊）](https://drive.google.com/file/d/1XXHIuPZCGn_F9O8oNdc9AdwhjDTUmqdB)
+
+# 📌 附录：什么是 RIP？
+
+哈哈，不是"睡觉"的 **RIP（Rest in Peace）**。
+
+这里的 **RIP（64位指令地址寄存器）** 是 CPU 内部的一个寄存器，用来记录：
+
+> CPU 接下来应该去哪个内存地址取指令。
+
+## CPU 执行过程
+
+假设内存中：
+
+```text
+地址 0x1000：打印A
+地址 0x1003：数字加1
+地址 0x1006：跳回 0x1000
+```
+
+执行时：
+
+```text
+RIP = 0x1000
+      ↓
+CPU 读取并执行"打印A"
+      ↓
+RIP = 0x1003
+      ↓
+CPU 执行"数字加1"
+      ↓
+RIP = 0x1006
+      ↓
+CPU 执行"跳回 0x1000"
+      ↓
+RIP = 0x1000
+```
+
+所以 CPU 能不断运行，就是因为 RIP 一直告诉它下一条指令在哪里。
+
+## 和你之前学的 IP 是一回事
+
+```text
+8086：
+CS:IP
+   └─ IP 是16位指令地址寄存器
+
+80386：
+CS:EIP
+   └─ EIP 是32位指令地址寄存器
+
+x86_64：
+CS:RIP
+   └─ RIP 是64位指令地址寄存器
+```
+
+关系是：
+
+```text
+RIP：64位
+└─ EIP：低32位
+   └─ IP：低16位
+```
+
+和下面很像：
+
+```text
+RAX
+└─ EAX
+   └─ AX
+```
+
+## `jmp` 做了什么？
+
+普通情况下，CPU 执行完指令后：
+
+```text
+RIP 自动增加
+```
+
+遇到跳转：
+
+```asm
+jmp 0x2000
+```
+
+CPU 就不再顺序执行，而是：
+
+```text
+RIP = 0x2000
+```
+
+下一条指令从 `0x2000` 读取。
+
+所以：
+
+```text
+Loader 跳转到 Kernel
+```
+
+在 CPU 层面的本质就是：
+
+```text
+RIP = Kernel 入口地址
+```
+
+然后 CPU 从内核入口继续执行。
