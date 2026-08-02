@@ -1,7 +1,8 @@
 {
   "source": "汇编",
-  "generatedAt": "2026-08-01T17:42:36.754Z",
+  "generatedAt": "2026-08-02T03:15:07.368Z",
   "files": [
-    "content/posts/assembly/8086-汇编入门教程.md"
+    "content/posts/assembly/8086-汇编入门教程.md",
+    "content/posts/assembly/oranges一个操作系统的实现.md"
   ]
 }

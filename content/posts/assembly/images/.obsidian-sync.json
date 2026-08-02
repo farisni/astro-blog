@@ -1,16 +1,32 @@
 {
   "source": "汇编",
-  "generatedAt": "2026-08-01T17:42:36.754Z",
+  "generatedAt": "2026-08-02T03:15:07.368Z",
   "files": [
     "content/posts/assembly/images/01-取指执行循环.png",
+    "content/posts/assembly/images/01-orangeos-overview.png",
     "content/posts/assembly/images/02-指令与数据.png",
+    "content/posts/assembly/images/02-real-to-protected-mode.png",
     "content/posts/assembly/images/03-数据段初始化.png",
+    "content/posts/assembly/images/03-boot-loader-kernel.png",
     "content/posts/assembly/images/04-段地址与偏移.png",
+    "content/posts/assembly/images/04-process-scheduling.png",
     "content/posts/assembly/images/05-位宽与寄存器.png",
+    "content/posts/assembly/images/05-io-layers.png",
     "content/posts/assembly/images/06-八位运算与溢出.png",
+    "content/posts/assembly/images/06-ipc-messages.png",
     "content/posts/assembly/images/07-程序退出.png",
+    "content/posts/assembly/images/07-filesystem-path.png",
     "content/posts/assembly/images/08-伪指令与机器指令.png",
+    "content/posts/assembly/images/08-process-lifecycle.png",
+    "content/posts/assembly/images/09-boot-asm-to-cpu.png",
+    "content/posts/assembly/images/10-gdt-selector-descriptor.png",
+    "content/posts/assembly/images/11-privilege-tss.png",
+    "content/posts/assembly/images/12-paging-linear-address.png",
+    "content/posts/assembly/images/13-interrupts-8259a-idt.png",
+    "content/posts/assembly/images/14-protected-mode-switch-spine.png",
     "content/posts/assembly/images/143069fdcd4f583eb8ac8c506563b206834f29d908a02159acdb127a0118c8cb.jpg",
+    "content/posts/assembly/images/15-protected-mode-capabilities.png",
+    "content/posts/assembly/images/8086-汇编入门教程-1785608957360.webp",
     "content/posts/assembly/images/e5a8f9361d05587dffc2e119a5cb63fb61074569e9021f502c07a467697087c7.jpg"
   ]
 }
