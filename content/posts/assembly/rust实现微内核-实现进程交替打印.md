@@ -1,7 +1,7 @@
 ---
 title: "Rust实现微内核：实现进程交替打印"
 description: "可以。先把目标定义清楚："
-publishDate: "2026-08-11"
+publishDate: "2026-08-12"
 tags:
   - "汇编"
 draft: false
