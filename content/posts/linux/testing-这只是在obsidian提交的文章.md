@@ -1,7 +1,7 @@
 ---
 title: "Testing：这只是在obsidian提交的文章"
 description: "22222 obs自己提交啦"
-publishDate: "2026-08-29"
+publishDate: "2026-08-30"
 tags:
   - "linux"
 draft: false
