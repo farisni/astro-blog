@@ -1,7 +1,7 @@
 ---
 title: "OrangeS一个操作系统的实现"
 description: "它也是\"动手写操作系统\"，但相比《操作系统真象还原》，它更短、更偏代码推进，并且带有明显的 MINIX / 微内核设计思路。"
-publishDate: "2026-08-31"
+publishDate: "2026-09-01"
 tags:
   - "汇编"
 draft: false
