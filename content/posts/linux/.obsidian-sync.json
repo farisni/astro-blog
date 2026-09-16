@@ -1,11 +1,12 @@
 {
   "source": "Linux",
-  "generatedAt": "2026-09-16T09:30:36.376Z",
+  "generatedAt": "2026-09-16T14:02:40.908Z",
   "files": [
     "content/posts/linux/archlinux扩展-hyprland.md",
     "content/posts/linux/hyprland-deskflow-hyprland-fix.md",
     "content/posts/linux/mintlinux.md",
     "content/posts/linux/testing-这只是在obsidian提交的文章.md",
+    "content/posts/linux/uefi和legacy-bios.md",
     "content/posts/linux/win11-archlinux-双系统安装.md"
   ]
 }

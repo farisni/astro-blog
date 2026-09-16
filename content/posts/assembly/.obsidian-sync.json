@@ -1,8 +1,10 @@
 {
   "source": "汇编",
-  "generatedAt": "2026-09-16T09:30:36.463Z",
+  "generatedAt": "2026-09-16T14:02:41.001Z",
   "files": [
     "content/posts/assembly/8086-汇编入门教程.md",
+    "content/posts/assembly/内核如何与c交互的.md",
+    "content/posts/assembly/纸带计算机.md",
     "content/posts/assembly/oranges一个操作系统的实现.md",
     "content/posts/assembly/rust实现微内核-实现进程交替打印.md"
   ]

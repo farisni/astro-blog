@@ -1,6 +1,6 @@
 {
   "source": "汇编",
-  "generatedAt": "2026-09-16T09:30:36.463Z",
+  "generatedAt": "2026-09-16T14:02:41.002Z",
   "files": [
     "content/posts/assembly/images/01-取指执行循环.png",
     "content/posts/assembly/images/01-orangeos-overview.png",
@@ -28,6 +28,11 @@
     "content/posts/assembly/images/15-protected-mode-capabilities.png",
     "content/posts/assembly/images/8086-汇编入门教程-1785608957360.webp",
     "content/posts/assembly/images/8086-汇编入门教程-1785655009304.webp",
+    "content/posts/assembly/images/内核如何与C交互的-1785930696107.webp",
+    "content/posts/assembly/images/内核如何与C交互的-1785932882930.webp",
+    "content/posts/assembly/images/内核如何与C交互的-1785932920266.webp",
+    "content/posts/assembly/images/纸带计算机-1786029518085.webp",
+    "content/posts/assembly/images/纸带计算机-1786029896508.webp",
     "content/posts/assembly/images/e5a8f9361d05587dffc2e119a5cb63fb61074569e9021f502c07a467697087c7.jpg"
   ]
 }
