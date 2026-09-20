@@ -1,7 +1,7 @@
 ---
 title: "内核如何与C交互的"
 description: "![[内核如何与C交互的-1785930696107.webp]]"
-publishDate: "2026-09-19"
+publishDate: "2026-09-20"
 tags:
   - "汇编"
 draft: false
