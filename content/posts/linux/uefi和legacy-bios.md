@@ -1,7 +1,7 @@
 ---
 title: "UEFI和Legacy BIOS"
 description: "本质上，UEFI 和 Legacy BIOS 都负责同一件事："
-publishDate: "2026-09-22"
+publishDate: "2026-09-23"
 tags:
   - "linux"
 draft: false
